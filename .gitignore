@@ -1,4 +1,36 @@
+# Python cache and build
 __pycache__/
-*.pyc
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env/
+.env.bak/
+
+# Environment / secrets
 .env
+
+# Logs
 logs/
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor-specific
+.vscode/
+.idea/
+
+# SQLite DBs (for local dev only)
+*.sqlite3
+*.db
+
+# Alembic version cache
+alembic/versions/*.pyc
