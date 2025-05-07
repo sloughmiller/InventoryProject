@@ -1,8 +1,6 @@
 # 🛠 TODO: Home Inventory API
 
-This file tracks the development progress and planned features for the Home Inventory API project.  
-It also serves as a GitHub project roadmap and commit guide.
-
+This file tracks the development progress and planned features for the Home Inventory 
 ---
 
 ## ✅ CORE FEATURES
