@@ -28,3 +28,7 @@ def shutdown_event():
 
 def read_root():
     return {"message": "Home Inventory API is running"}
+
+if __name__ == "__main__":
+    init_db()
+    print("Database tables create successfully.")

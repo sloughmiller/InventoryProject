@@ -9,4 +9,4 @@ class Condition(Base):
     description = Column(String)
 
     def __repr__(self):
-        return f"<Condition(id={self.id}, name={self.name}, description={self.description})>"
+        return f"<Condition(id={self.id}, name='{self.name}')>"

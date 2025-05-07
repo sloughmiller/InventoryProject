@@ -22,6 +22,5 @@ class Item(Base):
     owner = relationship("User")
 
     def __repr__(self):
-        return f"<Item(id={self.id}, name={self.name}, description={self.description}, barcode={self.barcode}, purchase_date={self.purchase_date}, value={self.value}, category_id={self.category_id}, location_id={self.location_id}, condition_id={self.condition_id}, owner_id={self.owner_id})>"
-    
-    
+        return (f"<Item(id={self.id}, name='{self.name}', barcode='{self.barcode}', "
+                f"value={self.value}, owner_id={self.owner_id})>")

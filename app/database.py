@@ -18,3 +18,9 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+# ✅ Function to initialize the database
+def init_db():
+    from app import models  # Import models to create tables
+    Base.metadata.create_all(bind=engine)
