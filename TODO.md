@@ -78,5 +78,3 @@ It also serves as a GitHub project roadmap and commit guide.
 - [ ] (Optional) Set up GitHub project board or issues
 
 ---
-
-## 📍 Example Commit Messages
