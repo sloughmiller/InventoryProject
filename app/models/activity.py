@@ -7,11 +7,11 @@ class Activity(Base):
     __tablename__ = "activities"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    activity_type = Column(String(50), nullable=False)
-    description = Column(Text, nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    user_id = Column(Integer, ForeignKey("users.id"))
+    item_id = Column(Integer, ForeignKey("items.id")) 
+    action = Column(String, nullable=False)
+    details = Column(String, nullable=True)
+    created_at = Column(String, server_default=func.now())
 
     user = relationship("User", back_populates="activities")
 

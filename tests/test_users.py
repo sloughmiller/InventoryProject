@@ -1,19 +1,32 @@
+from uuid import uuid4
+
 def test_create_user(client):
+    email = f"testuser_{uuid4()}@example.com"
     response = client.post("/users/", json={
         "username": "testuser",
-        "email": "testuser@example.com",
+        "email": email,
         "password": "testpass"
     })
     assert response.status_code == 200
-    assert response.json()["email"] == "testuser@example.com"
+    assert response.json()["email"] == email
 
 def test_duplicate_user(client):
-    response = client.post("/users/", json={
-        "username": "testuser",
-        "email": "testuser@example.com",
+    email = f"user_{uuid4()}@example.com"
+    # Create the first user
+    response1 = client.post("/users/", json={
+        "username": "testuser1",
+        "email": email,
         "password": "testpass"
     })
-    assert response.status_code == 400
+    assert response1.status_code == 200
+
+    # Attempt to create duplicate user (same email)
+    response2 = client.post("/users/", json={
+        "username": "testuser2",
+        "email": email,
+        "password": "testpass"
+    })
+    assert response2.status_code == 400
 
 def test_get_users(client):
     response = client.get("/users/")

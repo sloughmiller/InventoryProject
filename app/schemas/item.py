@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import date
 
@@ -13,7 +13,9 @@ class ItemBase(BaseModel):
     condition_id: Optional[int] = None
 
 class ItemCreate(ItemBase):
-    pass
+#    name: str
+#    description: Optional[str] = None
+    owner_id: int
 
 class ItemUpdate(BaseModel):
     name: Optional[str] = None
@@ -26,14 +28,14 @@ class ItemUpdate(BaseModel):
     owner_id: Optional[int] = None
 
     class Config:
-        from_attributes = True
+        model_config = ConfigDict(from_attributes=True)
 
 class Item(ItemBase):
     id: int
     owner_id: int
 
     class Config:
-        from_attributes = True
+        model_config = ConfigDict(from_attributes=True)
         schema_extra = {
             "example": {
                 "id": 1,

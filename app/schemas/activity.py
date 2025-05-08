@@ -1,11 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import datetime
 
-
 class ActivityBase(BaseModel):
-    item_id: int
     user_id: int
+    item_id: int
     action: str
     details: Optional[str] = None
 
@@ -17,22 +16,21 @@ class ActivityUpdate(BaseModel):
     details: Optional[str] = None
 
     class Config:
-        from_attributes = True
+        model_config = ConfigDict(from_attributes=True)
 
 class Activity(ActivityBase):
-    id:int
-    timestamp: datetime
-
+    id: int
+    created_at: datetime
 
     class Config:
-        from_attributes = True
-        schema_extra = {
+        model_config = ConfigDict(from_attributes=True)
+        json_schema_extra = {
             "example": {
                 "id": 1,
                 "item_id": 123,
                 "user_id": 456,
                 "action": "view",
                 "details": "User viewed the item",
-                "timestamp": "2023-10-01T12:00:00Z"
+                "created_at": "2023-10-01T12:00:00Z"
             }
         }

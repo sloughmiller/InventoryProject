@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional
 
 class UserBase(BaseModel):
@@ -16,14 +16,14 @@ class UserUpdate(BaseModel):
     is_superuser: Optional[bool] = None
 
     class Config:
-        from_attributes = True
+        model_config = ConfigDict(from_attributes=True)
 
 class User(UserBase):
     id: int
     is_active: bool = True
 
     class Config:
-        from_attributes = True
+        model_config = ConfigDict(from_attributes=True)
         schema_extra = {
             "example": {
                 "id": 1,
