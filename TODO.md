@@ -5,7 +5,7 @@ This file tracks the development progress and planned features for the Home Inve
 
 ## ✅ CORE FEATURES
 
-- [ ] Build CRUD operations:
+- [x] Build CRUD operations:
   - [x] Items (`crud/item.py`)
   - [x] Categories (`crud/category.py`)
   - [x] Items(`crud/items.py`)
