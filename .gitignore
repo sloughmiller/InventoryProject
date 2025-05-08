@@ -34,3 +34,5 @@ Thumbs.db
 
 # Alembic version cache
 alembic/versions/*.pyc
+models.py
+schema.sql
