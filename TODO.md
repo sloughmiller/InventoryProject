@@ -1,6 +1,7 @@
 # 🛠 TODO: Home Inventory API
 
-This file tracks the development progress and planned features for the Home Inventory 
+This file tracks the development progress and planned features for the Home Inventory
+
 ---
 
 ## ✅ CORE FEATURES
@@ -15,11 +16,11 @@ This file tracks the development progress and planned features for the Home Inve
 
 - [ ] Implement API routes (`api/`):
   - [x] Activity
-  - [ ] Items
-  - [ ] Categories
-  - [ ] Locations
-  - [ ] Conditions
-  - [ ] Users
+  - [x] Items
+  - [x] Categories
+  - [x] Locations
+  - [x] Conditions
+  - [x] Users
 
 - [ ] Wire up routers in `main.py`
 
