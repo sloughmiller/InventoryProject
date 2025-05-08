@@ -10,8 +10,9 @@ def get_activities(db: Session, skip: int = 0, limit: int = 100):
 def create_activity(db: Session, activity: schemas.ActivityCreate):
     db_activity = models.Activity(
         user_id=activity.user_id,
-        activity_type=activity.activity_type,
-        description=activity.description,
+        item_id=activity.item_id,
+        action=activity.action,
+        details=activity.details,
     )
     db.add(db_activity)
     db.commit()
