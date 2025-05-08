@@ -8,11 +8,18 @@ class LocationBase(BaseModel):
 class LocationCreate(LocationBase):
     pass
 
+class LocationUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
 class Location(LocationBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         schema_extra = {
             "example": {
                 "id": 1,

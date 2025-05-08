@@ -3,6 +3,8 @@ uvicorn
 sqlalchemy
 alembic
 psycopg2-binary
-pydantic
+pydantic==2.5.3
+pydantic-settings==2.0.3
+pydantic[email]
 python-dotenv
 pytest

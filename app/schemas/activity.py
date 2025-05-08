@@ -12,13 +12,20 @@ class ActivityBase(BaseModel):
 class ActivityCreate(ActivityBase):
     pass
 
+class ActivityUpdate(BaseModel):
+    action: Optional[str] = None
+    details: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
 class Activity(ActivityBase):
     id:int
     timestamp: datetime
 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         schema_extra = {
             "example": {
                 "id": 1,

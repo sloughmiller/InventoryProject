@@ -15,12 +15,25 @@ class ItemBase(BaseModel):
 class ItemCreate(ItemBase):
     pass
 
+class ItemUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    barcode: Optional[str] = None
+    value: Optional[float] = None
+    category_id: Optional[int] = None
+    location_id: Optional[int] = None
+    condition_id: Optional[int] = None
+    owner_id: Optional[int] = None
+
+    class Config:
+        from_attributes = True
+
 class Item(ItemBase):
     id: int
     owner_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         schema_extra = {
             "example": {
                 "id": 1,

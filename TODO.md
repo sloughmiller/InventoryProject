@@ -14,7 +14,7 @@ This file tracks the development progress and planned features for the Home Inve
   - [x] Conditions (`crud/condition.py`)
   - [x] Users (`crud/user.py`)
 
-- [ ] Implement API routes (`api/`):
+- [x] Implement API routes (`api/`):
   - [x] Activity
   - [x] Items
   - [x] Categories
