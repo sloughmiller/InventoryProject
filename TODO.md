@@ -8,7 +8,7 @@ This file tracks the development progress and planned features for the Home Inve
 - [ ] Build CRUD operations:
   - [ ] Items (`crud/item.py`)
   - [ ] Categories (`crud/category.py`)
-  - [ ] Locations (`crud/location.py`)
+  - [x] Locations (`crud/location.py`)
   - [x] Conditions (`crud/condition.py`)
   - [x] Users (`crud/user.py`)
 
