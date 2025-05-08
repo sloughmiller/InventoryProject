@@ -22,7 +22,7 @@ This file tracks the development progress and planned features for the Home Inve
   - [x] Conditions
   - [x] Users
 
-- [ ] Wire up routers in `main.py`
+- [x] Wire up routers in `main.py`
 
 ---
 
@@ -38,11 +38,11 @@ This file tracks the development progress and planned features for the Home Inve
 
 ## 🧪 TESTING
 
-- [ ] Write `scripts/test_query.py` to verify seeded data
-- [ ] Add automated tests using `pytest`:
-  - [ ] Item CRUD tests
-  - [ ] User CRUD tests
-  - [ ] Category CRUD tests
+- [x] Write `scripts/test_query.py` to verify seeded data
+- [x] Add automated tests using `pytest`:
+  - [x] Item CRUD tests
+  - [x] User CRUD tests
+  - [x] Category CRUD tests
 
 ---
 
