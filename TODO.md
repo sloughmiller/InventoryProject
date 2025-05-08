@@ -9,7 +9,7 @@ This file tracks the development progress and planned features for the Home Inve
   - [ ] Items (`crud/item.py`)
   - [ ] Categories (`crud/category.py`)
   - [ ] Locations (`crud/location.py`)
-  - [ ] Conditions (`crud/condition.py`)
+  - [x] Conditions (`crud/condition.py`)
   - [x] Users (`crud/user.py`)
 
 - [ ] Implement API routes (`api/`):
