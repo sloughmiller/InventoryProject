@@ -1,12 +1,17 @@
-from sqlalchemy import Column, Integer, String
-from app.database import Base
+from sqlalchemy import String, Integer, Index
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import List, Optional
+from .base import Base
 
 class Location(Base):
-    __tablename__ = "locations"
+    __tablename__ = 'locations'
+    __table_args__ = (
+        Index('ix_locations_id', 'id'),
+        Index('ix_locations_name', 'name', unique=True),
+    )
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True, nullable=False)
-    description = Column(String, nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
+    description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
 
-    def __repr__(self):
-        return f"<Location(id={self.id}, name={self.name}, description={self.description})>"
+    items: Mapped[List['Item']] = relationship('Item', back_populates='location', cascade='all, delete', passive_deletes=True)

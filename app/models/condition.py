@@ -1,12 +1,17 @@
-from sqlalchemy import Column, Integer, String
-from app.database import Base
+from sqlalchemy import String, Integer, Index
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import List, Optional
+from .base import Base
 
 class Condition(Base):
-    __tablename__ = "conditions"
+    __tablename__ = 'conditions'
+    __table_args__ = (
+        Index('ix_conditions_id', 'id'),
+        Index('ix_conditions_name', 'name', unique=True),
+    )
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False)
-    description = Column(String)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
+    description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
 
-    def __repr__(self):
-        return f"<Condition(id={self.id}, name='{self.name}')>"
+    items: Mapped[List['Item']] = relationship('Item', back_populates='condition', cascade='all, delete', passive_deletes=True)
