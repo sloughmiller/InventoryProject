@@ -31,7 +31,7 @@ This file tracks the development progress and planned features for the Home Inve
 - [x] Set up SQLAlchemy models
 - [x] Create Pydantic schemas
 - [x] Write and run seed script (`scripts/seed_data.py`)
-- [ ] Review DB for 1NF, 2NF, 3NF normalization
+- [x] Review DB for 1NF, 2NF, 3NF normalization
 - [ ] Add indexes (e.g., foreign keys, barcode)
 
 ---
