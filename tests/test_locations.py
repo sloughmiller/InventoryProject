@@ -1,8 +1,9 @@
-def test_create_location(client):
+def test_create_location(client,access_token):
+    headers = {"Authorization": f"Bearer {access_token}"}
     response = client.post("/locations/", json={
         "name": "Garage",
         "description": "Main garage"
-    })
+    }, headers=headers)
     assert response.status_code == 200
     assert response.json()["name"] == "Garage"
 

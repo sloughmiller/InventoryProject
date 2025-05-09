@@ -1,4 +1,5 @@
-def test_create_item(client):
+def test_create_item(client, access_token):
+    headers = {"Authorization": f"Bearer {access_token}"}
     response = client.post("/items/", json={
         "name": "Hammer",
         "description": "Steel hammer",
@@ -8,7 +9,7 @@ def test_create_item(client):
         "location_id": 1,
         "condition_id": 1,
         "owner_id": 1
-    })
+    }, headers=headers)
     assert response.status_code == 200
     assert response.json()["name"] == "Hammer"
 

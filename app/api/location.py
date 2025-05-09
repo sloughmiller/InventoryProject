@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import crud, schemas
+from app import crud, schemas, models
 from app.database import get_db
+from app.api.deps import get_current_user  # ✅ import auth dependency
 
 router = APIRouter()
 
@@ -17,13 +18,26 @@ def read_location(location_id: int, db: Session = Depends(get_db)):
     return db_location
 
 @router.post("/", response_model=schemas.Location)
-def create_location(location: schemas.LocationCreate, db: Session = Depends(get_db)):
+def create_location(
+    location: schemas.LocationCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)  
+):
     return crud.location.create_location(db, location)
 
 @router.put("/{location_id}", response_model=schemas.Location)
-def update_location(location_id: int, location_update: schemas.LocationUpdate, db: Session = Depends(get_db)):
+def update_location(
+    location_id: int,
+    location_update: schemas.LocationUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)  
+):
     return crud.location.update_location(db, location_id, location_update)
 
 @router.delete("/{location_id}", response_model=schemas.Location)
-def delete_location(location_id: int, db: Session = Depends(get_db)):
+def delete_location(
+    location_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)  
+):
     return crud.location.delete_location(db, location_id)

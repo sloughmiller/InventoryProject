@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import crud, schemas
+from app import crud, schemas, models
 from app.database import get_db
+from app.api.deps import get_current_user  # ✅ import auth dependency
 
 router = APIRouter()
 
@@ -17,13 +18,26 @@ def read_item(item_id: int, db: Session = Depends(get_db)):
     return db_item
 
 @router.post("/", response_model=schemas.Item)
-def create_item(item: schemas.ItemCreate, db: Session = Depends(get_db)):
+def create_item(
+    item: schemas.ItemCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)  
+):
     return crud.item.create_item(db, item)
 
 @router.put("/{item_id}", response_model=schemas.Item)
-def update_item(item_id: int, item_update: schemas.ItemUpdate, db: Session = Depends(get_db)):
+def update_item(
+    item_id: int,
+    item_update: schemas.ItemUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)  
+):
     return crud.item.update_item(db, item_id, item_update)
 
 @router.delete("/{item_id}", response_model=schemas.Item)
-def delete_item(item_id: int, db: Session = Depends(get_db)):
+def delete_item(
+    item_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)  
+):
     return crud.item.delete_item(db, item_id)
