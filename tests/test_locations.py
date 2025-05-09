@@ -1,4 +1,5 @@
-def test_create_location(client,access_token):
+def test_create_location(client, client_and_user):
+    client, user, access_token = client_and_user
     headers = {"Authorization": f"Bearer {access_token}"}
     response = client.post("/locations/", json={
         "name": "Garage",

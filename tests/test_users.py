@@ -1,6 +1,7 @@
 from uuid import uuid4
 
-def test_create_user(client, access_token):
+def test_create_user(client, client_and_user):
+    client, user, access_token = client_and_user
     headers = {"Authorization": f"Bearer {access_token}"}
     email = f"testuser_{uuid4()}@example.com"
     response = client.post("/users/", json={
@@ -11,7 +12,8 @@ def test_create_user(client, access_token):
     assert response.status_code == 200
     assert response.json()["email"] == email
 
-def test_duplicate_user(client, access_token):
+def test_duplicate_user(client, client_and_user):
+    client, user, access_token = client_and_user
     headers = {"Authorization": f"Bearer {access_token}"}
     email = f"user_{uuid4()}@example.com"
     # Create the first user

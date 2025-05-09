@@ -9,7 +9,8 @@ def test_create_activity(client, access_token):
     assert response.status_code == 200
 
 
-def test_get_activities(client):
+def test_get_activities(client, access_token):
+    headers = {"Authorization": f"Bearer {access_token}"}
     response = client.get("/activities/")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
