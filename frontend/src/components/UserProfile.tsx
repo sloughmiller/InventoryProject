@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../api/api';
+import api from '../../../frontend/src/api/api';
 
 interface User {
   id: number;
@@ -12,7 +12,7 @@ const UserProfile: React.FC = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await api.get('/users/me');
+        const response = await api.get<User>('/users/me');
       setUser(response.data);
     };
     fetchUser();

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import api from '../api/api';
+import api from '../../../frontend/src/api/api';
 
 interface LoginFormProps {
   onLoginSuccess: () => void;
+}
+
+interface LoginResponse {
+  access_token: string;
+  token_type: string;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
@@ -13,7 +18,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post('/login', new URLSearchParams({ username, password }));
+      const response = await api.post<LoginResponse>(
+        '/login',
+        new URLSearchParams({ username, password })
+      );
       localStorage.setItem('token', response.data.access_token);
       onLoginSuccess();
     } catch {
@@ -25,8 +33,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
       {error && <p>{error}</p>}
-      <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <input
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <button type="submit">Login</button>
     </form>
   );
