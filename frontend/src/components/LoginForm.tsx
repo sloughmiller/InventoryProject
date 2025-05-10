@@ -18,16 +18,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post<LoginResponse>(
+      const response = await api.post(
         '/login',
-        new URLSearchParams({ username, password })
+        new URLSearchParams({ username, password }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
       );
       localStorage.setItem('token', response.data.access_token);
       onLoginSuccess();
-    } catch {
+    } catch (err) {
+      console.error("❌ Login error:", err);
       setError('Login failed. Please check your credentials.');
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit}>
