@@ -26,4 +26,10 @@ export async function checkBackendAvailable(): Promise<boolean> {
   }
 }
 
+export async function fetchCurrentUser() {
+  const response = await api.get('/users/me');
+  return response.data;
+}
+
+
 export default api;

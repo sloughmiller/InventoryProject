@@ -4,11 +4,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
-
+import ProtectedRoute from './components/ProtectedRoute';
 import { checkBackendAvailable } from './api/api';
 
 const App: React.FC = () => {
   const [backendOnline, setBackendOnline] = useState<boolean | null>(null);
+
+
 
   console.log("🔍 API URL:", import.meta.env.VITE_API_URL);
 
@@ -40,7 +42,14 @@ const App: React.FC = () => {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<h2>404 - Page Not Found</h2>} />
       </Routes>
     </Router>
