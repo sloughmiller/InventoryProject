@@ -5,10 +5,10 @@ interface LoginFormProps {
   onLoginSuccess: () => void;
 }
 
-interface LoginResponse {
-  access_token: string;
-  token_type: string;
-}
+// interface LoginResponse {
+//   access_token: string;
+//   token_type: string;
+// }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
@@ -20,7 +20,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
     try {
       const response = await api.post(
         '/login',
-        new URLSearchParams({ username, password }),
+        new URLSearchParams({
+          grant_type: 'password',   // ✅ REQUIRED for FastAPI OAuth2
+          username,
+          password
+        }),
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -34,7 +38,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
       setError('Login failed. Please check your credentials.');
     }
   };
-  
+
+
 
   return (
     <form onSubmit={handleSubmit}>

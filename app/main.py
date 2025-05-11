@@ -5,6 +5,9 @@ from app import crud, schemas
 from app.api import activity, category, condition, item, location, user, health
 from app.core.logger import logger
 from contextlib import asynccontextmanager
+from app.api import login
+from fastapi.middleware.cors import CORSMiddleware
+
 import logging
 
 @asynccontextmanager
@@ -16,6 +19,16 @@ async def lifespan(app: FastAPI):
     logger.info("🛑 Shutting down the application...")
 
 app = FastAPI(lifespan=lifespan)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # ✅ Moved below app declaration
 @app.middleware("http")
@@ -32,6 +45,8 @@ app.include_router(item.router, prefix="/items", tags=["items"])
 app.include_router(location.router, prefix="/locations", tags=["locations"])
 app.include_router(user.router, prefix="/users", tags=["users"])
 app.include_router(health.router, tags=["Health"])
+app.include_router(login.router)
+
 
 @app.get("/")
 def read_root():
@@ -48,7 +63,7 @@ def seed_admin_user():
         admin_user = schemas.UserCreate(
             username=admin_username,
             email=admin_email,
-            password=hash_password(admin_password),
+            password=admin_password,
         )
         crud.user.create_user(db, admin_user)
         logger.info("✅ Admin user created: admin/adminpass")
