@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import UserProfile from '../components/UserProfile';
 import UserList from '../components/UserList';
 import { fetchCurrentUser } from '../api/api';
@@ -36,7 +37,18 @@ const DashboardPage: React.FC = () => {
         <p>👋 Welcome, <strong>{username}</strong>!</p>
       )}
 
-      <button onClick={handleLogout}>🚪 Logout</button>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+        <button onClick={handleLogout}>🚪 Logout</button>
+        <Link to="/items">
+          <button>📦 View Items</button>
+        </Link>
+        <Link to="/categories">
+          <button>📂 View Categories</button>
+        </Link>
+        <Link to="/locations">
+          <button>📍 View Locations</button>
+        </Link>
+      </div>
 
       <section style={{ marginBottom: '2rem' }}>
         <h3>👤 My Profile</h3>

@@ -5,7 +5,10 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import ItemsPage from './pages/ItemsPage';
+import CategoriesPage from './pages/CategoriesPage';
 import { checkBackendAvailable } from './api/api';
+import LocationsPage from './pages/LocationsPage';
 
 const App: React.FC = () => {
   const [backendOnline, setBackendOnline] = useState<boolean | null>(null);
@@ -47,6 +50,32 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/items"
+          element={
+            <ProtectedRoute>
+              <ItemsPage onItemCreated={function (): void {
+                throw new Error('Function not implemented.');
+              } } />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute>
+              <CategoriesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/locations"
+          element={
+            <ProtectedRoute>
+              <LocationsPage />
             </ProtectedRoute>
           }
         />

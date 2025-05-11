@@ -15,7 +15,7 @@ class ItemBase(BaseModel):
 class ItemCreate(ItemBase):
 #    name: str
 #    description: Optional[str] = None
-    owner_id: int
+    owner_id: Optional[int] = None
 
 class ItemUpdate(BaseModel):
     name: Optional[str] = None
