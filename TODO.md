@@ -46,28 +46,49 @@ This file tracks the development progress and planned features for the Home Inve
 
 ---
 
-## 🔐 AUTHENTICATION + SECURITY
+## 🔐 AUTHENTICATION & SECURITY
 
-- [ ] Add JWT-based user authentication
-- [ ] Restrict POST/PUT/DELETE endpoints to authenticated users
-- [ ] Hash passwords with `passlib`
-
----
-
-## 🚀 DEPLOYMENT + OPTIMIZATION
-
-- [ ] Deploy backend to AWS (Beanstalk / EC2)
-- [ ] Use `.env` for configs (DB, secret keys)
-- [ ] Optimize DB queries; implement pagination
-- [ ] Migrate to PostgreSQL (optional)
+- [x] OAuth2PasswordRequestForm login route
+- [x] JWT token generation with `jose`
+- [x] Token-based `get_current_user` dependency
+- [x] Password hashing using `passlib[bcrypt]`
+- [x] `@app.middleware` for logging requests
+- [ ] Add role-based auth (admin vs user)
+- [ ] Limit protected routes by role
 
 ---
 
-## 💡 BONUS FEATURES
+## 🌐 FRONTEND (React + Vite + TS)
 
-- [ ] Add barcode scanning support (API-ready)
-- [ ] Build React/Vue/Svelte PWA frontend
-- [ ] Create analytics dashboard (e.g., items per category)
+- [x] Login screen
+- [x] Signup screen
+- [x] Dashboard with:
+  - [x] UserProfile (GET /users/me)
+  - [x] UserList (GET /users)
+- [x] Central AuthContext for token handling
+- [x] Auto-redirects after login
+- [x] Frontend env config via `.env.local`
+- [ ] Tailwind CSS integration
+- [ ] Toast feedback (login errors, etc.)
+- [ ] Item/category creation forms
+
+---
+
+## 🚀 DEPLOYMENT & OPTIMIZATION
+
+- [ ] Deploy backend to EC2
+- [ ] PostgreSQL + RDS migration
+- [ ] Frontend hosted via Netlify or CloudFront
+- [ ] Move `SECRET_KEY` and credentials to SSM / .env.prod
+
+---
+
+## 📦 EXTRA FEATURES
+
+- [ ] Barcode scanning integration (React Native / browser)
+- [ ] Image upload per item
+- [ ] Audit history for item changes
+- [ ] Analytics dashboard
 
 ---
 
