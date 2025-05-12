@@ -1,108 +1,102 @@
 # 🏠 Home Inventory API
 
-A personal home inventory management system built with **FastAPI**, **SQLAlchemy**, and **Pydantic** — designed to help track items, categories, locations, and conditions.  
-This project also serves as a showcase of backend development, database management, and Python ecosystem skills.
+A full-stack personal inventory management system built with **FastAPI**, **PostgreSQL**, and **SQLAlchemy**, designed to help users track household items, categories, storage locations, and item conditions.
+
+This project serves as a demonstration of backend development, RESTful API design, database modeling, and modern Python practices — and is being actively deployed to **AWS EC2 + RDS**.
 
 ---
 
-## 📦 Project Structure
+## 🔧 Tech Stack
 
+- **Backend**: FastAPI, SQLAlchemy, Pydantic
+- **Database**: PostgreSQL (via RDS)
+- **Hosting**: EC2 + Nginx reverse proxy (in progress)
+- **Auth**: JWT-based auth (coming soon)
+- **Frontend**: React + Tailwind (PWA, linked repo coming soon)
 
+---
 
+## 📁 Project Structure
 
 ```
 /app
-├── /api
-│ ├── category.py → FastAPI routes for categories
-│ ├── condition.py → FastAPI routes for conditions
-│ ├── item.py → FastAPI routes for items
-│ └── location.py → FastAPI routes for locations
-│
-├── /crud
-│ ├── category.py → Database operations (CRUD) for categories
-│ ├── condition.py → CRUD logic for conditions
-│ ├── item.py → CRUD logic for items
-│ └── location.py → CRUD logic for locations
-│
-├── /models
-│ ├── category.py → SQLAlchemy database model for Category
-│ ├── condition.py → SQLAlchemy model for Condition
-│ ├── item.py → SQLAlchemy model for Item
-│ └── location.py → SQLAlchemy model for Location
-│
-├── /schemas
-│ ├── category.py → Pydantic schemas (request/response models) for Category
-│ ├── condition.py → Pydantic schemas for Condition
-│ ├── item.py → Pydantic schemas for Item
-│ └── location.py → Pydantic schemas for Location
-│
-├── main.py → FastAPI app entry point, router setup
-│
-/tests → Test cases (empty for now, to be implemented)
-/.env → Environment variables (DB URL, secret keys)
-alembic.ini → Alembic migration configuration
-requirements.txt → Python dependencies
-README.md → Project documentation (this file)
+├── api/         → FastAPI route definitions
+├── crud/        → SQLAlchemy database interaction logic
+├── models/      → Database schema definitions
+├── schemas/     → Pydantic request/response validation
+├── main.py      → App startup, router setup
+/tests           → (To be added)
+/.env             → Environment variables
 ```
 
-## 🚀 Getting Started
+---
 
-### 1️⃣ Clone the repository
+## 🚀 Quickstart
 
-bash
+### 1️⃣ Clone the repo
 
-```
-
+```bash
 git clone https://github.com/yourusername/home-inventory-api.git
 cd home-inventory-api
-
 ```
-### 2️⃣ Set up environment
 
+### 2️⃣ Set up the environment
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
 
 ### 3️⃣ Configure environment variables
 
-DATABASE_URL=sqlite:///./test.db
+Create a `.env` file in the root:
+
+```env
+DATABASE_URL=postgresql://<user>:<password>@<host>:5432/home_inventory?sslmode=require
 SECRET_KEY=your_secret_key
+```
 
 ### 4️⃣ Initialize the database
 
+```bash
 python scripts/seed_data.py
+```
 
-### 🌐 Run the FastAPI server
+---
 
+## 🌐 API Access
+
+Once running with:
+
+```bash
 uvicorn app.main:app --reload
-Access docs:
+```
 
-Swagger UI → http://localhost:8000/docs
+- [Swagger UI](http://localhost:8000/docs)
+- [ReDoc](http://localhost:8000/redoc)
 
-ReDoc → http://localhost:8000/redoc
+---
 
-### 🧪 Running Tests
+## ✅ Features
 
-Set up test cases in /tests (coming soon).
+- 🧑‍💼 User management (admin seeding and auth in progress)
+- 📦 Inventory items, categories, locations, and condition tracking
+- ⚙️ Modular FastAPI architecture
+- 🧪 API-ready for integration and testing
+- 🐘 PostgreSQL support (local & cloud)
 
-### ⚡ Features
+---
 
-✅ User management
-✅ Categories, items, locations, conditions
-✅ Database seed script
-✅ Modular project layout
-✅ Ready for API testing with Swagger
+## 🚧 In Progress
 
-### 💡 Next Steps
+- 🔐 JWT authentication
+- 🖼️ React + Tailwind frontend (PWA)
+- ☁️ EC2 + RDS deployment (backend complete, frontend in progress)
+- 📸 Barcode scanning (planned feature)
 
-Add JWT authentication
+---
 
-Build a PWA frontend
+## 📜 License
 
-Add barcode scanning support
-
-Deploy to AWS (Elastic Beanstalk / EC2)
-
-### 📄 License
-
-MIT License © [Your Name]
+MIT License © Sterling Loughmiller

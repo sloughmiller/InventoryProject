@@ -1,54 +1,93 @@
-# React + TypeScript + Vite
+# 🖥️ Home Inventory Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **frontend** for the Home Inventory app — a Progressive Web App (PWA) built with **React**, **TypeScript**, **TailwindCSS**, and **Vite**. It connects to the FastAPI backend and enables users to manage personal inventory items across categories, conditions, and locations.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ⚙️ Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend Framework**: React + Vite
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **PWA**: Vite PWA plugin (coming soon)
+- **API Communication**: REST via Axios or Fetch
+- **Environment Management**: `.env.local` for API endpoints
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🚀 Getting Started
+
+### 1️⃣ Install Dependencies
+
+```bash
+cd frontend
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2️⃣ Set up Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env.local` file in `frontend/`:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```env
+VITE_API_URL=http://localhost:8000
 ```
+
+> Update the URL to point to your backend (e.g. EC2 public IP or domain) when deployed.
+
+### 3️⃣ Run the Dev Server
+
+```bash
+npm run dev
+```
+
+- Open your browser to [http://localhost:5173](http://localhost:5173)
+- The app will auto-reload on changes.
+
+---
+
+## 📁 Project Structure (frontend/)
+
+```
+frontend/
+├── public/             → Static assets (favicons, icons)
+├── src/                → Source code
+│   ├── components/     → Reusable UI components
+│   ├── pages/          → Route-level pages (Dashboard, Login, etc.)
+│   ├── styles/         → Tailwind or global CSS
+│   └── main.tsx        → App entry point
+├── .env.local          → API base URL and secrets (not committed)
+├── tailwind.config.js  → TailwindCSS setup
+├── vite.config.ts      → Vite and PWA configuration
+```
+
+---
+
+## ✅ Features Implemented
+
+- 🔐 Login & signup flow (JWT-based)
+- 📋 Item list with categories, locations, and conditions
+- 📦 Integration with FastAPI backend
+- 🖼 Responsive layout using Tailwind
+- 🧾 Form-based item creation
+- 🧭 Navigation routing via `react-router`
+
+---
+
+## 🚧 Coming Soon
+
+- 📱 PWA support and installability
+- 🌐 Deployment (Netlify, Vercel, or EC2 via Nginx)
+- 🖌️ UI polish with Tailwind enhancements
+- 🧪 Unit and integration tests
+
+---
+
+## 🔗 Related Projects
+
+- [Home Inventory API (Backend)](../README.md)
+
+---
+
+## 📄 License
+
+MIT License © Sterling Loughmiller
