@@ -6,6 +6,8 @@ This file tracks the development progress and planned features for the Home Inve
 
 ## ✅ CORE FEATURES
 
+---
+
 - [x] Build CRUD operations:
   - [x] Activity (`crud/activity.py`)
   - [x] Categories (`crud/category.py`)
@@ -28,6 +30,8 @@ This file tracks the development progress and planned features for the Home Inve
 
 ## 💾 DATABASE + BACKEND SETUP
 
+---
+
 - [x] Set up SQLAlchemy models
 - [x] Create Pydantic schemas
 - [x] Write and run seed script (`scripts/seed_data.py`)
@@ -37,6 +41,8 @@ This file tracks the development progress and planned features for the Home Inve
 ---
 
 ## 🧪 TESTING
+
+---
 
 - [x] Write `scripts/test_query.py` to verify seeded data
 - [x] Add automated tests using `pytest`:
@@ -60,6 +66,7 @@ This file tracks the development progress and planned features for the Home Inve
 
 ## 🌐 FRONTEND (React + Vite + TS)
 
+
 - [x] Login screen
 - [x] Signup screen
 - [x] Dashboard with:
@@ -76,6 +83,10 @@ This file tracks the development progress and planned features for the Home Inve
 
 ## 🚀 DEPLOYMENT & OPTIMIZATION
 
+- [ ] Deploy backend to AWS (Beanstalk / EC2)
+- [ ] Use `.env` for configs (DB, secret keys)
+- [ ] Optimize DB queries; implement pagination
+- [ ] Migrate to PostgreSQL (optional)
 - [ ] Deploy backend to EC2
 - [ ] PostgreSQL + RDS migration
 - [ ] Frontend hosted via Netlify or CloudFront

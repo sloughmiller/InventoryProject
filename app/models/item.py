@@ -1,26 +1,30 @@
-from sqlalchemy import Column, Integer, String, Date, Numeric, ForeignKey
-from sqlalchemy.orm import relationship
-from app.database import Base
+from sqlalchemy import String, Integer, Date, Numeric, ForeignKey, Index
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import List, Optional
+import datetime
+import decimal
+from .base import Base
 
 class Item(Base):
-    __tablename__ = "items"
+    __tablename__ = 'items'
+    __table_args__ = (
+        Index('ix_items_id', 'id'),
+        Index('ix_items_barcode', 'barcode', unique=True),
+    )
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    description = Column(String)
-    barcode = Column(String, unique=True, nullable=True)
-    purchase_date = Column(Date)
-    value = Column(Numeric(10, 2))
-    category_id = Column(Integer, ForeignKey("categories.id"))
-    location_id = Column(Integer, ForeignKey("locations.id"))
-    condition_id = Column(Integer, ForeignKey("conditions.id"))
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String)
+    description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    barcode: Mapped[Optional[str]] = mapped_column(String, unique=True, nullable=True)
+    purchase_date: Mapped[Optional[datetime.date]] = mapped_column(Date, nullable=True)
+    value: Mapped[Optional[decimal.Decimal]] = mapped_column(Numeric(10, 2), nullable=True)
+    category_id: Mapped[Optional[int]] = mapped_column(ForeignKey('categories.id', ondelete='SET NULL'), nullable=True)
+    location_id: Mapped[Optional[int]] = mapped_column(ForeignKey('locations.id', ondelete='SET NULL'), nullable=True)
+    condition_id: Mapped[Optional[int]] = mapped_column(ForeignKey('conditions.id', ondelete='SET NULL'), nullable=True)
+    owner_id: Mapped[Optional[int]] = mapped_column(ForeignKey('users.id', ondelete='SET NULL'), nullable=True)
 
-    category = relationship("Category")
-    location = relationship("Location")
-    condition = relationship("Condition")
-    owner = relationship("User")
-
-    def __repr__(self):
-        return (f"<Item(id={self.id}, name='{self.name}', barcode='{self.barcode}', "
-                f"value={self.value}, owner_id={self.owner_id})>")
+    category = relationship('Category', back_populates='items')
+    condition = relationship('Condition', back_populates='items')
+    location = relationship('Location', back_populates='items')
+    owner = relationship('User', back_populates='items')
+    activities: Mapped[List['Activity']] = relationship('Activity', back_populates='item', cascade='all, delete', passive_deletes=True)
