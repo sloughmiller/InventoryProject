@@ -1,17 +1,21 @@
 # 🖥️ Home Inventory Frontend
 
-This is the **frontend** for the Home Inventory app — a Progressive Web App (PWA) built with **React**, **TypeScript**, **TailwindCSS**, and **Vite**. It connects to the FastAPI backend and enables users to manage personal inventory items across categories, conditions, and locations.
+This is the **frontend** application for the [Home Inventory System](../README.md), a full-stack project built to help users manage and track personal inventory — including items, categories, storage locations, and item conditions.
+
+The frontend is a **PWA-ready** React + TypeScript application styled with **TailwindCSS**, communicating with a **FastAPI backend** via secure RESTful APIs.
 
 ---
 
 ## ⚙️ Tech Stack
 
-- **Frontend Framework**: React + Vite
+- **Framework**: React (via Vite)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **PWA**: Vite PWA plugin (coming soon)
-- **API Communication**: REST via Axios or Fetch
-- **Environment Management**: `.env.local` for API endpoints
+- **Styling**: TailwindCSS
+- **Routing**: React Router
+- **API Layer**: Axios (with token-based interceptors)
+- **State Management**: React Context (AuthContext)
+- **Environment Config**: `.env.local`
+- **PWA Support**: Vite PWA Plugin (coming soon)
 
 ---
 
@@ -24,67 +28,74 @@ cd frontend
 npm install
 ```
 
-### 2️⃣ Set up Environment Variables
-
-Create a `.env.local` file in `frontend/`:
+### 2️⃣ Create `.env.local`
 
 ```env
 VITE_API_URL=http://localhost:8000
 ```
 
-> Update the URL to point to your backend (e.g. EC2 public IP or domain) when deployed.
+> Replace with your deployed backend URL (e.g. EC2 instance or domain) when ready.
 
-### 3️⃣ Run the Dev Server
+### 3️⃣ Start Development Server
 
 ```bash
 npm run dev
 ```
 
-- Open your browser to [http://localhost:5173](http://localhost:5173)
-- The app will auto-reload on changes.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## 📁 Project Structure (frontend/)
+## 🧭 App Structure
 
 ```
 frontend/
-├── public/             → Static assets (favicons, icons)
-├── src/                → Source code
+├── public/             → Static assets (icons, manifest)
+├── src/
+│   ├── api/            → Axios instance and auth setup
 │   ├── components/     → Reusable UI components
-│   ├── pages/          → Route-level pages (Dashboard, Login, etc.)
-│   ├── styles/         → Tailwind or global CSS
-│   └── main.tsx        → App entry point
-├── .env.local          → API base URL and secrets (not committed)
-├── tailwind.config.js  → TailwindCSS setup
-├── vite.config.ts      → Vite and PWA configuration
+│   ├── context/        → Global state (e.g., auth)
+│   ├── pages/          → Route-level components (Dashboard, Items, etc.)
+│   ├── styles/         → Tailwind/global CSS
+│   └── main.tsx        → App root + routing
+├── .env.local          → Local dev config
+├── tailwind.config.js  → Tailwind setup
+├── vite.config.ts      → Vite + PWA config
 ```
 
 ---
 
 ## ✅ Features Implemented
 
-- 🔐 Login & signup flow (JWT-based)
-- 📋 Item list with categories, locations, and conditions
-- 📦 Integration with FastAPI backend
-- 🖼 Responsive layout using Tailwind
-- 🧾 Form-based item creation
-- 🧭 Navigation routing via `react-router`
+- 🔐 JWT login + signup flow with `AuthContext`
+- 🛡️ Route protection via `ProtectedRoute.tsx`
+- 📦 View + manage items with location/category IDs
+- ✏️ Form-based item creation with validation
+- 🧭 Dashboard with navigation links
+- ⚙️ Live API ping to check backend status
+- 📱 Mobile-friendly layout via Tailwind
 
 ---
 
 ## 🚧 Coming Soon
 
-- 📱 PWA support and installability
-- 🌐 Deployment (Netlify, Vercel, or EC2 via Nginx)
-- 🖌️ UI polish with Tailwind enhancements
-- 🧪 Unit and integration tests
+- ✅ Token refresh and logout UI improvements
+- 📱 Full PWA installability
+- 🌐 Netlify / Vercel deployment configs
+- 🖌️ Tailwind polish + dark mode
+- 🧪 Unit & integration testing
 
 ---
 
 ## 🔗 Related Projects
 
-- [Home Inventory API (Backend)](../README.md)
+- [Backend API - FastAPI, PostgreSQL](../README.md)
+
+---
+
+## 📸 Screenshots
+
+_Add screenshots of the login, dashboard, item form, etc. here._
 
 ---
 
