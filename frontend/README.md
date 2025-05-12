@@ -34,7 +34,7 @@ npm install
 VITE_API_URL=http://localhost:8000
 ```
 
-> Replace with your deployed backend URL (e.g. EC2 instance or domain) when ready.
+> Replace with deployed backend URL (e.g. EC2 instance or domain) when ready.
 
 ### 3️⃣ Start Development Server
 
