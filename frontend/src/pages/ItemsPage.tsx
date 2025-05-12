@@ -1,110 +1,53 @@
-// src/components/ItemForm.tsx
+// src/pages/ItemsPage.tsx
 import React, { useEffect, useState } from 'react';
 import api from '../api/api';
+import ItemForm from '../components/ItemForm';
 
-interface ItemFormProps {
-  onItemCreated: () => void;
+interface Item {
+  id: number;
+  name: string;
+  description?: string;
+  quantity: number;
+  category_id: number;
+  location_id: number;
 }
 
-const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [barcode, setBarcode] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [locationId, setLocationId] = useState<number | null>(null);
-  const [categories, setCategories] = useState([]);
-  const [locations, setLocations] = useState([]);
+const ItemsPage: React.FC = () => {
+  const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    api.get('/categories/').then(res => setCategories(res.data));
-    api.get('/locations/').then(res => setLocations(res.data));
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const fetchItems = async () => {
     try {
-      await api.post('/items/', {
-        name,
-        description,
-        barcode,
-        quantity,
-        category_id: categoryId,
-        location_id: locationId,
-      });
-      setName('');
-      setDescription('');
-      setBarcode('');
-      setQuantity(1);
-      setCategoryId(null);
-      setLocationId(null);
+      const res = await api.get('/items/');
+      setItems(res.data);
       setError('');
-      onItemCreated();
     } catch (err) {
-      console.error('❌ Failed to create item:', err);
-      setError('Failed to create item.');
+      console.error('❌ Failed to fetch items:', err);
+      setError('Failed to load items.');
     }
   };
 
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h4>Add New Item</h4>
+    <div>
+      <h2>Inventory Items</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <input
-        placeholder="Item Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <input
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <input
-        placeholder="Barcode"
-        value={barcode}
-        onChange={(e) => setBarcode(e.target.value)}
-      />
-      <input
-        type="number"
-        placeholder="Quantity"
-        value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
-        required
-      />
+      <ItemForm onItemCreated={fetchItems} />
 
-      <select
-        value={categoryId ?? ''}
-        onChange={(e) => setCategoryId(Number(e.target.value))}
-        required
-      >
-        <option value="">Select Category</option>
-        {categories.map((cat: any) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.name} (ID: {cat.id})
-          </option>
+      <h3>Current Items</h3>
+      <ul>
+        {items.map((item) => (
+          <li key={item.id}>
+            <strong>{item.name}</strong> – {item.description || 'No description'} (Qty: {item.quantity})
+          </li>
         ))}
-      </select>
-
-      <select
-        value={locationId ?? ''}
-        onChange={(e) => setLocationId(Number(e.target.value))}
-        required
-      >
-        <option value="">Select Location</option>
-        {locations.map((loc: any) => (
-          <option key={loc.id} value={loc.id}>
-            {loc.name} (ID: {loc.id})
-          </option>
-        ))}
-      </select>
-
-      <button type="submit">➕ Add Item</button>
-    </form>
+      </ul>
+    </div>
   );
 };
 
-export default ItemForm;
+export default ItemsPage;

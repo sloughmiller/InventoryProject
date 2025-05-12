@@ -57,12 +57,11 @@ const App: React.FC = () => {
           path="/items"
           element={
             <ProtectedRoute>
-              <ItemsPage onItemCreated={function (): void {
-                throw new Error('Function not implemented.');
-              } } />
+              <ItemsPage />
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/categories"
           element={

@@ -1,39 +1,66 @@
-import React, { useState } from 'react';
+// src/components/ItemForm.tsx
+import React, { useEffect, useState } from 'react';
 import api from '../api/api';
 
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface Location {
+  id: number;
+  name: string;
+}
+
 interface ItemFormProps {
-  onItemCreated: () => void;
+  onItemCreated?: () => void;
 }
 
 const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [locationId, setLocationId] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>(''); // category name
+  const [selectedLocation, setSelectedLocation] = useState<string>(''); // location name
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    api.get('/categories/').then(res => setCategories(res.data));
+    api.get('/locations/').then(res => setLocations(res.data));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const category = categories.find(c => c.name === selectedCategory);
+    const location = locations.find(l => l.name === selectedLocation);
+
+    if (!category || !location) {
+      setError('Please select valid category and location.');
+      return;
+    }
+
     try {
       await api.post('/items/', {
         name,
         description,
-        quantity: Number(quantity),
-        category_id: Number(categoryId),
-        location_id: Number(locationId),
+        quantity,
+        category_id: category.id,
+        location_id: location.id,
       });
-      // Clear form
+
       setName('');
       setDescription('');
-      setQuantity('');
-      setCategoryId('');
-      setLocationId('');
+      setQuantity(1);
+      setSelectedCategory('');
+      setSelectedLocation('');
       setError('');
-      onItemCreated(); // trigger refresh
+      onItemCreated?.();
     } catch (err) {
       console.error('❌ Failed to create item:', err);
-      setError('Failed to create item. Make sure all fields are valid.');
+      setError('Failed to create item.');
     }
   };
 
@@ -57,23 +84,35 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated }) => {
         type="number"
         placeholder="Quantity"
         value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
+        onChange={(e) => setQuantity(Number(e.target.value))}
         required
       />
-      <input
-        type="number"
-        placeholder="Category ID"
-        value={categoryId}
-        onChange={(e) => setCategoryId(e.target.value)}
+
+      <select
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
         required
-      />
-      <input
-        type="number"
-        placeholder="Location ID"
-        value={locationId}
-        onChange={(e) => setLocationId(e.target.value)}
+      >
+        <option value="">Select Category</option>
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.name}>
+            {cat.name}
+          </option>
+        ))}
+      </select>
+
+      <select
+        value={selectedLocation}
+        onChange={(e) => setSelectedLocation(e.target.value)}
         required
-      />
+      >
+        <option value="">Select Location</option>
+        {locations.map((loc) => (
+          <option key={loc.id} value={loc.name}>
+            {loc.name}
+          </option>
+        ))}
+      </select>
 
       <button type="submit">➕ Add Item</button>
     </form>
