@@ -4,7 +4,10 @@ import os
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+print("🚀 Starting seed script")
+
 from app.database import SessionLocal, init_db
+print("✅ Imported DB modules")
 from app import models
 
 def seed_data():
@@ -61,5 +64,8 @@ def seed_data():
     print("✅ Seed data inserted successfully!")
 
 if __name__ == "__main__":
+    print("🔧 Calling init_db()...")
     init_db()
+    print("✅ Database initialized.")
     seed_data()
+    print("🎉 Seed complete.")
