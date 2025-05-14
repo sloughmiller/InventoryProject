@@ -49,4 +49,3 @@ schema.sql
 models.py
 alembic.ini
 .env
-.env
