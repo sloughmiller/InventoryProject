@@ -49,3 +49,5 @@ schema.sql
 models.py
 alembic.ini
 .env
+frontend/cert/cert.pem
+frontend/cert/key.pem

@@ -4,7 +4,7 @@ import axios from 'axios';
 console.log("🔧 Axios base URL:", import.meta.env.VITE_API_URL);
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || window.location.origin.replace(':5173', ':8000'),
 });
 
 api.interceptors.request.use((config) => {

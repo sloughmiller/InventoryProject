@@ -31,8 +31,11 @@ const ItemsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold mb-4 text-gray-800">📦 Inventory Items</h2>
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold mb-2 text-gray-900 flex items-center gap-2">
+        📦 Inventory Items
+      </h2>
+      <p className="text-gray-600 mb-6">Manage and review your current inventory.</p>
 
       {error && (
         <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
@@ -40,32 +43,46 @@ const ItemsPage: React.FC = () => {
         </p>
       )}
 
-      <div className="mb-8">
-        <ItemForm onItemCreated={fetchItems} />
-      </div>
+      <section className="mb-10">
+        <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+          ➕ Add New Item
+        </h3>
+        <div className="bg-white p-4 rounded shadow">
+          <ItemForm onItemCreated={fetchItems} />
+        </div>
+      </section>
 
-      <h3 className="text-2xl font-semibold mb-4 text-gray-700">🗂️ Current Items</h3>
-
-      {items.length === 0 ? (
-        <p className="text-gray-500">No items found.</p>
-      ) : (
-        <ul className="space-y-4">
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className="bg-white shadow-md rounded p-4 border border-gray-200"
-            >
-              <div className="text-xl font-medium text-gray-800">{item.name}</div>
-              <div className="text-gray-600 italic">
-                {item.description || 'No description'}
+      <section>
+        <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+          📂 Current Items
+        </h3>
+        {items.length === 0 ? (
+          <p className="text-gray-500">No items found. Add your first item above.</p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white shadow border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
+              >
+                <h4 className="text-xl font-bold text-gray-800 mb-1">{item.name}</h4>
+                <p className="text-gray-600 italic mb-2">
+                  {item.description || 'No description'}
+                </p>
+                <p className="text-sm text-gray-700">
+                  Quantity: <span className="font-semibold">{item.quantity}</span>
+                </p>
+                <button
+                  className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
+                  onClick={() => alert(`Edit item ${item.name}`)}
+                >
+                  ✏️ Edit Item
+                </button>
               </div>
-              <div className="text-sm text-gray-700 mt-1">
-                Quantity: <span className="font-semibold">{item.quantity}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 };

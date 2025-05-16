@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import UserProfile from '../components/UserProfile';
-import UserList from '../components/UserList';
 import { fetchCurrentUser } from '../api/api';
 
 const DashboardPage: React.FC = () => {
@@ -28,57 +27,51 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-4">📊 Dashboard</h2>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+      <header className="text-center space-y-2">
+        <h2 className="text-3xl font-bold">📊 Dashboard</h2>
+        {loading ? (
+          <p className="text-gray-500">Loading your profile...</p>
+        ) : (
+          <p className="text-lg">
+            👋 Welcome, <span className="font-semibold text-blue-600">{username}</span>!
+          </p>
+        )}
+      </header>
 
-      {loading ? (
-        <p className="text-gray-600">Loading your profile...</p>
-      ) : (
-        <p className="text-lg mb-4">
-          👋 Welcome, <strong className="text-blue-600">{username}</strong>!
-        </p>
-      )}
-
-      <div className="flex flex-wrap gap-3 mb-6">
+      <nav className="flex flex-wrap justify-center gap-4">
         <button
           onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow transition"
         >
           🚪 Logout
         </button>
 
         <Link to="/items">
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow transition">
             📦 View Items
           </button>
         </Link>
 
         <Link to="/categories">
-          <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+          <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow transition">
             📂 View Categories
           </button>
         </Link>
 
         <Link to="/locations">
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+          <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow transition">
             📍 View Locations
           </button>
         </Link>
-      </div>
+      </nav>
 
-      <section className="mb-8">
-        <h3 className="text-2xl font-semibold mb-2">👤 My Profile</h3>
-        <div className="bg-white shadow rounded p-4">
-          <UserProfile />
-        </div>
+      <section className="bg-white rounded-xl shadow p-6 space-y-4">
+        <h3 className="text-2xl font-semibold flex items-center gap-2">👤 My Profile</h3>
+        <UserProfile />
       </section>
 
-      <section>
-        <h3 className="text-2xl font-semibold mb-2">📋 All Users</h3>
-        <div className="bg-white shadow rounded p-4">
-          <UserList />
-        </div>
-      </section>
+      {/* 🔒 Removed "All Users" section for now */}
     </div>
   );
 };

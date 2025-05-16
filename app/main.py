@@ -23,11 +23,18 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://localhost:5173",
+        "http://192.168.1.21:5173",
+        "https://192.168.1.21:5173",
+        "https://192.168.1.21",  # Add this line for your mobile to work
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 # ✅ Moved below app declaration
