@@ -23,6 +23,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      
       <h2>Sign Up</h2>
       {error && <p>{error}</p>}
       <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />

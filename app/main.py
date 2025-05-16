@@ -5,7 +5,7 @@ from app import crud, schemas
 from app.api import activity, category, condition, item, location, user, health
 from app.core.logger import logger
 from contextlib import asynccontextmanager
-from app.api import login
+from app.api import auth
 from fastapi.middleware.cors import CORSMiddleware
 
 import logging
@@ -45,7 +45,7 @@ app.include_router(item.router, prefix="/items", tags=["items"])
 app.include_router(location.router, prefix="/locations", tags=["locations"])
 app.include_router(user.router, prefix="/users", tags=["users"])
 app.include_router(health.router, tags=["Health"])
-app.include_router(login.router)
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
 
 
 @app.get("/")

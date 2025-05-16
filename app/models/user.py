@@ -1,7 +1,12 @@
 from sqlalchemy import String, Integer, Boolean, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 from .base import Base
+
+if TYPE_CHECKING:
+    from .item import Item
+    from .activity import Activity
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -12,9 +17,9 @@ class User(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String, unique=True)
-    email: Mapped[str] = mapped_column(String, unique=True)
-    hashed_password: Mapped[str] = mapped_column(String)
+    username: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[Optional[bool]] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[Optional[bool]] = mapped_column(Boolean, default=False)
 

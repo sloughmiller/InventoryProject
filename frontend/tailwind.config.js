@@ -1,8 +1,8 @@
 // tailwind.config.js
-export default {
+module.exports = {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',  // React + Vite standard setup
   ],
   theme: {
     extend: {},
