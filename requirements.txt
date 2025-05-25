@@ -4,8 +4,8 @@ uvicorn[standard]==0.29.0  # includes uvloop, httptools, etc. for production
 # Database and ORM
 sqlalchemy==2.0.29
 alembic==1.13.1
-psycopg[binary]==3.1.18  # psycopg3 replaces psycopg2
-# psycopg2-binary==2.9.9  # old version, avoid mixing with psycopg3
+#psycopg[binary]==3.1.18  # psycopg3 replaces psycopg2
+psycopg2-binary==2.9.9  # old version, avoid mixing with psycopg3
 
 # Pydantic for validation and settings
 pydantic==2.5.3
