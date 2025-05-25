@@ -1,10 +1,29 @@
 fastapi==0.110.0
-uvicorn==0.29.0
+uvicorn[standard]==0.29.0  # includes uvloop, httptools, etc. for production
+
+# Database and ORM
 sqlalchemy==2.0.29
 alembic==1.13.1
-#psycopg2-binary==2.9.9
+psycopg[binary]==3.1.18  # psycopg3 replaces psycopg2
+# psycopg2-binary==2.9.9  # old version, avoid mixing with psycopg3
+
+# Pydantic for validation and settings
 pydantic==2.5.3
 pydantic-settings==2.0.3
 email-validator==2.1.1
+
+# Environment variables
 python-dotenv==1.0.1
+
+# CORS for frontend-backend comms
+fastapi[all]  # includes `jinja2`, `python-multipart`, `itsdangerous`, `pydantic`, `email-validator`, etc.
+
+# Optional but common
+httpx==0.27.0  # for async HTTP requests
+requests==2.31.0  # for sync HTTP requests
+
+# Testing
 pytest==8.2.1
+
+# Gunicorn (if you switch to it later for WSGI/ASGI deployment)
+# gunicorn==21.2.0
