@@ -18,7 +18,13 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("🛑 Shutting down the application...")
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    docs_url="/docs",             # Swagger UI
+    redoc_url="/redoc",           # Optional alternative UI
+    openapi_url="/openapi.json"   # OpenAPI schema
+)
+
 
 
 app.add_middleware(
