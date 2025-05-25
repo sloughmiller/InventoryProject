@@ -27,3 +27,7 @@ pytest==8.2.1
 
 # Gunicorn (if you switch to it later for WSGI/ASGI deployment)
 # gunicorn==21.2.0
+
+
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
