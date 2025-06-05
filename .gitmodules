@@ -1,0 +1,3 @@
+[submodule "frontend/deploy"]
+	path = frontend/deploy
+	url = https://github.com/sloughmiller/inventory.git
