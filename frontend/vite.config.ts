@@ -8,7 +8,9 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
   return {
-    base: '/',
+    // 👇 Set base path to match GitHub Pages repo name
+    base: '/inventory/',
+
     plugins: [
       react(),
       VitePWA({
@@ -20,7 +22,7 @@ export default defineConfig(({ mode }) => {
           start_url: '/',
           display: 'standalone',
           background_color: '#ffffff',
-          theme_color: '#1d4ed8', // Tailwind's blue-700
+          theme_color: '#1d4ed8',
           icons: [
             {
               src: 'pwa-192x192.png',
@@ -36,23 +38,26 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
+
     server: {
-      host: true, // ✅ enables LAN access
+      host: true,
       port: 5173,
-      // ✅ Optional HTTPS for Brave/iOS support
       https: {
         key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
         cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
       },
     },
+
     define: {
       'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
     },
+
     resolve: {
       alias: {
         '@': '/src',
       },
     },
+
     build: {
       outDir: 'dist',
     },
