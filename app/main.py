@@ -35,7 +35,7 @@ app.add_middleware(
         "http://192.168.1.21:5173",
         "https://192.168.1.21:5173",
         "https://192.168.1.21",
-        "https//sloughmiller.github.io"
+        "https://sloughmiller.github.io"
     ],
     allow_credentials=True,
     allow_methods=["*"],
