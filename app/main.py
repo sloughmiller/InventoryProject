@@ -34,7 +34,8 @@ app.add_middleware(
         "https://localhost:5173",
         "http://192.168.1.21:5173",
         "https://192.168.1.21:5173",
-        "https://192.168.1.21",  # Add this line for your mobile to work
+        "https://192.168.1.21",
+        "https//sloughmiller.github.io"
     ],
     allow_credentials=True,
     allow_methods=["*"],
