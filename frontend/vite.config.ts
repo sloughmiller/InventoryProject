@@ -19,18 +19,18 @@ export default defineConfig(({ mode }) => {
         manifest: {
           name: 'Home Inventory App',
           short_name: 'Inventory',
-          start_url: '/',
+          start_url: '/inventory/',
           display: 'standalone',
           background_color: '#ffffff',
           theme_color: '#1d4ed8',
           icons: [
             {
-              src: 'pwa-192x192.png',
+              src: '/inventory/pwa-192x192.png',
               sizes: '192x192',
               type: 'image/png',
             },
             {
-              src: 'pwa-512x512.png',
+              src: '/inventory/ pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
             },
@@ -47,7 +47,6 @@ export default defineConfig(({ mode }) => {
         cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
       },
     },
-
     define: {
       'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
     },
