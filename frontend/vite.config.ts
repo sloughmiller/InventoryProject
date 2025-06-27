@@ -5,7 +5,13 @@ import fs from 'fs';
 import path from 'path';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd());
+  const env = loadEnv(mode || 'production', process.cwd()); // ✅ fallback to production
+  const API_URL = env.VITE_API_URL || 'https://inventoryproject-72il.onrender.com'; // ✅ hard fallback
+
+  console.log('[vite] mode:', mode);
+  console.log('[vite] VITE_API_URL:', API_URL);
+
+
 
   return {
     // 👇 Set base path to match GitHub Pages repo name
