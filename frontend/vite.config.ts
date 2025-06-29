@@ -48,11 +48,14 @@ export default defineConfig(({ mode }) => {
     server: {
       host: true,
       port: 5173,
-      https: {
-        key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
-        cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
-      },
+      ...(process.env.NODE_ENV === 'development' && {
+        https: {
+          key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
+          cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
+        },
+      }),
     },
+
     define: {
       'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL || 'https://inventoryproject-72il.onrender.com'),
     },
