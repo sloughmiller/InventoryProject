@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     // 👇 Set base path to match GitHub Pages repo name
-    base: '/inventory/',
+    base: '/',
 
     plugins: [
       react(),
@@ -25,18 +25,18 @@ export default defineConfig(({ mode }) => {
         manifest: {
           name: 'Home Inventory App',
           short_name: 'Inventory',
-          start_url: '/inventory/',
+          start_url: '/',
           display: 'standalone',
           background_color: '#ffffff',
           theme_color: '#1d4ed8',
           icons: [
             {
-              src: '/inventory/pwa-192x192.png',
+              src: 'pwa-192x192.png',
               sizes: '192x192',
               type: 'image/png',
             },
             {
-              src: '/inventory/pwa-512x512.png',
+              src: 'pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
             },
