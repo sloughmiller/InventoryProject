@@ -34,8 +34,7 @@ app.add_middleware(
         "https://localhost:5173",
         "http://192.168.1.21:5173",
         "https://192.168.1.21:5173",
-        "https://192.168.1.21",
-        "https://sloughmiller.github.io"
+        "https://sloughmiller-inventoryproject.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
