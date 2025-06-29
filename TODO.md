@@ -83,14 +83,14 @@ This file tracks the development progress and planned features for the Home Inve
 
 ## 🚀 DEPLOYMENT & OPTIMIZATION
 
-- [ ] Deploy backend to AWS (Beanstalk / EC2)
-- [ ] Use `.env` for configs (DB, secret keys)
-- [ ] Optimize DB queries; implement pagination
-- [ ] Migrate to PostgreSQL (optional)
-- [ ] Deploy backend to EC2
-- [ ] PostgreSQL + RDS migration
-- [ ] Frontend hosted via Netlify or CloudFront
-- [ ] Move `SECRET_KEY` and credentials to SSM / .env.prod
+- [x] Deploy backend to AWS (Beanstalk / EC2)
+- [x] Use `.env` for configs (DB, secret keys)
+- [x] Optimize DB queries; implement pagination
+- [x] Migrate to PostgreSQL (optional)
+- [x] Deploy backend to EC2
+- [x] PostgreSQL + RDS migration
+- [x] Frontend hosted via Netlify or CloudFront
+- [x] Move `SECRET_KEY` and credentials to SSM / .env.prod
 
 ---
 
