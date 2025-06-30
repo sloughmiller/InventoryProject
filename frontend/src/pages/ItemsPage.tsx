@@ -15,6 +15,7 @@ interface Item {
 const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState('');
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   const fetchItems = async () => {
     try {
@@ -24,6 +25,17 @@ const ItemsPage: React.FC = () => {
     } catch (err) {
       console.error('❌ Failed to fetch items:', err);
       setError('Failed to load items.');
+    }
+  };
+
+  const handleDelete = async (itemId: number) => {
+    if (!confirm('Are you sure you want to delete this item?')) return;
+    try {
+      await api.delete(`/items/${itemId}`);
+      fetchItems();
+    } catch (err) {
+      console.error('❌ Failed to delete item:', err);
+      setError('Failed to delete item.');
     }
   };
 
@@ -51,10 +63,14 @@ const ItemsPage: React.FC = () => {
 
         <section>
           <h3 className="text-2xl font-semibold text-emerald-600 mb-4 flex items-center gap-2">
-            ➕ Add New Item
+            {editingItem ? '✏️ Edit Item' : '➕ Add New Item'}
           </h3>
           <div className="bg-white p-6 rounded shadow">
-            <ItemForm onItemCreated={fetchItems} />
+            <ItemForm
+              onItemCreated={fetchItems}
+              editingItem={editingItem}
+              onEditDone={() => setEditingItem(null)}
+            />
           </div>
         </section>
 
@@ -79,12 +95,20 @@ const ItemsPage: React.FC = () => {
                   <p className="text-sm text-gray-700">
                     Quantity: <span className="font-semibold">{item.quantity}</span>
                   </p>
-                  <button
-                    className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
-                    onClick={() => alert(`Edit item ${item.name}`)}
-                  >
-                    ✏️ Edit Item
-                  </button>
+                  <div className="mt-4 space-y-2">
+                    <button
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
+                      onClick={() => setEditingItem(item)}
+                    >
+                      ✏️ Edit Item
+                    </button>
+                    <button
+                      className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      🗑️ Delete Item
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

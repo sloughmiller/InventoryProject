@@ -12,30 +12,77 @@ interface Location {
   name: string;
 }
 
-interface ItemFormProps {
-  onItemCreated?: () => void;
+interface Item {
+  id: number;
+  name: string;
+  description?: string;
+  quantity: number;
+  category_id: number;
+  location_id: number;
 }
 
-const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated }) => {
+interface ItemFormProps {
+  onItemCreated?: () => void;
+  editingItem?: Item | null;
+  onEditDone?: () => void;
+}
+
+const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditDone }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [categories, setCategories] = useState<Category[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>(''); // category name
-  const [selectedLocation, setSelectedLocation] = useState<string>(''); // location name
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api.get('/categories/').then(res => setCategories(res.data));
-    api.get('/locations/').then(res => setLocations(res.data));
+    const loadData = async () => {
+      const [catRes, locRes] = await Promise.all([
+        api.get('/categories/'),
+        api.get('/locations/'),
+      ]);
+      setCategories(catRes.data);
+      setLocations(locRes.data);
+    };
+    loadData();
   }, []);
+
+  useEffect(() => {
+    if (editingItem) {
+      setName(editingItem.name);
+      setDescription(editingItem.description || '');
+      setQuantity(editingItem.quantity);
+
+      // Try to match category/location name from ID
+      const fetchNames = async () => {
+        try {
+          const catRes = await api.get(`/categories/${editingItem.category_id}`);
+          const locRes = await api.get(`/locations/${editingItem.location_id}`);
+          setSelectedCategory(catRes.data.name);
+          setSelectedLocation(locRes.data.name);
+        } catch (err) {
+          console.error('❌ Failed to load category or location names', err);
+        }
+      };
+      fetchNames();
+    } else {
+      // Reset form if switching away from editing
+      setName('');
+      setDescription('');
+      setQuantity(1);
+      setSelectedCategory('');
+      setSelectedLocation('');
+      setError('');
+    }
+  }, [editingItem]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const category = categories.find(c => c.name === selectedCategory);
-    const location = locations.find(l => l.name === selectedLocation);
+    const category = categories.find((c) => c.name === selectedCategory);
+    const location = locations.find((l) => l.name === selectedLocation);
 
     if (!category || !location) {
       setError('Please select valid category and location.');
@@ -43,45 +90,65 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated }) => {
     }
 
     try {
-      await api.post('/items/', {
-        name,
-        description,
-        quantity,
-        category_id: category.id,
-        location_id: location.id,
-      });
+      if (editingItem) {
+        // Edit mode: PUT
+        await api.put(`/items/${editingItem.id}`, {
+          name,
+          description,
+          quantity,
+          category_id: category.id,
+          location_id: location.id,
+        });
+        onEditDone?.();
+      } else {
+        // Create mode: POST
+        await api.post('/items/', {
+          name,
+          description,
+          quantity,
+          category_id: category.id,
+          location_id: location.id,
+        });
+        onItemCreated?.();
+      }
 
+      // Reset form
       setName('');
       setDescription('');
       setQuantity(1);
       setSelectedCategory('');
       setSelectedLocation('');
       setError('');
-      onItemCreated?.();
     } catch (err) {
-      console.error('❌ Failed to create item:', err);
-      setError('Failed to create item.');
+      console.error('❌ Failed to save item:', err);
+      setError('Failed to save item.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h4>Add New Item</h4>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <h4 className="text-xl font-semibold">
+        {editingItem ? '✏️ Edit Item' : '➕ Add New Item'}
+      </h4>
+
+      {error && <p className="text-red-600">{error}</p>}
 
       <input
+        className="w-full border p-2 rounded"
         placeholder="Item Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
       />
       <input
+        className="w-full border p-2 rounded"
         placeholder="Description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
       <input
         type="number"
+        className="w-full border p-2 rounded"
         placeholder="Quantity"
         value={quantity}
         onChange={(e) => setQuantity(Number(e.target.value))}
@@ -89,6 +156,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated }) => {
       />
 
       <select
+        className="w-full border p-2 rounded"
         value={selectedCategory}
         onChange={(e) => setSelectedCategory(e.target.value)}
         required
@@ -102,6 +170,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated }) => {
       </select>
 
       <select
+        className="w-full border p-2 rounded"
         value={selectedLocation}
         onChange={(e) => setSelectedLocation(e.target.value)}
         required
@@ -114,7 +183,12 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated }) => {
         ))}
       </select>
 
-      <button type="submit">➕ Add Item</button>
+      <button
+        type="submit"
+        className="bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded"
+      >
+        {editingItem ? '💾 Save Changes' : '➕ Add Item'}
+      </button>
     </form>
   );
 };
