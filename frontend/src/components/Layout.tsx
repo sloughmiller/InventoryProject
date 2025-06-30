@@ -1,31 +1,31 @@
 // src/components/Layout.tsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const location = useLocation();
   const navigate = useNavigate();
 
+  const showBackButton = location.pathname !== '/dashboard';
+
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
-      <nav className="bg-emerald-700 text-white px-4 py-3 shadow-md">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-lg font-semibold">🏠 Home Inventory</h1>
+    <div className="min-h-screen bg-gray-100 relative">
+      <header className="bg-emerald-700 text-white px-4 py-3 shadow relative flex justify-center items-center">
+        <h1 className="text-xl font-bold">🏠 Home Inventory</h1>
+
+        {showBackButton && (
           <button
             onClick={() => navigate('/dashboard')}
-            className="bg-white text-emerald-700 font-semibold px-3 py-1 rounded hover:bg-gray-100"
+            className="absolute left-4 top-3 text-white hover:text-gray-200 focus:outline-none"
+            aria-label="Back to Dashboard"
           >
-            ← Back to Dashboard
+            <ArrowLeftIcon className="h-6 w-6" />
           </button>
-        </div>
-      </nav>
+        )}
+      </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        {children}
-      </main>
+      <main className="p-4">{children}</main>
     </div>
   );
 };
