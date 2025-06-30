@@ -32,18 +32,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
   };
 
 
-
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="text-lg font-semibold text-blue-800">Login</h2>
+
+      {error && (
+        <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">
+          {error}
+        </p>
+      )}
 
       <div>
         <input
+          type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
+          className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500"
         />
       </div>
 
@@ -54,12 +60,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500"
         />
       </div>
 
-      <button type="submit">Login</button>
+      <button
+        type="submit"
+        className="w-full rounded-md bg-green-600 px-4 py-2 text-white font-semibold hover:bg-green-700 transition"
+      >
+        Login
+      </button>
     </form>
   );
 };
-
 export default LoginForm;

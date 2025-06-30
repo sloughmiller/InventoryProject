@@ -11,7 +11,7 @@ const LoginPage: React.FC = () => {
   return (
     <Layout>
       <h1 className="text-3xl font-semibold text-center">Welcome Back</h1>
-      <p className="mt-2 text-center text-sm text-gray-700">
+      <p className="mt-2 text-center text-sm text-gray-50">
         Log in to continue managing your inventory.
       </p>
 
@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
         <LoginForm onLoginSuccess={handleSuccess} />
       </div>
 
-      <p className="mt-6 text-center text-sm text-gray-700">
+      <p className="mt-6 text-center text-sm text-blue-700">
         Don’t have an account?{' '}
         <button
           onClick={goToSignup}
