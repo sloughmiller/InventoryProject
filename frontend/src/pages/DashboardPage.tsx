@@ -29,7 +29,15 @@ const DashboardPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="space-y-8">
+      <div className="relative max-w-5xl mx-auto px-4 py-8 space-y-8">
+        {/* 🔒 Logout Button (Top Right) */}
+        <button
+          onClick={handleLogout}
+          className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow transition"
+        >
+          🚪 Logout
+        </button>
+
         <header className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-emerald-700">📊 Dashboard</h2>
           {loading ? (
@@ -42,13 +50,6 @@ const DashboardPage: React.FC = () => {
         </header>
 
         <nav className="flex flex-wrap justify-center gap-4">
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow transition"
-          >
-            🚪 Logout
-          </button>
-
           <Link to="/items">
             <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow transition">
               📦 View Items
