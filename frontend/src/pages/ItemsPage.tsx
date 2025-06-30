@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../api/api';
+import { getItems, deleteItem } from '../api/itemApi'
 import ItemForm from '../components/ItemForm';
 import Layout from '../components/Layout';
 
@@ -19,8 +19,8 @@ const ItemsPage: React.FC = () => {
 
   const fetchItems = async () => {
     try {
-      const res = await api.get('/items/');
-      setItems(res.data);
+      const data = await getItems();
+      setItems(data);
       setError('');
     } catch (err) {
       console.error('❌ Failed to fetch items:', err);
@@ -31,7 +31,8 @@ const ItemsPage: React.FC = () => {
   const handleDelete = async (itemId: number) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
     try {
-      await api.delete(`/items/${itemId}`);
+      await deleteItem(itemId);
+
       fetchItems();
     } catch (err) {
       console.error('❌ Failed to delete item:', err);
