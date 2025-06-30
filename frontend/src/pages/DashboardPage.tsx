@@ -22,22 +22,10 @@ const DashboardPage: React.FC = () => {
     loadUser();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/login';
-  };
 
   return (
     <Layout>
-      <div className="relative max-w-5xl mx-auto px-4 py-8 space-y-8">
-        {/* 🔒 Logout Button (Top Right) */}
-        <button
-          onClick={handleLogout}
-          className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow transition"
-        >
-          🚪 Logout
-        </button>
-
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
         <header className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-emerald-700">📊 Dashboard</h2>
           {loading ? (
