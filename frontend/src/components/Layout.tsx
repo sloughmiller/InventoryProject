@@ -33,21 +33,22 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <div className="w-6" />
         )}
 
-        {/* Title or center spacer */}
+        {/* Spacer (center) */}
         <div />
 
         {/* Right-side controls */}
         <div className="flex items-center space-x-3">
-          {/* Refresh button (always visible) */}
+          {/* ✅ Refresh button */}
           <button
             onClick={handleRefresh}
-            className="text-emerald-600 hover:text-emerald-800"
+            className="flex items-center gap-1 px-2 py-1 bg-emerald-100 rounded hover:bg-emerald-200 text-emerald-700"
             title="Refresh"
           >
-            <ArrowPathIcon className="h-6 w-6" />
+            <ArrowPathIcon className="h-5 w-5" />
+            <span className="text-sm font-medium">Refresh</span>
           </button>
 
-          {/* Logout (only on dashboard) */}
+          {/* ✅ Logout (only on dashboard) */}
           {isDashboard ? (
             <button
               onClick={handleLogout}
