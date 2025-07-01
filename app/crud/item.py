@@ -8,17 +8,7 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Item).offset(skip).limit(limit).all()
 
 def create_item(db: Session, item: schemas.ItemCreate):
-    db_item = models.Item(
-        name=item.name,
-        description=item.description,
-        barcode=item.barcode,
-        value=item.value,
-        quantity=item.quantity,
-        category_id=item.category_id,
-        location_id=item.location_id,
-        condition_id=item.condition_id,
-        owner_id=item.owner_id
-    )
+    db_item = models.Item(**item.dict())
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

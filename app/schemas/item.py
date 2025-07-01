@@ -12,11 +12,10 @@ class ItemBase(BaseModel):
     category_id: Optional[int] = None
     location_id: Optional[int] = None
     condition_id: Optional[int] = None
+    inventory_id: int
 
 class ItemCreate(ItemBase):
-#    name: str
-#    description: Optional[str] = None
-    owner_id: Optional[int] = None
+    pass
 
 class ItemUpdate(BaseModel):
     name: Optional[str] = None
@@ -27,14 +26,13 @@ class ItemUpdate(BaseModel):
     category_id: Optional[int] = None
     location_id: Optional[int] = None
     condition_id: Optional[int] = None
-    owner_id: Optional[int] = None
+    inventory_id: Optional[int] = None
 
     class Config:
         model_config = ConfigDict(from_attributes=True)
 
 class Item(ItemBase):
     id: int
-    owner_id: int
 
     class Config:
         model_config = ConfigDict(from_attributes=True)
@@ -50,7 +48,7 @@ class Item(ItemBase):
                 "category_id": 2,
                 "location_id": 3,
                 "condition_id": 1,
-                "owner_id": 1
+                "inventory_id": 1
             }
         }
         # This allows the model to work with ORM objects

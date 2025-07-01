@@ -18,9 +18,8 @@ Implement support for:
 - [x] Create Inventory schemas (`schemas/inventory.py`)
 - [x] Create Inventory CRUD functions (`crud/inventory.py`)
 - [x] Create Inventory API routes (`api/inventory.py`)
-- [ ] Update `Item` model to use `inventory_id` instead of `owner_id`
-- [ ] Update `ItemCreate`, `ItemUpdate`, `Item` schemas to include `inventory_id`
-- [ ] Update all Item CRUD and API logic to use `inventory_id`
+- [x] Update `Item` model to use `inventory_id` instead of `owner_id`
+- [] Update all Item CRUD and API logic to use `inventory_id`
 - [ ] Run Alembic migration to add `inventory_id` to `items`
 
 ### 🔍 Checkpoint

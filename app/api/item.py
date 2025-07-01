@@ -26,9 +26,7 @@ def create_item(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    item_data = item.dict()
-    item_data["owner_id"] = current_user.id
-    return crud.item.create_item(db, schemas.ItemCreate(**item_data))
+    return crud.item.create_item(db, item)
 
 
 @router.put("/{item_id}", response_model=schemas.Item)
