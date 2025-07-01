@@ -30,7 +30,7 @@ interface ItemFormProps {
 const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditDone }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState('1');
   const [categories, setCategories] = useState<Category[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -53,7 +53,9 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
     if (editingItem) {
       setName(editingItem.name);
       setDescription(editingItem.description || '');
-      setQuantity(editingItem.quantity);
+      setQuantity(editingItem.quantity !== undefined ? editingItem.quantity.toString() : '1');
+
+
 
       // Try to match category/location name from ID
       const fetchNames = async () => {
@@ -71,7 +73,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       // Reset form if switching away from editing
       setName('');
       setDescription('');
-      setQuantity(1);
+      setQuantity('');
       setSelectedCategory('');
       setSelectedLocation('');
       setError('');
@@ -89,13 +91,18 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       return;
     }
 
+    const parsedQuantity = parseInt(quantity, 10);
+    if (isNaN(parsedQuantity) || parsedQuantity < 0) {
+      setError('Quantity must be a valid number.');
+      return;
+    }
+
     try {
       if (editingItem) {
-        // Edit mode: PUT
         await api.put(`/items/${editingItem.id}`, {
           name,
           description,
-          quantity,
+          quantity: parsedQuantity, // ✅ FIXED: use parsed int
           category_id: category.id,
           location_id: location.id,
         });
@@ -105,17 +112,18 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
         await api.post('/items/', {
           name,
           description,
-          quantity,
+          quantity: parsedQuantity,
           category_id: category.id,
           location_id: location.id,
         });
+
         onItemCreated?.();
       }
 
       // Reset form
       setName('');
       setDescription('');
-      setQuantity(1);
+      setQuantity('');
       setSelectedCategory('');
       setSelectedLocation('');
       setError('');
@@ -151,9 +159,11 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
         className="w-full border p-2 rounded"
         placeholder="Quantity"
         value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
+        onChange={(e) => setQuantity(e.target.value)}
         required
       />
+
+
 
       <select
         className="w-full border p-2 rounded"

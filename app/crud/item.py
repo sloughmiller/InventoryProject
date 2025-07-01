@@ -13,6 +13,7 @@ def create_item(db: Session, item: schemas.ItemCreate):
         description=item.description,
         barcode=item.barcode,
         value=item.value,
+        quantity=item.quantity,
         category_id=item.category_id,
         location_id=item.location_id,
         condition_id=item.condition_id,
