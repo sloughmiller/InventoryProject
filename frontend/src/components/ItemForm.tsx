@@ -53,7 +53,8 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
     if (editingItem) {
       setName(editingItem.name);
       setDescription(editingItem.description || '');
-      setQuantity(editingItem.quantity !== undefined ? editingItem.quantity.toString() : '1');
+      setQuantity(editingItem.quantity != null ? editingItem.quantity.toString() : '1');
+
 
 
 
@@ -102,7 +103,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
         await api.put(`/items/${editingItem.id}`, {
           name,
           description,
-          quantity: parsedQuantity, // ✅ FIXED: use parsed int
+          quantity: parsedQuantity,
           category_id: category.id,
           location_id: location.id,
         });
