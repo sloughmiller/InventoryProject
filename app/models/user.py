@@ -6,6 +6,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .item import Item
     from .activity import Activity
+    from .inventory import Inventory
 
 
 class User(Base):
@@ -23,5 +24,12 @@ class User(Base):
     is_active: Mapped[Optional[bool]] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[Optional[bool]] = mapped_column(Boolean, default=False)
 
-    items: Mapped[List['Item']] = relationship('Item', back_populates='owner', cascade='all, delete', passive_deletes=True)
-    activities: Mapped[List['Activity']] = relationship('Activity', back_populates='user', cascade='all, delete', passive_deletes=True)
+    items: Mapped[List['Item']] = relationship(
+        'Item', back_populates='owner', cascade='all, delete', passive_deletes=True
+    )
+    activities: Mapped[List['Activity']] = relationship(
+        'Activity', back_populates='user', cascade='all, delete', passive_deletes=True
+    )
+    inventories: Mapped[List['Inventory']] = relationship(
+        'Inventory', back_populates='owner', cascade='all, delete', passive_deletes=True
+    )

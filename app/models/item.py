@@ -22,11 +22,11 @@ class Item(Base):
     category_id: Mapped[Optional[int]] = mapped_column(ForeignKey('categories.id', ondelete='SET NULL'), nullable=True)
     location_id: Mapped[Optional[int]] = mapped_column(ForeignKey('locations.id', ondelete='SET NULL'), nullable=True)
     condition_id: Mapped[Optional[int]] = mapped_column(ForeignKey('conditions.id', ondelete='SET NULL'), nullable=True)
-    owner_id: Mapped[Optional[int]] = mapped_column(ForeignKey('users.id', ondelete='SET NULL'), nullable=True)
-
+    inventory_id: Mapped[int] = mapped_column(ForeignKey('inventories.id', ondelete='CASCADE'), nullable=False)
+    
     category = relationship('Category', back_populates='items')
     condition = relationship('Condition', back_populates='items')
     location = relationship('Location', back_populates='items')
-    owner = relationship('User', back_populates='items')
+    inventory = relationship('Inventory', back_populates='items')
     activities: Mapped[List['Activity']] = relationship('Activity', back_populates='item', cascade='all, delete', passive_deletes=True)
 
