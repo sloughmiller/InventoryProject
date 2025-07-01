@@ -1,5 +1,5 @@
 // src/pages/LocationsPage.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { getLocations, createLocation, deleteLocation, updateLocation } from '../api/locationApi';
 import Layout from '../components/Layout';
 
