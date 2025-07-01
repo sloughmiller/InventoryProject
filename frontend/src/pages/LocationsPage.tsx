@@ -1,5 +1,5 @@
 // src/pages/LocationsPage.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getLocations, createLocation, deleteLocation, updateLocation } from '../api/locationApi';
 import Layout from '../components/Layout';
 
@@ -62,6 +62,11 @@ const LocationsPage: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+  fetchLocations();
+}, []);
+
 
 
   return (
