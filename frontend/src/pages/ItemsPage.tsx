@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { getItems, deleteItem } from '../api/itemApi'
 import ItemForm from '../components/ItemForm';
 import Layout from '../components/Layout';
+import ItemCard from '../components/cards/ItemCard';
+import api from '../api/api';
+
 
 interface Item {
   id: number;
@@ -16,17 +19,38 @@ const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState('');
   const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [categoryMap, setCategoryMap] = useState<Record<number, string>>({});
+  const [locationMap, setLocationMap] = useState<Record<number, string>>({});
+
 
   const fetchItems = async () => {
     try {
-      const data = await getItems();
-      setItems(data);
+      const [itemsData, categoriesData, locationsData] = await Promise.all([
+        getItems(),
+        api.get('/categories/'),
+        api.get('/locations/')
+      ]);
+
+      const catMap: Record<number, string> = {};
+      categoriesData.data.forEach((cat: { id: number; name: string }) => {
+        catMap[cat.id] = cat.name;
+      });
+
+      const locMap: Record<number, string> = {};
+      locationsData.data.forEach((loc: { id: number; name: string }) => {
+        locMap[loc.id] = loc.name;
+      });
+
+      setItems(itemsData);
+      setCategoryMap(catMap);
+      setLocationMap(locMap);
       setError('');
     } catch (err) {
-      console.error('❌ Failed to fetch items:', err);
+      console.error('❌ Failed to fetch items or related data:', err);
       setError('Failed to load items.');
     }
   };
+
 
   const handleDelete = async (itemId: number) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
@@ -85,32 +109,16 @@ const ItemsPage: React.FC = () => {
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {items.map((item) => (
-                <div
+                <ItemCard
                   key={item.id}
-                  className="bg-white shadow border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
-                >
-                  <h4 className="text-xl font-bold text-gray-800 mb-1">{item.name}</h4>
-                  <p className="text-gray-600 italic mb-2">
-                    {item.description || 'No description'}
-                  </p>
-                  <p className="text-sm text-gray-700">
-                    Quantity: <span className="font-semibold">{item.quantity}</span>
-                  </p>
-                  <div className="mt-4 space-y-2">
-                    <button
-                      className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
-                      onClick={() => setEditingItem(item)}
-                    >
-                      ✏️ Edit Item
-                    </button>
-                    <button
-                      className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      🗑️ Delete Item
-                    </button>
-                  </div>
-                </div>
+                  item={item}
+                  categoryName={categoryMap[item.category_id]}
+                  locationName={locationMap[item.location_id]}
+                  onEdit={() => setEditingItem(item)}
+                  onDelete={() => handleDelete(item.id)}
+                />
+
+
               ))}
             </div>
           )}
