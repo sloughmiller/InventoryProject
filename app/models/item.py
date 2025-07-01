@@ -18,6 +18,7 @@ class Item(Base):
     barcode: Mapped[Optional[str]] = mapped_column(String, unique=True, nullable=True)
     purchase_date: Mapped[Optional[datetime.date]] = mapped_column(Date, nullable=True)
     value: Mapped[Optional[decimal.Decimal]] = mapped_column(Numeric(10, 2), nullable=True)
+    quantity: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     category_id: Mapped[Optional[int]] = mapped_column(ForeignKey('categories.id', ondelete='SET NULL'), nullable=True)
     location_id: Mapped[Optional[int]] = mapped_column(ForeignKey('locations.id', ondelete='SET NULL'), nullable=True)
     condition_id: Mapped[Optional[int]] = mapped_column(ForeignKey('conditions.id', ondelete='SET NULL'), nullable=True)
@@ -28,3 +29,4 @@ class Item(Base):
     location = relationship('Location', back_populates='items')
     owner = relationship('User', back_populates='items')
     activities: Mapped[List['Activity']] = relationship('Activity', back_populates='item', cascade='all, delete', passive_deletes=True)
+
