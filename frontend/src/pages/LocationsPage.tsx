@@ -1,6 +1,6 @@
 // src/pages/LocationsPage.tsx
 import React, { useEffect, useState } from 'react';
-import api from '../api/api';
+import { getLocations, createLocation, deleteLocation, updateLocation } from '../api/locationApi';
 import Layout from '../components/Layout';
 
 interface Location {
@@ -17,21 +17,17 @@ const LocationsPage: React.FC = () => {
 
   const fetchLocations = async () => {
     try {
-      const response = await api.get('/locations/');
-      setLocations(response.data);
+      const data = await getLocations();
+      setLocations(data);
     } catch (err) {
       console.error('❌ Failed to fetch locations:', err);
     }
   };
 
-  useEffect(() => {
-    fetchLocations();
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post('/locations/', { name, description });
+      await createLocation({ name, description });
       setName('');
       setDescription('');
       setError('');
@@ -41,6 +37,32 @@ const LocationsPage: React.FC = () => {
       setError('Failed to create location.');
     }
   };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteLocation(id);
+      fetchLocations();
+    } catch (err) {
+      console.error(`❌ Failed to delete location ${id}:`, err);
+    }
+  };
+
+  const handleEdit = async (id: number) => {
+    const newName = prompt('Enter new location name:');
+    const newDescription = prompt('Enter new description (optional):');
+    if (newName !== null) {
+      try {
+        await updateLocation(id, {
+          name: newName,
+          description: newDescription || undefined,
+        });
+        fetchLocations();
+      } catch (err) {
+        console.error(`❌ Failed to update location ${id}:`, err);
+      }
+    }
+  };
+
 
   return (
     <Layout>
@@ -87,15 +109,30 @@ const LocationsPage: React.FC = () => {
           <h3 className="text-2xl font-semibold text-emerald-700 mb-4">📋 Existing Locations</h3>
           <ul className="space-y-2">
             {locations.map((loc) => (
-              <li key={loc.id} className="bg-white p-4 shadow rounded">
-                <strong className="text-emerald-700">{loc.name}</strong> —{' '}
-                <span className="text-gray-700">
-                  {loc.description || 'No description'}
-                </span>{' '}
-                <span className="text-gray-500 text-sm">(ID: {loc.id})</span>
+              <li key={loc.id} className="bg-white p-4 shadow rounded flex justify-between items-center">
+                <div>
+                  <strong className="text-emerald-700">{loc.name}</strong> —{' '}
+                  <span className="text-gray-700">{loc.description || 'No description'}</span>{' '}
+                  <span className="text-gray-500 text-sm">(ID: {loc.id})</span>
+                </div>
+                <div className="space-x-2">
+                  <button
+                    onClick={() => handleEdit(loc.id)}
+                    className="text-sm text-blue-600 hover:text-blue-800 underline"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(loc.id)}
+                    className="text-sm text-red-600 hover:text-red-800 underline"
+                  >
+                    Delete
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
+
         </section>
       </div>
     </Layout>
