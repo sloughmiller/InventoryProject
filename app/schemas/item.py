@@ -8,6 +8,7 @@ class ItemBase(BaseModel):
     barcode: Optional[str] = None
     purchase_date: Optional[date] = None
     value: Optional[float] = None
+    quantity: Optional[int] = None
     category_id: Optional[int] = None
     location_id: Optional[int] = None
     condition_id: Optional[int] = None
@@ -22,6 +23,7 @@ class ItemUpdate(BaseModel):
     description: Optional[str] = None
     barcode: Optional[str] = None
     value: Optional[float] = None
+    quantity: Optional[int] = None
     category_id: Optional[int] = None
     location_id: Optional[int] = None
     condition_id: Optional[int] = None
@@ -44,6 +46,7 @@ class Item(ItemBase):
                 "barcode": "123456789",
                 "purchase_date": "2023-08-15",
                 "value": 899.99,
+                "quantity": 2,
                 "category_id": 2,
                 "location_id": 3,
                 "condition_id": 1,
