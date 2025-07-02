@@ -19,13 +19,13 @@ Implement support for:
 - [x] Create Inventory CRUD functions (`crud/inventory.py`)
 - [x] Create Inventory API routes (`api/inventory.py`)
 - [x] Update `Item` model to use `inventory_id` instead of `owner_id`
-- [ ] Update all Item CRUD and API logic to use `inventory_id`
+- [x] Update all Item CRUD and API logic to use `inventory_id`
 - [x] Run Alembic migration to add `inventory_id` to `items`
 
 ### 🔍 Checkpoint
-- [ ] Can create a named inventory
-- [ ] Can assign new items to an inventory
-- [ ] Can fetch only items for the current user's inventories
+- [x] Can create a named inventory
+- [x] Can assign new items to an inventory
+- [x] Can fetch only items for the current user's inventories
 
 ---
 
