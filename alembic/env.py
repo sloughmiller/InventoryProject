@@ -35,6 +35,7 @@ from app.models import (
     Condition,
     Item,
     Activity,
+    Inventory,
 )
 
 target_metadata = Base.metadata
