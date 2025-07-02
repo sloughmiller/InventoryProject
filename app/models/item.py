@@ -1,10 +1,15 @@
 from sqlalchemy import String, Integer, Date, Numeric, ForeignKey, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 import datetime
 import decimal
 from .base import Base
 
+if TYPE_CHECKING:
+    from .inventory import Inventory
+    from .activity import Activity
+    
+    
 class Item(Base):
     __tablename__ = 'items'
     __table_args__ = (
