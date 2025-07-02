@@ -20,7 +20,7 @@ Implement support for:
 - [x] Create Inventory API routes (`api/inventory.py`)
 - [x] Update `Item` model to use `inventory_id` instead of `owner_id`
 - [ ] Update all Item CRUD and API logic to use `inventory_id`
-- [ ] Run Alembic migration to add `inventory_id` to `items`
+- [x] Run Alembic migration to add `inventory_id` to `items`
 
 ### 🔍 Checkpoint
 - [ ] Can create a named inventory
