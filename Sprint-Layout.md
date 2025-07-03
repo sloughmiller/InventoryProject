@@ -34,7 +34,7 @@ Implement support for:
 **Goal**: Enable other users to access an inventory based on shared permissions.
 
 ### ✅ Tasks
-- [ ] Create `SharedInventory` model (`models/shared_inventory.py`)
+- [X] Create `SharedInventory` model (`models/shared_inventory.py`)
 - [ ] Create SharedInventory schemas (`schemas/shared_inventory.py`)
 - [ ] Create CRUD for SharedInventory (`crud/shared_inventory.py`)
 - [ ] Create SharedInventory API routes (`api/shared_inventory.py`)
