@@ -74,23 +74,34 @@ Implement support for:
 
 ---
 
-## 📆 Sprint 4 – Frontend Coordination & Testing
+## ✅ Sprint 4 Tasks (Updated)
 
-**Goal**: Connect frontend forms with new inventory logic and test multi-user flows.
+- [x] Update item form to support selecting from user’s inventories  
+- [x] Update dashboard to filter by inventory
+- [ ] **Create `InventorySelectorPage`** to choose current working inventory after login  
+- [ ] **Add `InventoryContext`** to store selected inventory across the app  
+- [ ] Create **Inventory Manager Page** (`/manage-inventories`)
+  - [ ] List owned inventories
+  - [ ] Create new inventory
+  - [ ] Rename/delete inventory
+- [ ] Add **Shared User Management** tools:
+  - [ ] View shared users & roles
+  - [ ] Add user with `viewer` or `admin` role
+  - [ ] Remove shared user access
+- [ ] **Route protection**: Ensure user can't access inventory they're not authorized for
+- [ ] Final Testing: create + share + restrict access between test users
 
-### ✅ Sprint 4 Tasks
+---
 
-- [X] Update item form to support selecting from user’s inventories
-- [X] Update dashboard to filter by inventory
-- [ ] Add simple inventory manager (create, rename, share)
-- [ ] Add shared user management (list/add/remove roles)
-- [ ] Full testing: create + share + restrict access between test users
+## 🔍 Sprint 4 Checkpoint (Updated)
 
-### 🔍 Sprint 4 Checkpoint
+- [ ] User is routed to `/select-inventory` after login  
+- [ ] Selected inventory is stored and used globally (via context or localStorage)  
+- [ ] Users can create, rename, and manage their own inventories  
+- [ ] Users can share inventories with others and manage roles  
+- [ ] Users only see items within inventories they have access to  
+- [ ] Unauthorized access returns 403
 
-- [ ] Frontend can create and assign inventories
-- [ ] Frontend can manage inventory sharing and roles
-- [ ] Users see only their items and shared ones
 
 ---
 
