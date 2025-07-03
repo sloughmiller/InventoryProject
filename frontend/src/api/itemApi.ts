@@ -1,14 +1,7 @@
 // src/api/itemApi.ts
 import api from './api';
+import type { Item } from '../types'
 
-export interface Item {
-  id: number;
-  name: string;
-  description?: string;
-  quantity: number;
-  category_id: number;
-  location_id: number;
-}
 
 // ✅ GET all items
 export async function getItems(): Promise<Item[]> {

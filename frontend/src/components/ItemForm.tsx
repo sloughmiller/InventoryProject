@@ -1,6 +1,8 @@
 // src/components/ItemForm.tsx
 import React, { useEffect, useState } from 'react';
 import api from '../api/api';
+import type { Item, Inventory } from '../types';
+
 
 interface Category {
   id: number;
@@ -12,22 +14,19 @@ interface Location {
   name: string;
 }
 
-interface Item {
-  id: number;
-  name: string;
-  description?: string;
-  quantity: number;
-  category_id: number;
-  location_id: number;
-}
-
 interface ItemFormProps {
   onItemCreated?: () => void;
   editingItem?: Item | null;
   onEditDone?: () => void;
+  inventories: Inventory[];
 }
 
-const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditDone }) => {
+const ItemForm: React.FC<ItemFormProps> = ({
+  onItemCreated,
+  editingItem,
+  onEditDone,
+  inventories,
+}) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [quantity, setQuantity] = useState('1');
@@ -35,6 +34,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedInventory, setSelectedInventory] = useState(''); 
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -53,12 +53,9 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
     if (editingItem) {
       setName(editingItem.name);
       setDescription(editingItem.description || '');
-      setQuantity(editingItem.quantity != null ? editingItem.quantity.toString() : '1');
+      setQuantity(editingItem.quantity.toString());
+      setSelectedInventory(editingItem.inventory_id?.toString() || ''); 
 
-
-
-
-      // Try to match category/location name from ID
       const fetchNames = async () => {
         try {
           const catRes = await api.get(`/categories/${editingItem.category_id}`);
@@ -71,12 +68,12 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       };
       fetchNames();
     } else {
-      // Reset form if switching away from editing
       setName('');
       setDescription('');
       setQuantity('');
       setSelectedCategory('');
       setSelectedLocation('');
+      setSelectedInventory('');
       setError('');
     }
   }, [editingItem]);
@@ -87,8 +84,8 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
     const category = categories.find((c) => c.name === selectedCategory);
     const location = locations.find((l) => l.name === selectedLocation);
 
-    if (!category || !location) {
-      setError('Please select valid category and location.');
+    if (!category || !location || !selectedInventory) {
+      setError('Please select valid inventory, category, and location.');
       return;
     }
 
@@ -99,25 +96,20 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
     }
 
     try {
+      const itemData = {
+        name,
+        description,
+        quantity: parsedQuantity,
+        category_id: category.id,
+        location_id: location.id,
+        inventory_id: parseInt(selectedInventory),
+      };
+
       if (editingItem) {
-        await api.put(`/items/${editingItem.id}`, {
-          name,
-          description,
-          quantity: parsedQuantity,
-          category_id: category.id,
-          location_id: location.id,
-        });
+        await api.put(`/items/${editingItem.id}`, itemData);
         onEditDone?.();
       } else {
-        // Create mode: POST
-        await api.post('/items/', {
-          name,
-          description,
-          quantity: parsedQuantity,
-          category_id: category.id,
-          location_id: location.id,
-        });
-
+        await api.post('/items/', itemData);
         onItemCreated?.();
       }
 
@@ -127,6 +119,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       setQuantity('');
       setSelectedCategory('');
       setSelectedLocation('');
+      setSelectedInventory('');
       setError('');
     } catch (err) {
       console.error('❌ Failed to save item:', err);
@@ -164,7 +157,20 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
         required
       />
 
-
+      {/* ✅ Inventory Select */}
+      <select
+        className="w-full border p-2 rounded"
+        value={selectedInventory}
+        onChange={(e) => setSelectedInventory(e.target.value)}
+        required
+      >
+        <option value="">Select Inventory</option>
+        {inventories.map((inv) => (
+          <option key={inv.id} value={inv.id.toString()}>
+            {inv.name}
+          </option>
+        ))}
+      </select>
 
       <select
         className="w-full border p-2 rounded"
