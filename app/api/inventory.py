@@ -47,7 +47,9 @@ def get_inventory(
     if db_inventory is None:
         raise HTTPException(status_code=404, detail="Inventory not found")
     if db_inventory.owner_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not authorized to view this inventory")
+        raise HTTPException(
+            status_code=403, detail="Not authorized to view this inventory"
+        )
     return db_inventory
 
 
@@ -64,7 +66,9 @@ def update_inventory(
     if not db_inventory:
         raise HTTPException(status_code=404, detail="Inventory not found")
     if db_inventory.owner_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not authorized to edit this inventory")
+        raise HTTPException(
+            status_code=403, detail="Not authorized to edit this inventory"
+        )
     return crud.inventory.update_inventory(db, inventory_id, inventory_update)
 
 
@@ -75,10 +79,23 @@ def delete_inventory(
     db: Session = Depends(get_db),
     current_user: schemas.User = Depends(get_current_user),
 ):
-    print(f"🗑️ Attempting deletion of inventory {inventory_id} by user {current_user.id}")
+    print(
+        f"🗑️ Attempting deletion of inventory {inventory_id} by user {current_user.id}"
+    )
     db_inventory = crud.inventory.get_inventory(db, inventory_id)
     if not db_inventory:
         raise HTTPException(status_code=404, detail="Inventory not found")
     if db_inventory.owner_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not authorized to delete this inventory")
+        raise HTTPException(
+            status_code=403, detail="Not authorized to delete this inventory"
+        )
     return crud.inventory.delete_inventory(db, inventory_id)
+
+
+@router.get("/accessible", response_model=list[schemas.Inventory])
+def get_accessible_inventories(
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_user),
+):
+    print(f"🔍 Fetching accessible inventories for user {current_user.username}")
+    return crud.inventory.get_inventories_user_can_access(db, current_user.id)

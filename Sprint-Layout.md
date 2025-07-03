@@ -59,18 +59,18 @@ Implement support for:
 
 ### ✅ Srpint 3 Tasks
 
-- [ ] Create dependency `get_inventory_role_or_403(user, inventory_id)`
-- [ ] Apply permission checks to all relevant endpoints:
+- [X] Create dependency `get_inventory_role_or_403(user, inventory_id)`
+- [X] Apply permission checks to all relevant endpoints:
   - Item creation → must be `admin`
   - Item update/delete → must be `admin`
   - View inventory/items → must be `admin` or `viewer`
-- [ ] Optionally: Add route to list inventories a user has access to
+- [X] Optionally: Add route to list inventories a user has access to
 
 ### 🔍 Sprint 3 Checkpoint
 
-- [ ] Users can only access their authorized inventories
-- [ ] Admins can modify items, viewers can only read
-- [ ] Unauthorized users receive 403 on access attempt
+- [X] Users can only access their authorized inventories
+- [X] Admins can modify items, viewers can only read
+- [X] Unauthorized users receive 403 on access attempt
 
 ---
 
