@@ -1,8 +1,8 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
-import fs from 'fs';
-import path from 'path';
+//import fs from 'fs';
+//import path from 'path';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode || 'production', process.cwd()); // ✅ fallback to production
@@ -49,10 +49,10 @@ export default defineConfig(({ mode }) => {
       host: true,
       port: 5173,
       ...(process.env.NODE_ENV === 'development' && {
-        https: {
-          key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
-          cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
-        },
+        // https: {
+        //   key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
+        //   cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
+        // },
       }),
     },
 
