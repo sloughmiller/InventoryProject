@@ -7,14 +7,15 @@ if TYPE_CHECKING:
     from .item import Item
     from .activity import Activity
     from .inventory import Inventory
+    from .shared_inventory import SharedInventory
 
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
     __table_args__ = (
-        Index('ix_users_id', 'id'),
-        Index('ix_users_username', 'username', unique=True),
-        Index('ix_users_email', 'email', unique=True),
+        Index("ix_users_id", "id"),
+        Index("ix_users_username", "username", unique=True),
+        Index("ix_users_email", "email", unique=True),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -24,12 +25,19 @@ class User(Base):
     is_active: Mapped[Optional[bool]] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[Optional[bool]] = mapped_column(Boolean, default=False)
 
-    items: Mapped[List['Item']] = relationship(
-        'Item', back_populates='owner', cascade='all, delete', passive_deletes=True
+    items: Mapped[List["Item"]] = relationship(
+        "Item", back_populates="owner", cascade="all, delete", passive_deletes=True
     )
-    activities: Mapped[List['Activity']] = relationship(
-        'Activity', back_populates='user', cascade='all, delete', passive_deletes=True
+    activities: Mapped[List["Activity"]] = relationship(
+        "Activity", back_populates="user", cascade="all, delete", passive_deletes=True
     )
-    inventories: Mapped[List['Inventory']] = relationship(
-        'Inventory', back_populates='owner', cascade='all, delete', passive_deletes=True
+    inventories: Mapped[List["Inventory"]] = relationship(
+        "Inventory", back_populates="owner", cascade="all, delete", passive_deletes=True
+    )
+
+    shared_inventories: Mapped[List["SharedInventory"]] = relationship(
+        "SharedInventory",
+        back_populates="user",
+        cascade="all, delete",
+        passive_deletes=True,
     )

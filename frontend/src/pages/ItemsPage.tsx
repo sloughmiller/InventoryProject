@@ -4,16 +4,8 @@ import ItemForm from '../components/ItemForm';
 import Layout from '../components/Layout';
 import ItemCard from '../components/cards/ItemCard';
 import api from '../api/api';
+import type { Item, Inventory } from '../types';
 
-
-interface Item {
-  id: number;
-  name: string;
-  description?: string;
-  quantity: number;
-  category_id: number;
-  location_id: number;
-}
 
 const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -21,14 +13,18 @@ const ItemsPage: React.FC = () => {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [categoryMap, setCategoryMap] = useState<Record<number, string>>({});
   const [locationMap, setLocationMap] = useState<Record<number, string>>({});
+  const [inventories, setInventories] = useState<Inventory[]>([]);
+  const [selectedInventoryId, setSelectedInventoryId] = useState<string>('');
+
 
 
   const fetchItems = async () => {
     try {
-      const [itemsData, categoriesData, locationsData] = await Promise.all([
+      const [itemsData, categoriesData, locationsData, inventoriesData] = await Promise.all([
         getItems(),
         api.get('/categories/'),
-        api.get('/locations/')
+        api.get('/locations/'),
+        api.get('/inventories/accessible'),
       ]);
 
       const catMap: Record<number, string> = {};
@@ -41,15 +37,23 @@ const ItemsPage: React.FC = () => {
         locMap[loc.id] = loc.name;
       });
 
-      setItems(itemsData);
+      const filteredItems =
+        selectedInventoryId === ''
+          ? itemsData
+          : itemsData.filter((item) => item.inventory_id === parseInt(selectedInventoryId));
+
+      setItems(filteredItems);
+
       setCategoryMap(catMap);
       setLocationMap(locMap);
+      setInventories(inventoriesData.data);  // 👈 Add this line
       setError('');
     } catch (err) {
       console.error('❌ Failed to fetch items or related data:', err);
       setError('Failed to load items.');
     }
   };
+
 
 
   const handleDelete = async (itemId: number) => {
@@ -66,7 +70,7 @@ const ItemsPage: React.FC = () => {
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [selectedInventoryId]);
 
   return (
     <Layout>
@@ -78,6 +82,22 @@ const ItemsPage: React.FC = () => {
           <p className="text-gray-600 mt-2">
             Manage and review your current inventory.
           </p>
+          <div className="mt-4">
+            <label className="text-sm font-medium text-gray-700 mr-2">Filter by Inventory:</label>
+            <select
+              value={selectedInventoryId}
+              onChange={(e) => setSelectedInventoryId(e.target.value)}
+              className="border border-gray-300 rounded p-2"
+            >
+              <option value="">All Inventories</option>
+              {inventories.map((inv) => (
+                <option key={inv.id} value={inv.id.toString()}>
+                  {inv.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
         </header>
 
         {error && (
@@ -95,6 +115,7 @@ const ItemsPage: React.FC = () => {
               onItemCreated={fetchItems}
               editingItem={editingItem}
               onEditDone={() => setEditingItem(null)}
+              inventories={inventories}
             />
           </div>
         </section>
