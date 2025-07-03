@@ -3,6 +3,7 @@
 ## 🎯 Objective
 
 Implement support for:
+
 - Per-user inventories (each user can own multiple inventories)
 - Inventory sharing with other users
 - Role-based access control per inventory (admin / viewer)
@@ -13,7 +14,8 @@ Implement support for:
 
 **Goal**: Replace `owner_id`-based item ownership with full inventory ownership.
 
-### ✅ Tasks
+### ✅ Sprint 1 Tasks
+
 - [x] Create `Inventory` model (`models/inventory.py`)
 - [x] Create Inventory schemas (`schemas/inventory.py`)
 - [x] Create Inventory CRUD functions (`crud/inventory.py`)
@@ -22,7 +24,8 @@ Implement support for:
 - [x] Update all Item CRUD and API logic to use `inventory_id`
 - [x] Run Alembic migration to add `inventory_id` to `items`
 
-### 🔍 Checkpoint
+### 🔍 Sprint 1 Checkpoint
+
 - [x] Can create a named inventory
 - [x] Can assign new items to an inventory
 - [x] Can fetch only items for the current user's inventories
@@ -33,18 +36,20 @@ Implement support for:
 
 **Goal**: Enable other users to access an inventory based on shared permissions.
 
-### ✅ Tasks
-- [X] Create `SharedInventory` model (`models/shared_inventory.py`)
-- [ ] Create SharedInventory schemas (`schemas/shared_inventory.py`)
-- [ ] Create CRUD for SharedInventory (`crud/shared_inventory.py`)
-- [ ] Create SharedInventory API routes (`api/shared_inventory.py`)
-- [ ] Add Alembic migration to create `shared_inventory` table
-- [ ] Add utility to check current user's role in inventory (for `Depends()` injection)
+### ✅ Sprint 2 Tasks
 
-### 🔍 Checkpoint
-- [ ] Can share an inventory with another user
-- [ ] Can assign roles: `admin`, `viewer`
-- [ ] Roles are enforced for protected routes
+- [X] Create `SharedInventory` model (`models/shared_inventory.py`)
+- [X] Create SharedInventory schemas (`schemas/shared_inventory.py`)
+- [X] Create CRUD for SharedInventory (`crud/shared_inventory.py`)
+- [X] Create SharedInventory API routes (`api/shared_inventory.py`)
+- [X] Add Alembic migration to create `shared_inventory` table
+- [X] Add utility to check current user's role in inventory (for `Depends()` injection)
+
+### 🔍 Sprint 2 Checkpoint
+
+- [X] Can share an inventory with another user
+- [X] Can assign roles: `admin`, `viewer`
+- [X] Roles are enforced for protected routes
 
 ---
 
@@ -52,7 +57,8 @@ Implement support for:
 
 **Goal**: Ensure all actions (create/edit/delete items) are permission-restricted.
 
-### ✅ Tasks
+### ✅ Srpint 3 Tasks
+
 - [ ] Create dependency `get_inventory_role_or_403(user, inventory_id)`
 - [ ] Apply permission checks to all relevant endpoints:
   - Item creation → must be `admin`
@@ -60,7 +66,8 @@ Implement support for:
   - View inventory/items → must be `admin` or `viewer`
 - [ ] Optionally: Add route to list inventories a user has access to
 
-### 🔍 Checkpoint
+### 🔍 Sprint 3 Checkpoint
+
 - [ ] Users can only access their authorized inventories
 - [ ] Admins can modify items, viewers can only read
 - [ ] Unauthorized users receive 403 on access attempt
@@ -71,14 +78,16 @@ Implement support for:
 
 **Goal**: Connect frontend forms with new inventory logic and test multi-user flows.
 
-### ✅ Tasks
+### ✅ Sprint 4 Tasks
+
 - [ ] Update item form to support selecting from user’s inventories
 - [ ] Update dashboard to filter by inventory
 - [ ] Add simple inventory manager (create, rename, share)
 - [ ] Add shared user management (list/add/remove roles)
 - [ ] Full testing: create + share + restrict access between test users
 
-### 🔍 Checkpoint
+### 🔍 Sprint 4 Checkpoint
+
 - [ ] Frontend can create and assign inventories
 - [ ] Frontend can manage inventory sharing and roles
 - [ ] Users see only their items and shared ones
