@@ -14,6 +14,7 @@ const ItemsPage: React.FC = () => {
   const [categoryMap, setCategoryMap] = useState<Record<number, string>>({});
   const [locationMap, setLocationMap] = useState<Record<number, string>>({});
   const [inventories, setInventories] = useState<Inventory[]>([]);
+  const [selectedInventoryId, setSelectedInventoryId] = useState<string>('');
 
 
 
@@ -36,7 +37,13 @@ const ItemsPage: React.FC = () => {
         locMap[loc.id] = loc.name;
       });
 
-      setItems(itemsData);
+      const filteredItems =
+        selectedInventoryId === ''
+          ? itemsData
+          : itemsData.filter((item) => item.inventory_id === parseInt(selectedInventoryId));
+
+      setItems(filteredItems);
+
       setCategoryMap(catMap);
       setLocationMap(locMap);
       setInventories(inventoriesData.data);  // 👈 Add this line
@@ -63,7 +70,7 @@ const ItemsPage: React.FC = () => {
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [selectedInventoryId]);
 
   return (
     <Layout>
@@ -75,6 +82,22 @@ const ItemsPage: React.FC = () => {
           <p className="text-gray-600 mt-2">
             Manage and review your current inventory.
           </p>
+          <div className="mt-4">
+            <label className="text-sm font-medium text-gray-700 mr-2">Filter by Inventory:</label>
+            <select
+              value={selectedInventoryId}
+              onChange={(e) => setSelectedInventoryId(e.target.value)}
+              className="border border-gray-300 rounded p-2"
+            >
+              <option value="">All Inventories</option>
+              {inventories.map((inv) => (
+                <option key={inv.id} value={inv.id.toString()}>
+                  {inv.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
         </header>
 
         {error && (

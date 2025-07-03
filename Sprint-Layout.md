@@ -81,7 +81,7 @@ Implement support for:
 ### ✅ Sprint 4 Tasks
 
 - [X] Update item form to support selecting from user’s inventories
-- [ ] Update dashboard to filter by inventory
+- [X] Update dashboard to filter by inventory
 - [ ] Add simple inventory manager (create, rename, share)
 - [ ] Add shared user management (list/add/remove roles)
 - [ ] Full testing: create + share + restrict access between test users
