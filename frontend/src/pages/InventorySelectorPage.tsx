@@ -3,63 +3,55 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import type { Inventory } from '../types';
-import Layout from '../components/Layout';
 
 const InventorySelectorPage: React.FC = () => {
   const [inventories, setInventories] = useState<Inventory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchInventories = async () => {
       try {
-        const response = await api.get('/inventories/accessible');
-        setInventories(response.data);
+        const res = await api.get('/inventories/accessible');
+        const data: Inventory[] = res.data;
+        setInventories(data);
+
+        if (data.length === 1) {
+          // Auto-select and go to dashboard
+          localStorage.setItem('selectedInventory', JSON.stringify(data[0]));
+          navigate('/dashboard');
+        }
       } catch (err) {
         console.error('❌ Failed to fetch inventories:', err);
-        setError('Failed to load inventories');
       } finally {
         setLoading(false);
       }
     };
-
     fetchInventories();
-  }, []);
+  }, [navigate]);
 
-  const handleSelect = (inventory: Inventory) => {
-    localStorage.setItem('selectedInventoryId', inventory.id.toString());
-    localStorage.setItem('selectedInventoryName', inventory.name);
-    navigate('/items'); // or wherever your app should land after selection
+  const handleSelect = (inv: Inventory) => {
+    localStorage.setItem('selectedInventory', JSON.stringify(inv));
+    navigate('/dashboard');
   };
 
-  return (
-    <Layout>
-      <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow rounded">
-        <h2 className="text-2xl font-bold mb-4 text-emerald-700">Select an Inventory</h2>
+  if (loading) return <p className="p-4 text-gray-600">Loading inventories...</p>;
 
-        {loading ? (
-          <p>Loading inventories...</p>
-        ) : error ? (
-          <p className="text-red-600">{error}</p>
-        ) : inventories.length === 0 ? (
-          <p>No inventories found. Please create one first.</p>
-        ) : (
-          <ul className="space-y-3">
-            {inventories.map((inv) => (
-              <li key={inv.id}>
-                <button
-                  className="w-full text-left p-3 border rounded hover:bg-emerald-50"
-                  onClick={() => handleSelect(inv)}
-                >
-                  <span className="text-lg font-semibold text-emerald-800">{inv.name}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </Layout>
+  return (
+    <div className="max-w-lg mx-auto p-6 mt-10 bg-white shadow rounded">
+      <h2 className="text-2xl font-bold text-emerald-700 mb-4">Select an Inventory</h2>
+      <ul className="space-y-3">
+        {inventories.map((inv) => (
+          <li
+            key={inv.id}
+            className="p-3 bg-gray-100 hover:bg-emerald-100 rounded cursor-pointer border"
+            onClick={() => handleSelect(inv)}
+          >
+            {inv.name}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

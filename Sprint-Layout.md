@@ -78,7 +78,7 @@ Implement support for:
 
 - [x] Update item form to support selecting from user’s inventories  
 - [x] Update dashboard to filter by inventory
-- [ ] **Create `InventorySelectorPage`** to choose current working inventory after login  
+- [X] **Create `InventorySelectorPage`** to choose current working inventory after login  
 - [ ] **Add `InventoryContext`** to store selected inventory across the app  
 - [ ] Create **Inventory Manager Page** (`/manage-inventories`)
   - [ ] List owned inventories
