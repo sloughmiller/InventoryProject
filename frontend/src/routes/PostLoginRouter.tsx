@@ -1,10 +1,11 @@
-// src/pages/PostLoginRouter.tsx
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
+import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
 
 const PostLoginRouter: React.FC = () => {
   const navigate = useNavigate();
+  const { setSelectedInventory } = useSelectedInventory();
 
   useEffect(() => {
     const checkInventories = async () => {
@@ -13,9 +14,8 @@ const PostLoginRouter: React.FC = () => {
         const inventories = res.data;
 
         if (inventories.length === 1) {
-          // ✅ Auto-select and redirect
           const [single] = inventories;
-          localStorage.setItem('selectedInventoryId', single.id.toString());
+          setSelectedInventory(single);
           navigate('/dashboard', { replace: true });
         } else {
           navigate('/select-inventory', { replace: true });
@@ -27,7 +27,7 @@ const PostLoginRouter: React.FC = () => {
     };
 
     checkInventories();
-  }, [navigate]);
+  }, [navigate, setSelectedInventory]);
 
   return <p className="text-center mt-10 text-gray-500">Loading your inventories...</p>;
 };

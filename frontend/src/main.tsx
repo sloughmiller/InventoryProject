@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { AuthProvider } from './context/AuthContext';
-import { SelectedInventoryProvider } from './context/SelectedInventoryContext';
+import { AuthProvider } from './contexts/AuthContext';
+import { SelectedInventoryProvider } from './contexts/SelectedInventoryContext';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
-      <SelectedInventoryProvider> {}
+      <SelectedInventoryProvider>
         <App />
       </SelectedInventoryProvider>
     </AuthProvider>
