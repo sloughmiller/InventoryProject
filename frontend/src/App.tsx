@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
+import InventoryManagerPage from './pages/InventoryManagerPage';
+
 import ProtectedRoute from './components/ProtectedRoute';
 
 import { checkBackendAvailable } from './api/api';
@@ -74,6 +76,16 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/manage-inventories"
+          element={
+            <ProtectedRoute>
+              <InventoryManagerPage />
+            </ProtectedRoute>
+          }
+        />
+
 
         {/* Other routes like /items, /categories, etc. */}
       </Routes>

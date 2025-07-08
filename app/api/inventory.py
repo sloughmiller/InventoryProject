@@ -8,6 +8,7 @@ router = APIRouter()
 
 
 # Create new inventory
+# api/inventory.py
 @router.post("/", response_model=schemas.Inventory)
 def create_inventory(
     inventory: schemas.InventoryCreate,
@@ -16,13 +17,23 @@ def create_inventory(
 ):
     print("📦 Creating inventory:", inventory.name)
     try:
-        inventory.owner_id = current_user.id  # Ensure ownership
-        created_inventory = crud.inventory.create_inventory(db, inventory)
+        created_inventory = crud.inventory.create_inventory(
+            db, inventory, current_user.id
+        )
         print("✅ Inventory created:", created_inventory.id)
         return created_inventory
     except Exception as e:
         print("❌ Failed to create inventory:", e)
         raise HTTPException(status_code=500, detail="Error creating inventory")
+
+
+@router.get("/accessible", response_model=list[schemas.Inventory])
+def get_accessible_inventories(
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_user),
+):
+    print(f"🔍 Fetching accessible inventories for user {current_user.username}")
+    return crud.inventory.get_inventories_user_can_access(db, current_user.id)
 
 
 # Get all inventories owned by current user
@@ -90,12 +101,3 @@ def delete_inventory(
             status_code=403, detail="Not authorized to delete this inventory"
         )
     return crud.inventory.delete_inventory(db, inventory_id)
-
-
-@router.get("/accessible", response_model=list[schemas.Inventory])
-def get_accessible_inventories(
-    db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(get_current_user),
-):
-    print(f"🔍 Fetching accessible inventories for user {current_user.username}")
-    return crud.inventory.get_inventories_user_can_access(db, current_user.id)

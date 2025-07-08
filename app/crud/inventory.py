@@ -13,10 +13,13 @@ def get_user_inventories(db: Session, user_id: int):
     return db.query(models.Inventory).filter(models.Inventory.owner_id == user_id).all()
 
 
-def create_inventory(db: Session, inventory: schemas.InventoryCreate):
+# crud/inventory.py
+def create_inventory(
+    db: Session, inventory_data: schemas.InventoryCreate, owner_id: int
+):
     db_inventory = models.Inventory(
-        name=inventory.name,
-        owner_id=inventory.owner_id,
+        name=inventory_data.name,
+        owner_id=owner_id,
     )
     db.add(db_inventory)
     db.commit()
