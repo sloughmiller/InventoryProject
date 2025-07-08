@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import type { Inventory } from '../types';
+import Layout from '../components/Layout';
 
 const InventorySelectorPage: React.FC = () => {
   const [inventories, setInventories] = useState<Inventory[]>([]);
@@ -38,32 +39,38 @@ const InventorySelectorPage: React.FC = () => {
   if (loading) return <p className="p-4 text-gray-600">Loading inventories...</p>;
 
   return (
-    <div className="max-w-lg mx-auto p-6 mt-10 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold text-emerald-700 mb-4">Select an Inventory</h2>
+    <Layout>
+      {loading ? (
+        <p className="p-4 text-gray-600">Loading inventories...</p>
+      ) : (
+        <div className="max-w-lg mx-auto p-6 mt-10 bg-white shadow rounded">
+          <h2 className="text-2xl font-bold text-emerald-700 mb-4">Select an Inventory</h2>
 
-      <ul className="space-y-3">
-        {inventories.map((inv) => (
-          <li
-            key={inv.id}
-            className="p-3 bg-gray-100 hover:bg-emerald-100 rounded cursor-pointer border"
-            onClick={() => handleSelect(inv)}
-          >
-            {inv.name}
-          </li>
-        ))}
-      </ul>
+          <ul className="space-y-3">
+            {inventories.map((inv) => (
+              <li
+                key={inv.id}
+                className="p-3 bg-gray-100 hover:bg-emerald-100 rounded cursor-pointer border"
+                onClick={() => handleSelect(inv)}
+              >
+                {inv.name}
+              </li>
+            ))}
+          </ul>
 
-      <p className="mt-6 text-sm text-center text-gray-500">
-        Need to create, rename, or delete an inventory?{' '}
-        <a
-          href="/manage-inventories"
-          className="text-emerald-700 hover:underline font-medium"
-        >
-          Manage here
-        </a>
-      </p>
-    </div>
+          <p className="mt-6 text-sm text-center text-gray-500">
+            Need to create, rename, or delete an inventory?{' '}
+            <a
+              href="/manage-inventories"
+              className="text-emerald-700 hover:underline font-medium"
+            >
+              Manage here
+            </a>
+          </p>
+        </div>
+      )}
+    </Layout>
   );
 };
 
-  export default InventorySelectorPage;
+export default InventorySelectorPage;
