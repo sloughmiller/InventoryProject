@@ -2,7 +2,7 @@
 import React from 'react';
 import BaseCard from './BaseCard';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
-import type { Item } from '../../api/itemApi';
+import type { Item } from '../../types';
 
 interface ItemCardProps {
   item: Item;
