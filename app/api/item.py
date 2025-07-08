@@ -15,7 +15,7 @@ def read_items(
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
-    role: str = Depends(get_inventory_role_or_403(inventory_id, ["admin", "viewer"])),
+    role: str = Depends(require_admin_role),
 ):
     return crud.item.get_items(db, inventory_id=inventory_id, skip=skip, limit=limit)
 
@@ -44,7 +44,7 @@ def create_item(
     inventory_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
-    role: str = Depends(get_inventory_role_or_403(inventory_id, ["admin"])),
+    role: str = Depends(require_admin_role),
 ):
     return crud.item.create_item(db, item, inventory_id=inventory_id)
 

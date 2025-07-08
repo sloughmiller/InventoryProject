@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Path
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jose import JWTError
@@ -62,3 +62,21 @@ def get_inventory_role_or_403(inventory_id: int, allowed_roles: list[str]):
         return role_entry.role
 
     return dependency
+
+
+def require_admin_role(
+    inventory_id: int = Path(...),
+    db: Session = Depends(database.get_db),
+    current_user=Depends(get_current_user),
+):
+    return get_inventory_role_or_403(inventory_id, ["admin"])(db, current_user)
+
+
+def require_admin_or_viewer_role(
+    inventory_id: int = Path(...),
+    db: Session = Depends(database.get_db),
+    current_user=Depends(get_current_user),
+):
+    return get_inventory_role_or_403(inventory_id, ["admin", "viewer"])(
+        db, current_user
+    )
