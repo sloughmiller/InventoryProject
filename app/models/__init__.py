@@ -5,4 +5,5 @@ from .condition import Condition
 from .item import Item
 from .activity import Activity
 from .inventory import Inventory
+from .shared_inventory import SharedInventory
 from .base import Base
