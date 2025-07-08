@@ -25,9 +25,7 @@ class User(Base):
     is_active: Mapped[Optional[bool]] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[Optional[bool]] = mapped_column(Boolean, default=False)
 
-    items: Mapped[List["Item"]] = relationship(
-        "Item", back_populates="owner", cascade="all, delete", passive_deletes=True
-    )
+    
     activities: Mapped[List["Activity"]] = relationship(
         "Activity", back_populates="user", cascade="all, delete", passive_deletes=True
     )
