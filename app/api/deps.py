@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status, Path
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jose import JWTError
@@ -39,6 +39,26 @@ def get_current_user(
     return user
 
 
+def extract_inventory_id(request: Request) -> int:
+    """
+    Tries to extract `inventory_id` from either query parameters or path parameters.
+    """
+    inventory_id = (
+        request.path_params.get("inventory_id")
+        or request.query_params.get("inventory_id")
+    )
+    if not inventory_id:
+        raise HTTPException(
+            status_code=400, detail="Missing required parameter: inventory_id"
+        )
+    try:
+        return int(inventory_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=422, detail="Invalid inventory_id format, must be an integer"
+        )
+
+
 def get_inventory_role_or_403(inventory_id: int, allowed_roles: list[str]):
     def dependency(
         db: Session = Depends(database.get_db),
@@ -65,7 +85,7 @@ def get_inventory_role_or_403(inventory_id: int, allowed_roles: list[str]):
 
 
 def require_admin_role(
-    inventory_id: int = Path(...),
+    inventory_id: int = Depends(extract_inventory_id),
     db: Session = Depends(database.get_db),
     current_user=Depends(get_current_user),
 ):
@@ -73,10 +93,8 @@ def require_admin_role(
 
 
 def require_admin_or_viewer_role(
-    inventory_id: int = Path(...),
+    inventory_id: int = Depends(extract_inventory_id),
     db: Session = Depends(database.get_db),
     current_user=Depends(get_current_user),
 ):
-    return get_inventory_role_or_403(inventory_id, ["admin", "viewer"])(
-        db, current_user
-    )
+    return get_inventory_role_or_403(inventory_id, ["admin", "viewer"])(db, current_user)

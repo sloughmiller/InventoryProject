@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import crud, schemas, models
 from app.database import get_db
-from app.api.deps import get_current_user, get_inventory_role_or_403
+from app.api.deps import get_current_user, get_inventory_role_or_403, require_admin_role
 
 router = APIRouter()
 
