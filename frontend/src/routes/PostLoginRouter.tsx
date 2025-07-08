@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
+import { log } from '../utils/logger';
 
 const PostLoginRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -12,16 +13,19 @@ const PostLoginRouter: React.FC = () => {
       try {
         const res = await api.get('/inventories/accessible');
         const inventories = res.data;
+         log.info('PostLoginRouter', 'Accessible inventories:', inventories);
 
         if (inventories.length === 1) {
           const [single] = inventories;
+          log.info('PostLoginRouter', '✅ One inventory found, selecting:', single.id);
           setSelectedInventory(single);
           navigate('/dashboard', { replace: true });
         } else {
+          log.info('PostLoginRouter', `🔀 ${inventories.length} inventories found. Redirecting to selector.`);
           navigate('/select-inventory', { replace: true });
         }
       } catch (err) {
-        console.error('❌ Failed to fetch inventories after login:', err);
+        log.error('PostLoginRouter', '❌ Failed to fetch inventories after login:', err);;
         navigate('/login');
       }
     };
