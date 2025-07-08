@@ -55,6 +55,15 @@ const DashboardPage: React.FC = () => {
               📍 View Locations
             </button>
           </Link>
+
+          <Link to="/select-inventory">
+            <button className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded shadow transition">
+              🔁 Switch Inventory
+            </button>
+          </Link>
+
+
+
         </nav>
 
         <section className="bg-white rounded-xl shadow p-6 space-y-4">

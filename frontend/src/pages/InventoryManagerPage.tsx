@@ -31,6 +31,28 @@ const InventoryManagerPage: React.FC = () => {
         }
     };
 
+    const handleRename = async (inv: Inventory) => {
+        const newName = prompt('Enter new inventory name:', inv.name);
+        if (!newName || newName === inv.name) return;
+        try {
+            await api.put(`/inventories/${inv.id}`, { name: newName });
+            fetchInventories();
+        } catch (err) {
+            console.error('❌ Failed to rename inventory:', err);
+        }
+    };
+
+    const handleDelete = async (inv: Inventory) => {
+        const confirmDelete = confirm(`Delete inventory "${inv.name}"?`);
+        if (!confirmDelete) return;
+        try {
+            await api.delete(`/inventories/${inv.id}`);
+            fetchInventories();
+        } catch (err) {
+            console.error('❌ Failed to delete inventory:', err);
+        }
+    };
+
     return (
         <div className="p-4 max-w-xl mx-auto">
             <h1 className="text-xl font-bold mb-4">Manage Your Inventories</h1>
@@ -53,12 +75,24 @@ const InventoryManagerPage: React.FC = () => {
 
             <ul className="space-y-2">
                 {inventories.map((inv) => (
-                    <li key={inv.id} className="border p-2 rounded bg-gray-100 flex justify-between items-center">
+                    <li
+                        key={inv.id}
+                        className="border p-2 rounded bg-gray-100 flex justify-between items-center"
+                    >
                         <span>{inv.name}</span>
                         <div>
-                            {/* Placeholder for Rename/Delete buttons */}
-                            <button className="text-blue-500 mr-3">Rename</button>
-                            <button className="text-red-500">Delete</button>
+                            <button
+                                className="text-blue-500 hover:underline mr-3"
+                                onClick={() => handleRename(inv)}
+                            >
+                                Rename
+                            </button>
+                            <button
+                                className="text-red-500 hover:underline"
+                                onClick={() => handleDelete(inv)}
+                            >
+                                Delete
+                            </button>
                         </div>
                     </li>
                 ))}

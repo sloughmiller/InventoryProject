@@ -40,6 +40,7 @@ const InventorySelectorPage: React.FC = () => {
   return (
     <div className="max-w-lg mx-auto p-6 mt-10 bg-white shadow rounded">
       <h2 className="text-2xl font-bold text-emerald-700 mb-4">Select an Inventory</h2>
+
       <ul className="space-y-3">
         {inventories.map((inv) => (
           <li
@@ -51,8 +52,18 @@ const InventorySelectorPage: React.FC = () => {
           </li>
         ))}
       </ul>
+
+      <p className="mt-6 text-sm text-center text-gray-500">
+        Need to create, rename, or delete an inventory?{' '}
+        <a
+          href="/manage-inventories"
+          className="text-emerald-700 hover:underline font-medium"
+        >
+          Manage here
+        </a>
+      </p>
     </div>
   );
 };
 
-export default InventorySelectorPage;
+  export default InventorySelectorPage;
