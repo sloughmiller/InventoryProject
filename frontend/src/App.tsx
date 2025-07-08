@@ -5,6 +5,10 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import InventoryManagerPage from './pages/InventoryManagerPage';
+import ItemsPage from './pages/ItemsPage';
+import CategoriesPage from './pages/CategoriesPage';
+import LocationsPage from './pages/LocationsPage';
+
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -85,9 +89,30 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
-
-
-        {/* Other routes like /items, /categories, etc. */}
+        <Route
+          path="/items"
+          element={
+            <ProtectedRoute>
+              <ItemsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute>
+              <CategoriesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/locations"
+          element={
+            <ProtectedRoute>
+              <LocationsPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
 
