@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.core.auth import verify_password, create_access_token
 from app import crud
+import logging
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -21,8 +23,9 @@ def login(
         print("❌ User not found:", form_data.username)
         raise HTTPException(status_code=401, detail="Invalid username or password")
 
-    print("🔐 Input password:", form_data.password)
-    print("🔐 Stored hashed password:", user.hashed_password)
+    logger.info("🔐 Login attempt: %s", form_data.username)
+
+
 
     if not verify_password(form_data.password, user.hashed_password):
         print("❌ Password mismatch for user:", form_data.username)

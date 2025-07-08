@@ -6,6 +6,11 @@ from app.api.deps import get_current_user
 from app.core.auth import hash_password, verify_password, create_access_token
 from fastapi.security import OAuth2PasswordRequestForm
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 router = APIRouter()
 
 
@@ -28,23 +33,21 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
-    print("🔐 Login attempt:", form_data.username)
+    logger.info("🔐 Login attempt: %s", form_data.username)
     db_user = crud.user.get_user_by_username(db, username=form_data.username)
 
     if not db_user:
-        print("❌ User not found:", form_data.username)
+        logger.warning("❌ User not found: %s", form_data.username)
         raise HTTPException(status_code=401, detail="Invalid username or password")
-
-    print("🔐 Hashed password in DB:", db_user.hashed_password)
-    print("🔐 Input password:", form_data.password)
 
     if not verify_password(form_data.password, db_user.hashed_password):
-        print("❌ Password mismatch for user:", form_data.username)
+        logger.warning("❌ Password mismatch for user: %s", form_data.username)
         raise HTTPException(status_code=401, detail="Invalid username or password")
 
-    print("✅ Password matched. Issuing token.")
+    logger.info("✅ Password matched. Issuing token.")
     access_token = create_access_token(data={"sub": db_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
+
 
 
 # Get all users (protected)
