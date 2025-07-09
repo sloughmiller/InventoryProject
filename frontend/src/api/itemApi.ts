@@ -6,10 +6,11 @@ import type { Item } from '../types'
 // ✅ GET all items
 export async function getItems(inventoryId: string): Promise<Item[]> {
   const res = await api.get('/items/', {
-    params: { inventory_id: inventoryId },
+    params: inventoryId ? { inventory_id: inventoryId } : {},
   });
   return res.data;
 }
+
 
 
 // ✅ GET single item by ID (optional, not required unless editing inline)
