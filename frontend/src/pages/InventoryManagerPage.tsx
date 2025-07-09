@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../api/api';
 import type { Inventory } from '../types';
 import Layout from '../components/Layout';
+import { log } from '../utils/logger'; // ✅ centralized logging
 
 const InventoryManagerPage: React.FC = () => {
     const [inventories, setInventories] = useState<Inventory[]>([]);
@@ -11,10 +12,11 @@ const InventoryManagerPage: React.FC = () => {
 
     const fetchInventories = async () => {
         try {
-            const res = await api.get('/inventories/owned');
+            const res = await api.get('/inventories/');
             setInventories(res.data);
+            log.info('InventoryManagerPage', '📦 Inventories loaded:', res.data);
         } catch (err) {
-            console.error('❌ Failed to load inventories:', err);
+            log.error('InventoryManagerPage', '❌ Failed to load inventories:', err);
         }
     };
 
@@ -24,11 +26,12 @@ const InventoryManagerPage: React.FC = () => {
 
     const handleCreate = async () => {
         try {
+            log.info('InventoryManagerPage', `➕ Creating inventory: ${name}`);
             await api.post('/inventories/', { name });
             setName('');
             fetchInventories();
         } catch (err) {
-            console.error('❌ Error fetching inventories:', err);
+            log.error('InventoryManagerPage', '❌ Failed to create inventory:', err);
         }
     };
 
@@ -36,10 +39,11 @@ const InventoryManagerPage: React.FC = () => {
         const newName = prompt('Enter new inventory name:', inv.name);
         if (!newName || newName === inv.name) return;
         try {
+            log.info('InventoryManagerPage', `✏️ Renaming inventory ${inv.id} to "${newName}"`);
             await api.put(`/inventories/${inv.id}`, { name: newName });
             fetchInventories();
         } catch (err) {
-            console.error('❌ Failed to rename inventory:', err);
+            log.error('InventoryManagerPage', `❌ Failed to rename inventory ${inv.id}:`, err);
         }
     };
 
@@ -47,10 +51,11 @@ const InventoryManagerPage: React.FC = () => {
         const confirmDelete = confirm(`Delete inventory "${inv.name}"?`);
         if (!confirmDelete) return;
         try {
+            log.info('InventoryManagerPage', `🗑️ Deleting inventory ${inv.id}`);
             await api.delete(`/inventories/${inv.id}`);
             fetchInventories();
         } catch (err) {
-            console.error('❌ Failed to delete inventory:', err);
+            log.error('InventoryManagerPage', `❌ Failed to delete inventory ${inv.id}:`, err);
         }
     };
 
