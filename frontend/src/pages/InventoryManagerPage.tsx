@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../api/api';
 import type { Inventory } from '../types';
 import Layout from '../components/Layout';
-import { log } from '../utils/logger'; // ✅ centralized logging
+import { log } from '../utils/logger';
 
 const InventoryManagerPage: React.FC = () => {
     const [inventories, setInventories] = useState<Inventory[]>([]);

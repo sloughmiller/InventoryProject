@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { getItems, deleteItem } from '../api/itemApi'
+import { getItems, deleteItem } from '../api/itemApi';
 import ItemForm from '../components/ItemForm';
 import Layout from '../components/Layout';
 import ItemCard from '../components/cards/ItemCard';
 import api from '../api/api';
+import { log } from '../utils/logger';
 import type { Item, Inventory } from '../types';
-
 
 const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -16,12 +16,11 @@ const ItemsPage: React.FC = () => {
   const [inventories, setInventories] = useState<Inventory[]>([]);
   const [selectedInventoryId, setSelectedInventoryId] = useState<string>('');
 
-
-
   const fetchItems = async () => {
+    log.info('ItemsPage', '🔄 Fetching items and metadata...');
     try {
       const [itemsData, categoriesData, locationsData, inventoriesData] = await Promise.all([
-        getItems(),
+        getItems(selectedInventoryId),
         api.get('/categories/'),
         api.get('/locations/'),
         api.get('/inventories/accessible'),
@@ -43,32 +42,33 @@ const ItemsPage: React.FC = () => {
           : itemsData.filter((item) => item.inventory_id === parseInt(selectedInventoryId));
 
       setItems(filteredItems);
-
       setCategoryMap(catMap);
       setLocationMap(locMap);
-      setInventories(inventoriesData.data);  // 👈 Add this line
+      setInventories(inventoriesData.data);
       setError('');
+
+      log.info('ItemsPage', `✅ Loaded ${filteredItems.length} items`);
     } catch (err) {
-      console.error('❌ Failed to fetch items or related data:', err);
+      log.error('ItemsPage', '❌ Failed to fetch items or metadata', err);
       setError('Failed to load items.');
     }
   };
 
-
-
   const handleDelete = async (itemId: number) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
+    log.warn('ItemsPage', '🗑️ Deleting item ID', itemId);
     try {
       await deleteItem(itemId);
-
+      log.info('ItemsPage', '✅ Item ID deleted', itemId);
       fetchItems();
     } catch (err) {
-      console.error('❌ Failed to delete item:', err);
+      log.error('ItemsPage', '❌ Failed to delete item ID', itemId, err);
       setError('Failed to delete item.');
     }
   };
 
   useEffect(() => {
+    log.debug('ItemsPage', '🔁 Selected inventory changed to:', selectedInventoryId || 'All');
     fetchItems();
   }, [selectedInventoryId]);
 
@@ -86,7 +86,11 @@ const ItemsPage: React.FC = () => {
             <label className="text-sm font-medium text-gray-700 mr-2">Filter by Inventory:</label>
             <select
               value={selectedInventoryId}
-              onChange={(e) => setSelectedInventoryId(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedInventoryId(value);
+                log.debug('ItemsPage', '🧭 Inventory filter selected:', value || 'All');
+              }}
               className="border border-gray-300 rounded p-2"
             >
               <option value="">All Inventories</option>
@@ -97,7 +101,6 @@ const ItemsPage: React.FC = () => {
               ))}
             </select>
           </div>
-
         </header>
 
         {error && (
@@ -114,7 +117,10 @@ const ItemsPage: React.FC = () => {
             <ItemForm
               onItemCreated={fetchItems}
               editingItem={editingItem}
-              onEditDone={() => setEditingItem(null)}
+              onEditDone={() => {
+                log.debug('ItemsPage', '✅ Finished editing item');
+                setEditingItem(null);
+              }}
               inventories={inventories}
             />
           </div>
@@ -135,11 +141,12 @@ const ItemsPage: React.FC = () => {
                   item={item}
                   categoryName={categoryMap[item.category_id]}
                   locationName={locationMap[item.location_id]}
-                  onEdit={() => setEditingItem(item)}
+                  onEdit={() => {
+                    log.info('ItemsPage', '✏️ Editing item ID', item.id);
+                    setEditingItem(item);
+                  }}
                   onDelete={() => handleDelete(item.id)}
                 />
-
-
               ))}
             </div>
           )}
