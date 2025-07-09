@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from app import crud, schemas, models
 from app.database import get_db
 from app.api.deps import get_current_user, get_inventory_role_or_403, require_admin_role
+from typing import Optional
+
 
 router = APIRouter()
 
@@ -10,14 +12,20 @@ router = APIRouter()
 # View all items in an inventory → requires admin or viewer
 @router.get("/", response_model=list[schemas.Item])
 def read_items(
-    inventory_id: int,
+    inventory_id: Optional[int] = None,
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
-    role: str = Depends(require_admin_role),
 ):
-    return crud.item.get_items(db, inventory_id=inventory_id, skip=skip, limit=limit)
+    if inventory_id is not None:
+        # Role check only if accessing a specific inventory
+        role = require_admin_role(inventory_id)(db, current_user)
+        return crud.item.get_items(db, inventory_id=inventory_id, skip=skip, limit=limit)
+    else:
+        # Return all items the user has access to (admin/viewer on shared inventories)
+        return crud.item.get_all_accessible_items(db, user_id=current_user.id)
+
 
 
 # View a single item → requires admin or viewer
