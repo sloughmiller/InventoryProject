@@ -121,7 +121,6 @@ const ItemsPage: React.FC = () => {
                 log.debug('ItemsPage', '✅ Finished editing item');
                 setEditingItem(null);
               }}
-              inventories={inventories}
             />
           </div>
         </section>
