@@ -7,7 +7,7 @@ from app import crud, database, core
 from app.crud.shared_inventory import get_user_inventory_role
 from app.models.inventory import Inventory
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 def get_current_user(
