@@ -6,7 +6,7 @@ import type { Item } from '../types'
 // ✅ GET all items
 export async function getItems(inventoryId: string): Promise<Item[]> {
   const res = await api.get('/items/', {
-    params: inventoryId ? { inventory_id: inventoryId } : {} ,
+    params: { inventory_id: inventoryId },
   });
   return res.data;
 }
