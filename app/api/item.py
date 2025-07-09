@@ -2,12 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import crud, schemas, models
 from app.database import get_db
-from app.api.deps import get_current_user, get_inventory_role_or_403, require_admin_role
+from app.api.deps import get_current_user, get_inventory_role_or_403
 from typing import Optional
 
-
 router = APIRouter()
-
 
 # View all items in an inventory → requires admin or viewer
 @router.get("/", response_model=list[schemas.Item])
@@ -19,13 +17,10 @@ def read_items(
     current_user: models.User = Depends(get_current_user),
 ):
     if inventory_id is not None:
-        # Role check only if accessing a specific inventory
-        role = require_admin_role(inventory_id)(db, current_user)
+        get_inventory_role_or_403(inventory_id, ["admin", "viewer"])(db, current_user)
         return crud.item.get_items(db, inventory_id=inventory_id, skip=skip, limit=limit)
     else:
-        # Return all items the user has access to (admin/viewer on shared inventories)
         return crud.item.get_all_accessible_items(db, user_id=current_user.id)
-
 
 
 # View a single item → requires admin or viewer
@@ -39,9 +34,7 @@ def read_item(
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    # Permission check via inventory_id on the item
     get_inventory_role_or_403(item.inventory_id, ["admin", "viewer"])(db, current_user)
-
     return item
 
 
@@ -52,8 +45,8 @@ def create_item(
     inventory_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
-    role: str = Depends(require_admin_role),
 ):
+    get_inventory_role_or_403(inventory_id, ["admin"])(db, current_user)
     return crud.item.create_item(db, item, inventory_id=inventory_id)
 
 
