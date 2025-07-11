@@ -21,7 +21,7 @@ interface ItemFormProps {
 }
 
 const ItemForm: React.FC<ItemFormProps> = ({
-  onItemCreated,
+  //onItemCreated,
   editingItem,
   onEditDone,
 }) => {
@@ -113,8 +113,11 @@ const ItemForm: React.FC<ItemFormProps> = ({
         });
         onEditDone?.();
       } else {
-        await api.post(`/items/?inventory_id=${selectedInventory.id}`, itemData);
-        onItemCreated?.();
+        await api.post(`/items/`, {
+          ...itemData,
+          inventory_id: selectedInventory.id,
+        });
+
       }
 
       // Reset form
