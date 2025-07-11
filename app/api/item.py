@@ -42,14 +42,12 @@ def read_item(
 @router.post("/", response_model=schemes.Item)
 def create_item(
     item: schemes.ItemCreate,
-    inventory_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    
-    print("📥 Received item data:", item.dict())
-    get_inventory_role_or_403(inventory_id, ["admin"])(db, current_user)
-    return crud.item.create_item(db, item, inventory_id=inventory_id)
+    get_inventory_role_or_403(item.inventory_id, ["admin", "user"])(db, current_user)
+    return crud.item.create_item(db, item, inventory_id=item.inventory_id)
+
 
 
 # Update an item → requires admin
