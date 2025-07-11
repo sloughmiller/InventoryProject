@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../api/api';
+import api, { setAuthToken } from '../api/api';
 import { useAuth } from '../contexts/AuthContext';
 
 interface LoginFormProps {
@@ -23,7 +23,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
       const response = await api.post('/auth/login', params, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
-      login(response.data.access_token);
+
+      const token = response.data.access_token;
+
+      // ✅ Immediately set the token for Axios
+      setAuthToken(token);
+
+      // ✅ Update auth context (e.g., store token in state/localStorage)
+      login(token);
+
+      // ✅ Call post-login handler (e.g., redirect, fetch user/inventories)
       onLoginSuccess();
     } catch (err) {
       console.error('❌ Login error:', err);
