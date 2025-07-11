@@ -2,10 +2,33 @@ import React from 'react';
 import LoginForm from '../components/LoginForm';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+import api from '../api/api';
+import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
+import { log } from '../utils/logger';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const handleSuccess = () => navigate('/dashboard');
+  const { setSelectedInventory } = useSelectedInventory();
+
+  const handleSuccess = async () => {
+    try {
+      const response = await api.get('/inventories/accessible');
+      const inventories = response.data;
+
+      if (inventories.length === 1) {
+        log.info('LoginPage', '🔐 One inventory found, auto-selecting and navigating to dashboard');
+        setSelectedInventory(inventories[0]);
+        navigate('/dashboard');
+      } else {
+        log.info('LoginPage', `🔐 ${inventories.length} inventories found, navigating to selector`);
+        navigate('/select-inventory');
+      }
+    } catch (err) {
+      log.error('LoginPage', '❌ Failed to load inventories after login', err);
+      navigate('/dashboard'); // fallback
+    }
+  };
+
   const goToSignup = () => navigate('/signup');
 
   return (
