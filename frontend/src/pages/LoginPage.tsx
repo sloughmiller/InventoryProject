@@ -18,6 +18,7 @@ const LoginPage: React.FC = () => {
       if (inventories.length === 1) {
         log.info('LoginPage', '🔐 One inventory found, auto-selecting and navigating to dashboard');
         setSelectedInventory(inventories[0]);
+        localStorage.setItem('selectedInventory', JSON.stringify(inventories[0]));
         navigate('/dashboard');
       } else {
         log.info('LoginPage', `🔐 ${inventories.length} inventories found, navigating to selector`);
