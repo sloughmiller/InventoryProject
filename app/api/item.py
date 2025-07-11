@@ -46,6 +46,8 @@ def create_item(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
+    
+    print("📥 Received item data:", item.dict())
     get_inventory_role_or_403(inventory_id, ["admin"])(db, current_user)
     return crud.item.create_item(db, item, inventory_id=inventory_id)
 

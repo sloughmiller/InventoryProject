@@ -119,6 +119,10 @@ const ItemForm: React.FC<ItemFormProps> = ({
         });
         onEditDone?.();
       } else {
+        console.log("📦 Submitting item data:", {
+          ...itemData,
+          inventory_id: selectedInventory.id,
+        });
         await api.post(`/items/`, itemData);
       }
 
