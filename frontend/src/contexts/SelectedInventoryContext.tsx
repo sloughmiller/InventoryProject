@@ -1,6 +1,7 @@
 // src/contexts/SelectedInventoryContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Inventory } from '../types';
+import { log } from '../utils/logger'; // assuming you're using your centralized logger
 
 interface InventoryContextType {
   selectedInventory: Inventory | null;
@@ -13,17 +14,35 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
   const [selectedInventory, setSelectedInventoryState] = useState<Inventory | null>(null);
 
   useEffect(() => {
-    const storedId = localStorage.getItem('selectedInventoryId');
-    const storedName = localStorage.getItem('selectedInventoryName');
-    if (storedId && storedName) {
-      setSelectedInventoryState({ id: parseInt(storedId), name: storedName });
+    try {
+      const storedId = localStorage.getItem('selectedInventoryId');
+      const storedName = localStorage.getItem('selectedInventoryName');
+
+      if (storedId && storedName) {
+        const restored: Inventory = {
+          id: parseInt(storedId, 10),
+          name: storedName,
+        };
+
+        setSelectedInventoryState(restored);
+        log.info('SelectedInventoryContext', '📦 Restored inventory from localStorage:', restored);
+      } else {
+        log.debug('SelectedInventoryContext', 'ℹ️ No saved inventory found in localStorage.');
+      }
+    } catch (err) {
+      log.warn('SelectedInventoryContext', '⚠️ Failed to restore inventory from localStorage:', err);
     }
   }, []);
 
   const setSelectedInventory = (inv: Inventory) => {
-    localStorage.setItem('selectedInventoryId', inv.id.toString());
-    localStorage.setItem('selectedInventoryName', inv.name);
-    setSelectedInventoryState(inv);
+    try {
+      localStorage.setItem('selectedInventoryId', inv.id.toString());
+      localStorage.setItem('selectedInventoryName', inv.name);
+      setSelectedInventoryState(inv);
+      log.info('SelectedInventoryContext', '✅ Inventory selected and saved to localStorage:', inv);
+    } catch (err) {
+      log.error('SelectedInventoryContext', '❌ Failed to save inventory to localStorage:', err);
+    }
   };
 
   return (
