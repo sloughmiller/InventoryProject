@@ -1,3 +1,4 @@
+// src/pages/LoginPage.tsx
 import React from 'react';
 import LoginForm from '../components/LoginForm';
 import { useNavigate } from 'react-router-dom';
@@ -12,21 +13,24 @@ const LoginPage: React.FC = () => {
 
   const handleSuccess = async () => {
     try {
-      const response = await api.get('/inventories/accessible');
-      const inventories = response.data;
+      const res = await api.get('/inventories/accessible');
+      const inventories = res.data;
 
       if (inventories.length === 1) {
-        log.info('LoginPage', '🔐 One inventory found, auto-selecting and navigating to dashboard');
-        setSelectedInventory(inventories[0]);
-        localStorage.setItem('selectedInventory', JSON.stringify(inventories[0]));
+        const inv = inventories[0];
+        log.info('LoginPage', `✅ One inventory found: "${inv.name}", auto-selecting and navigating to dashboard`);
+        setSelectedInventory(inv); // Context + localStorage
         navigate('/dashboard');
       } else {
-        log.info('LoginPage', `🔐 ${inventories.length} inventories found, navigating to selector`);
+        if (inventories.length === 0) {
+          log.info('LoginPage', '👤 No inventories found, redirecting to selector so user can create one');
+        } else {
+          log.info('LoginPage', `📦 ${inventories.length} inventories found, redirecting to selector`);
+        }
         navigate('/select-inventory');
       }
     } catch (err) {
-      log.error('LoginPage', '❌ Failed to load inventories after login', err);
-      navigate('/dashboard'); // fallback
+      log.error('LoginPage', '❌ Failed to fetch inventories after login', err);
     }
   };
 
