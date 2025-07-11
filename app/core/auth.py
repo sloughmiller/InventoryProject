@@ -3,7 +3,7 @@ from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from app import schemas
+from app import schemes
 
 SECRET_KEY = "supersecret"
 ALGORITHM = "HS256"

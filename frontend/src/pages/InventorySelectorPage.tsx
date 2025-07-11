@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
-import type { Inventory } from '../types';
 import Layout from '../components/Layout';
+import InventoryCard from '../components/cards/InventoryCard';
+import type { Inventory } from '../types';
+import { log } from '../utils/logger';
 
 const InventorySelectorPage: React.FC = () => {
   const [inventories, setInventories] = useState<Inventory[]>([]);
@@ -16,59 +18,53 @@ const InventorySelectorPage: React.FC = () => {
         const res = await api.get('/inventories/accessible');
         const data: Inventory[] = res.data;
         setInventories(data);
+        log.info('InventorySelectorPage', '✅ Inventories fetched:', data);
 
         if (data.length === 1) {
-          // Auto-select and go to dashboard
+          log.info('InventorySelectorPage', `🟢 Auto-selecting inventory "${data[0].name}"`);
           localStorage.setItem('selectedInventory', JSON.stringify(data[0]));
           navigate('/dashboard');
         }
       } catch (err) {
-        console.error('❌ Failed to fetch inventories:', err);
+        log.error('InventorySelectorPage', '❌ Failed to fetch inventories:', err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchInventories();
   }, [navigate]);
 
   const handleSelect = (inv: Inventory) => {
+    log.info('InventorySelectorPage', `📦 Inventory selected: ${inv.name}`);
     localStorage.setItem('selectedInventory', JSON.stringify(inv));
     navigate('/dashboard');
   };
 
-  if (loading) return <p className="p-4 text-gray-600">Loading inventories...</p>;
-
   return (
     <Layout>
-      {loading ? (
-        <p className="p-4 text-gray-600">Loading inventories...</p>
-      ) : (
-        <div className="max-w-lg mx-auto p-6 mt-10 bg-white shadow rounded">
-          <h2 className="text-2xl font-bold text-emerald-700 mb-4">Select an Inventory</h2>
+      <div className="max-w-2xl mx-auto space-y-8">
+        <header className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-emerald-700">📦 Select an Inventory</h1>
+          <p className="text-gray-500">Choose which inventory you want to view and manage.</p>
+        </header>
 
-          <ul className="space-y-3">
+        {loading ? (
+          <p className="text-center text-gray-500">Loading inventories...</p>
+        ) : inventories.length === 0 ? (
+          <p className="text-center text-gray-500">No inventories found. Please contact admin.</p>
+        ) : (
+          <div className="space-y-4">
             {inventories.map((inv) => (
-              <li
+              <InventoryCard
                 key={inv.id}
-                className="p-3 bg-gray-100 hover:bg-emerald-100 rounded cursor-pointer border"
-                onClick={() => handleSelect(inv)}
-              >
-                {inv.name}
-              </li>
+                inventory={inv}
+                onSelect={() => handleSelect(inv)}
+              />
             ))}
-          </ul>
-
-          <p className="mt-6 text-sm text-center text-gray-500">
-            Need to create, rename, or delete an inventory?{' '}
-            <a
-              href="/manage-inventories"
-              className="text-emerald-700 hover:underline font-medium"
-            >
-              Manage here
-            </a>
-          </p>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </Layout>
   );
 };

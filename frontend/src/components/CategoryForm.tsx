@@ -1,6 +1,8 @@
 // src/components/CategoryForm.tsx
 import React, { useState } from 'react';
 import api from '../api/api';
+import BaseCard from './cards/BaseCard';
+import type { Category } from '../types';
 
 interface CategoryFormProps {
   onCreated: () => void;
@@ -13,8 +15,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post('/categories/', { name });
+      await api.post<Category>('/categories/', { name }); // optional Category response
       setName('');
+      setError('');
       onCreated();
     } catch (err) {
       console.error('❌ Failed to create category:', err);
@@ -23,17 +26,27 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h4>Add New Category</h4>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input
-        placeholder="Category Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <button type="submit">➕ Add Category</button>
-    </form>
+    <BaseCard title="➕ Add New Category" description="Enter a name and click to add.">
+      <form onSubmit={handleSubmit} className="space-y-3">
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <input
+          type="text"
+          placeholder="Category Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        />
+
+        <button
+          type="submit"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded font-medium"
+        >
+          ➕ Add Category
+        </button>
+      </form>
+    </BaseCard>
   );
 };
 

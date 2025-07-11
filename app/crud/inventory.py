@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app import models, schemas
+from app import models, schemes
 
 
 def get_inventory(db: Session, inventory_id: int):
@@ -15,7 +15,7 @@ def get_user_inventories(db: Session, user_id: int):
 
 # crud/inventory.py
 def create_inventory(
-    db: Session, inventory_data: schemas.InventoryCreate, owner_id: int
+    db: Session, inventory_data: schemes.InventoryCreate, owner_id: int
 ):
     db_inventory = models.Inventory(
         name=inventory_data.name,
@@ -28,7 +28,7 @@ def create_inventory(
 
 
 def update_inventory(
-    db: Session, inventory_id: int, inventory_update: schemas.InventoryUpdate
+    db: Session, inventory_id: int, inventory_update: schemes.InventoryUpdate
 ):
     db_inventory = get_inventory(db, inventory_id)
     if not db_inventory:

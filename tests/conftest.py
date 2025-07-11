@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from app.main import app
 from app.database import Base, get_db
 from app.core.config import settings
-from app import crud, schemas
+from app import crud, schemes
 from app.core.auth import create_access_token
 
 DATABASE_TEST_URL = settings.database_test_url or "sqlite:///./test.db"
@@ -49,7 +49,7 @@ def db_session():
 @pytest.fixture(scope="function")
 def test_user(db_session):
     unique_id = uuid.uuid4().hex[:8]
-    user_data = schemas.UserCreate(
+    user_data = schemes.UserCreate(
         username=f"testuser_{unique_id}",
         email=f"test_{unique_id}@example.com",
         password="testpassword"
@@ -76,7 +76,7 @@ def client_and_user():
 
     db = TestingSessionLocal()
     unique_id = uuid.uuid4().hex[:8]
-    user_data = schemas.UserCreate(
+    user_data = schemes.UserCreate(
         username=f"testuser_{unique_id}",
         email=f"test_{unique_id}@example.com",
         password="testpassword"

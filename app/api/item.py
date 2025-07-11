@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import crud, schemas, models
+from app import crud, schemes, models
 from app.database import get_db
 from app.api.deps import get_current_user, get_inventory_role_or_403
 from typing import Optional
@@ -8,7 +8,7 @@ from typing import Optional
 router = APIRouter()
 
 # View all items in an inventory → requires admin or viewer
-@router.get("/", response_model=list[schemas.Item])
+@router.get("/", response_model=list[schemes.Item])
 def read_items(
     inventory_id: Optional[int] = None,
     skip: int = 0,
@@ -24,7 +24,7 @@ def read_items(
 
 
 # View a single item → requires admin or viewer
-@router.get("/{item_id}", response_model=schemas.Item)
+@router.get("/{item_id}", response_model=schemes.Item)
 def read_item(
     item_id: int,
     db: Session = Depends(get_db),
@@ -39,9 +39,9 @@ def read_item(
 
 
 # Create an item → requires admin
-@router.post("/", response_model=schemas.Item)
+@router.post("/", response_model=schemes.Item)
 def create_item(
-    item: schemas.ItemCreate,
+    item: schemes.ItemCreate,
     inventory_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -51,10 +51,10 @@ def create_item(
 
 
 # Update an item → requires admin
-@router.put("/{item_id}", response_model=schemas.Item)
+@router.put("/{item_id}", response_model=schemes.Item)
 def update_item(
     item_id: int,
-    item_update: schemas.ItemUpdate,
+    item_update: schemes.ItemUpdate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -67,7 +67,7 @@ def update_item(
 
 
 # Delete an item → requires admin
-@router.delete("/{item_id}", response_model=schemas.Item)
+@router.delete("/{item_id}", response_model=schemes.Item)
 def delete_item(
     item_id: int,
     db: Session = Depends(get_db),

@@ -1,87 +1,81 @@
+// src/pages/CategoriesPage.tsx
 import React, { useEffect, useState } from 'react';
 import api from '../api/api';
 import Layout from '../components/Layout';
-
-interface Category {
-  id: number;
-  name: string;
-}
+import CategoryForm from '../components/CategoryForm';
+import CategoryCard from '../components/cards/CategoryCard';
+import type { Category } from '../types';
+import { log } from '../utils/logger';
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [newName, setNewName] = useState('');
-  const [error, setError] = useState('');
 
   const fetchCategories = async () => {
     try {
       const response = await api.get('/categories/');
       setCategories(response.data);
+      log.info('CategoriesPage', '📦 Categories loaded:', response.data);
     } catch (err) {
-      console.error('❌ Failed to load categories:', err);
+      log.error('CategoriesPage', '❌ Failed to load categories:', err);
     }
   };
 
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRename = async (category: Category) => {
+    const newName = prompt('Enter new category name:', category.name);
+    if (!newName || newName === category.name) return;
+
     try {
-      await api.post('/categories/', { name: newName });
-      setNewName('');
-      setError('');
-      fetchCategories(); // refresh
+      log.info('CategoriesPage', `✏️ Renaming category ID ${category.id} to "${newName}"`);
+      await api.put(`/categories/${category.id}`, { name: newName });
+      fetchCategories();
     } catch (err) {
-      console.error('❌ Failed to create category:', err);
-      setError('Could not create category. Make sure the name is valid.');
+      log.error('CategoriesPage', `❌ Failed to rename category ID ${category.id}:`, err);
+    }
+  };
+
+  const handleDelete = async (category: Category) => {
+    const confirmDelete = confirm(`Delete category "${category.name}"?`);
+    if (!confirmDelete) return;
+
+    try {
+      log.info('CategoriesPage', `🗑️ Deleting category ID ${category.id}`);
+      await api.delete(`/categories/${category.id}`);
+      fetchCategories();
+    } catch (err) {
+      log.error('CategoriesPage', `❌ Failed to delete category ID ${category.id}:`, err);
     }
   };
 
   useEffect(() => {
+    log.debug('CategoriesPage', '🔄 Initializing category fetch...');
     fetchCategories();
   }, []);
 
   return (
     <Layout>
       <div className="max-w-3xl mx-auto space-y-8">
-        <h2 className="text-3xl font-bold text-emerald-700 text-center">🏷️ Categories</h2>
+        <header className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-emerald-700">📁 Categories</h1>
+          <p className="text-gray-500">Add and manage your item categories.</p>
+        </header>
 
-        <form
-          onSubmit={handleCreate}
-          className="bg-white rounded shadow p-6 space-y-4"
-        >
-          <h4 className="text-xl font-semibold text-emerald-600">Add New Category</h4>
+        {/* Category creation form */}
+        <CategoryForm onCreated={fetchCategories} />
 
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{error}</p>
-          )}
-
-          <input
-            type="text"
-            placeholder="New category name"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            required
-            className="w-full rounded border px-3 py-2 focus:outline-none focus:ring focus:ring-emerald-400"
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded transition"
-          >
-            ➕ Add Category
-          </button>
-        </form>
-
-        <div className="bg-white rounded shadow p-6">
-          <h3 className="text-xl font-semibold text-emerald-600 mb-4">📋 Existing Categories</h3>
-          <ul className="space-y-2">
-            {categories.map((cat) => (
-              <li
+        {/* List of categories */}
+        <div className="space-y-2">
+          {categories.length === 0 ? (
+            <p className="text-gray-500 text-center">No categories found.</p>
+          ) : (
+            categories.map((cat) => (
+              <CategoryCard
                 key={cat.id}
-                className="border border-gray-200 rounded px-3 py-2 shadow-sm"
-              >
-                <strong>{cat.name}</strong> <span className="text-gray-500">(ID: {cat.id})</span>
-              </li>
-            ))}
-          </ul>
+                category={cat}
+                onRename={handleRename}
+                onDelete={handleDelete}
+              />
+            ))
+          )}
         </div>
       </div>
     </Layout>

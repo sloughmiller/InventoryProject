@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app import models, schemas
+from app import models, schemes
 
 def get_condition(db: Session, condition_id: int):
     return db.query(models.Condition).filter(models.Condition.id == condition_id).first()
@@ -7,7 +7,7 @@ def get_condition(db: Session, condition_id: int):
 def get_conditions(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Condition).offset(skip).limit(limit).all()
 
-def create_condition(db: Session, condition: schemas.ConditionCreate):
+def create_condition(db: Session, condition: schemes.ConditionCreate):
     db_condition = models.Condition(
         name=condition.name,
         description=condition.description
@@ -24,7 +24,7 @@ def delete_condition(db: Session, condition_id: int):
         db.commit()
     return db_condition
 
-def update_condition(db: Session, condition_id: int, condition_update: schemas.ConditionUpdate):
+def update_condition(db: Session, condition_id: int, condition_update: schemes.ConditionUpdate):
     db_condition = get_condition(db, condition_id)
     if db_condition:
         for key, value in condition_update.dict(exclude_unset=True).items():

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import crud, schemas
+from app import crud, schemes
 from app.database import get_db
 from app.api.deps import get_current_user
 from app.core.auth import hash_password, verify_password, create_access_token
@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=schemes.User)
+def create_user(user: schemes.UserCreate, db: Session = Depends(get_db)):
     print("🧾 Incoming signup request:", user.dict())
     try:
         created_user = crud.user.create_user(db, user)
@@ -52,21 +52,21 @@ def login(
 
 # Get all users (protected)
 @router.get(
-    "/", response_model=list[schemas.User], dependencies=[Depends(get_current_user)]
+    "/", response_model=list[schemes.User], dependencies=[Depends(get_current_user)]
 )
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.user.get_users(db, skip=skip, limit=limit)
 
 
 # Get current user's own profile (protected)
-@router.get("/me", response_model=schemas.User)
-def read_current_user(current_user: schemas.User = Depends(get_current_user)):
+@router.get("/me", response_model=schemes.User)
+def read_current_user(current_user: schemes.User = Depends(get_current_user)):
     return current_user
 
 
 # Get user by ID (protected)
 @router.get(
-    "/{user_id}", response_model=schemas.User, dependencies=[Depends(get_current_user)]
+    "/{user_id}", response_model=schemes.User, dependencies=[Depends(get_current_user)]
 )
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.user.get_user(db, user_id)
@@ -77,10 +77,10 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 # Update user (protected)
 @router.put(
-    "/{user_id}", response_model=schemas.User, dependencies=[Depends(get_current_user)]
+    "/{user_id}", response_model=schemes.User, dependencies=[Depends(get_current_user)]
 )
 def update_user(
-    user_id: int, user_update: schemas.UserUpdate, db: Session = Depends(get_db)
+    user_id: int, user_update: schemes.UserUpdate, db: Session = Depends(get_db)
 ):
     if user_update.password:
         user_update.password = hash_password(user_update.password)
@@ -89,7 +89,7 @@ def update_user(
 
 # Delete user (protected)
 @router.delete(
-    "/{user_id}", response_model=schemas.User, dependencies=[Depends(get_current_user)]
+    "/{user_id}", response_model=schemes.User, dependencies=[Depends(get_current_user)]
 )
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     return crud.user.delete_user(db, user_id)

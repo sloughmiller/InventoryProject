@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app import models, schemas
+from app import models, schemes
 
 
 def get_shared_inventory(db: Session, shared_id: int):
@@ -26,7 +26,7 @@ def get_user_inventory_role(db: Session, user_id: int, inventory_id: int):
     )
 
 
-def create_shared_inventory(db: Session, share: schemas.SharedInventoryCreate):
+def create_shared_inventory(db: Session, share: schemes.SharedInventoryCreate):
     existing = get_user_inventory_role(db, share.user_id, share.inventory_id)
     if existing:
         raise HTTPException(status_code=400, detail="User already has access to this inventory")
@@ -45,7 +45,7 @@ def create_shared_inventory(db: Session, share: schemas.SharedInventoryCreate):
 def update_shared_inventory(
     db: Session,
     shared_id: int,
-    update_data: schemas.SharedInventoryBase,
+    update_data: schemes.SharedInventoryBase,
 ):
     db_share = get_shared_inventory(db, shared_id)
     if not db_share:

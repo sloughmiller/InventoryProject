@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from app.database import get_db, init_db, SessionLocal
 from app.core.auth import hash_password
-from app import crud, schemas
+from app import crud, schemes
 from app.api import (
     activity,
     category,
@@ -89,7 +89,7 @@ def seed_admin_user():
 
     existing_user = crud.user.get_user_by_username(db, admin_username)
     if not existing_user:
-        admin_user = schemas.UserCreate(
+        admin_user = schemes.UserCreate(
             username=admin_username,
             email=admin_email,
             password=admin_password,

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app import models, schemas
+from app import models, schemes
 
 
 def get_item(db: Session, item_id: int):
@@ -28,7 +28,7 @@ def get_all_accessible_items(db: Session, user_id: int) -> list[models.Item]:
     )
 
 
-def create_item(db: Session, item: schemas.ItemCreate, inventory_id: int):
+def create_item(db: Session, item: schemes.ItemCreate, inventory_id: int):
     db_item = models.Item(**item.dict(), inventory_id=inventory_id)
     db.add(db_item)
     db.commit()
@@ -44,7 +44,7 @@ def delete_item(db: Session, item_id: int):
     return db_item
 
 
-def update_item(db: Session, item_id: int, item_update: schemas.ItemUpdate):
+def update_item(db: Session, item_id: int, item_update: schemes.ItemUpdate):
     db_item = get_item(db, item_id)
     if db_item:
         for key, value in item_update.dict(exclude_unset=True).items():

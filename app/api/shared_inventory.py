@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import crud, schemas
+from app import crud, schemes
 from app.database import get_db
 from app.api.deps import get_current_user
 
@@ -8,11 +8,11 @@ router = APIRouter()
 
 
 # Share inventory with another user
-@router.post("/", response_model=schemas.SharedInventoryResponse)
+@router.post("/", response_model=schemes.SharedInventoryResponse)
 def share_inventory(
-    share: schemas.SharedInventoryCreate,
+    share: schemes.SharedInventoryCreate,
     db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemes.User = Depends(get_current_user),
 ):
     print(f"👥 User {current_user.id} sharing inventory {share.inventory_id} with user {share.user_id}")
     db_inventory = crud.inventory.get_inventory(db, share.inventory_id)
@@ -29,11 +29,11 @@ def share_inventory(
 
 
 # Get all shared users for an inventory (only owner can view)
-@router.get("/users/{inventory_id}", response_model=list[schemas.SharedInventoryResponse])
+@router.get("/users/{inventory_id}", response_model=list[schemes.SharedInventoryResponse])
 def get_shared_users(
     inventory_id: int,
     db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemes.User = Depends(get_current_user),
 ):
     print(f"👁️ User {current_user.id} requesting shared users for inventory {inventory_id}")
     db_inventory = crud.inventory.get_inventory(db, inventory_id)
@@ -46,12 +46,12 @@ def get_shared_users(
 
 
 # Update a user's role in shared inventory
-@router.put("/{shared_id}", response_model=schemas.SharedInventoryResponse)
+@router.put("/{shared_id}", response_model=schemes.SharedInventoryResponse)
 def update_shared_role(
     shared_id: int,
-    update_data: schemas.SharedInventoryBase,
+    update_data: schemes.SharedInventoryBase,
     db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemes.User = Depends(get_current_user),
 ):
     print(f"🔄 User {current_user.id} updating role for shared_id {shared_id}")
     db_share = crud.shared_inventory.get_shared_inventory(db, shared_id)
@@ -66,11 +66,11 @@ def update_shared_role(
 
 
 # Remove a user from shared inventory
-@router.delete("/{shared_id}", response_model=schemas.SharedInventoryResponse)
+@router.delete("/{shared_id}", response_model=schemes.SharedInventoryResponse)
 def delete_shared_inventory(
     shared_id: int,
     db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemes.User = Depends(get_current_user),
 ):
     print(f"🗑️ User {current_user.id} removing shared access entry {shared_id}")
     db_share = crud.shared_inventory.get_shared_inventory(db, shared_id)
