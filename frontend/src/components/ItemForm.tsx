@@ -104,7 +104,13 @@ const ItemForm: React.FC<ItemFormProps> = ({
         quantity: parsedQuantity,
         category_id: category.id,
         location_id: location.id,
+        inventory_id: selectedInventory.id,
+        barcode: null,
+        purchase_date: null,
+        value: null,
+        condition_id: null,
       };
+
 
       if (editingItem) {
         await api.put(`/items/${editingItem.id}`, {
@@ -113,11 +119,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
         });
         onEditDone?.();
       } else {
-        await api.post(`/items/`, {
-          ...itemData,
-          inventory_id: selectedInventory.id,
-        });
-
+        await api.post(`/items/`, itemData);
       }
 
       // Reset form
