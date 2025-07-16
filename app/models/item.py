@@ -14,7 +14,6 @@ class Item(Base):
     __tablename__ = 'items'
     __table_args__ = (
         Index('ix_items_id', 'id'),
-        Index('ix_items_barcode', 'barcode', unique=True),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)

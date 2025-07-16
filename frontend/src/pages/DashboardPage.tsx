@@ -11,7 +11,7 @@ const DashboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const { selectedInventory } = useSelectedInventory();
+  const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -29,13 +29,19 @@ const DashboardPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (inventoryLoading) {
+      log.debug('DashboardPage', '⏳ Waiting for inventory context to finish loading...');
+      return;
+    }
+
     const isInvalid = !selectedInventory || !selectedInventory.id;
     if (isInvalid) {
       log.warn('DashboardPage', '⚠️ No valid inventory selected. Showing modal.');
       setShowModal(true);
     }
     log.debug('DashboardPage', '📦 Current selected inventory:', selectedInventory);
-  }, [selectedInventory]);
+  }, [selectedInventory, inventoryLoading]);
+
 
   return (
     <Layout>

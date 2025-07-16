@@ -1,17 +1,18 @@
-// src/contexts/SelectedInventoryContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Inventory } from '../types';
-import { log } from '../utils/logger'; // assuming you're using your centralized logger
+import { log } from '../utils/logger';
 
 interface InventoryContextType {
   selectedInventory: Inventory | null;
   setSelectedInventory: (inv: Inventory) => void;
+  loading: boolean;
 }
 
 const SelectedInventoryContext = createContext<InventoryContextType | undefined>(undefined);
 
 export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [selectedInventory, setSelectedInventoryState] = useState<Inventory | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     try {
@@ -23,7 +24,6 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
           id: parseInt(storedId, 10),
           name: storedName,
         };
-
         setSelectedInventoryState(restored);
         log.info('SelectedInventoryContext', '📦 Restored inventory from localStorage:', restored);
       } else {
@@ -31,6 +31,8 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
       }
     } catch (err) {
       log.warn('SelectedInventoryContext', '⚠️ Failed to restore inventory from localStorage:', err);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -46,7 +48,7 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
   };
 
   return (
-    <SelectedInventoryContext.Provider value={{ selectedInventory, setSelectedInventory }}>
+    <SelectedInventoryContext.Provider value={{ selectedInventory, setSelectedInventory, loading }}>
       {children}
     </SelectedInventoryContext.Provider>
   );

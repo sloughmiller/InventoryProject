@@ -6,11 +6,16 @@ import Layout from '../components/Layout';
 import InventoryCard from '../components/cards/InventoryCard';
 import type { Inventory } from '../types';
 import { log } from '../utils/logger';
+import { useSelectedInventory } from '../contexts/SelectedInventoryContext'; // ← make sure this is imported
+
+
 
 const InventorySelectorPage: React.FC = () => {
   const [inventories, setInventories] = useState<Inventory[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { setSelectedInventory } = useSelectedInventory(); // ← add this inside the component
+
 
   useEffect(() => {
     const fetchInventories = async () => {
@@ -22,7 +27,7 @@ const InventorySelectorPage: React.FC = () => {
 
         if (data.length === 1) {
           log.info('InventorySelectorPage', `🟢 Auto-selecting inventory "${data[0].name}"`);
-          localStorage.setItem('selectedInventory', JSON.stringify(data[0]));
+          setSelectedInventory(data[0]);
           navigate('/dashboard');
         }
       } catch (err) {
@@ -37,7 +42,7 @@ const InventorySelectorPage: React.FC = () => {
 
   const handleSelect = (inv: Inventory) => {
     log.info('InventorySelectorPage', `📦 Inventory selected: ${inv.name}`);
-    localStorage.setItem('selectedInventory', JSON.stringify(inv));
+    setSelectedInventory(inv); // <- this updates both context and localStorage
     navigate('/dashboard');
   };
 
