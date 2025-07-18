@@ -37,6 +37,7 @@ class Inventory(Base):
         cascade="all, delete",
         passive_deletes=True,
     )
+    
     categories: Mapped[List["Category"]] = relationship(
         "Category",
         back_populates="inventory",
