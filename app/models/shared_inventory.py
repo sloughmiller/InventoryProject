@@ -1,4 +1,3 @@
-# models/shared_inventory.py
 from sqlalchemy import Integer, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
@@ -21,5 +20,5 @@ class SharedInventory(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
     role: Mapped[RoleEnum] = mapped_column(Enum(RoleEnum), nullable=False)
 
-    inventory: Mapped['Inventory'] = relationship('Inventory', back_populates='shared_users')
-    user: Mapped['User'] = relationship('User', back_populates='shared_inventories')
+    inventory: Mapped["Inventory"] = relationship("Inventory", back_populates="shared_users")
+    user: Mapped["User"] = relationship("User", back_populates="shared_inventories")
