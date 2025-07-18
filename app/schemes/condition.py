@@ -4,6 +4,7 @@ from typing import Optional
 class ConditionBase(BaseModel):
     name: str
     description: Optional[str] = None
+    inventory_id: int
 
 class ConditionCreate(ConditionBase):
     pass
@@ -11,6 +12,7 @@ class ConditionCreate(ConditionBase):
 class ConditionUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
+    inventory_id: Optional[int] = None
 
     class Config:
         model_config = ConfigDict(from_attributes=True)
@@ -31,7 +33,8 @@ class Condition(ConditionBase):
             "example": {
                 "id": 1,
                 "name": "Condition Name",
-                "description": "Condition Description"
+                "description": "Condition Description",
+                "inventory_id": 100
             }
         }
         # Add any additional configuration here

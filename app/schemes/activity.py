@@ -5,6 +5,7 @@ from datetime import datetime
 class ActivityBase(BaseModel):
     user_id: int
     item_id: int
+    inventory_id: int
     action: str
     details: Optional[str] = None
 
@@ -29,6 +30,7 @@ class Activity(ActivityBase):
                 "id": 1,
                 "item_id": 123,
                 "user_id": 456,
+                "inventory_id": 789,
                 "action": "view",
                 "details": "User viewed the item",
                 "created_at": "2023-10-01T12:00:00Z"

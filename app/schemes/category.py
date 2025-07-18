@@ -5,6 +5,7 @@ from typing import Optional
 class CategoryBase(BaseModel):
     name: str
     description: Optional[str] = None
+    inventory_id: int
 
 class CategoryCreate(CategoryBase):
     pass
@@ -12,6 +13,7 @@ class CategoryCreate(CategoryBase):
 class CategoryUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
+    inventory_id: Optional[int] = None
 
     class Config:
         model_config = ConfigDict(from_attributes=True)
@@ -26,7 +28,8 @@ class Category(CategoryBase):
             "example": {
                 "id": 1,
                 "name": "Electronics",
-                "description": "Devices and gadgets"
+                "description": "Devices and gadgets",
+                "inventory_id": 100
             }
         }
         # This will allow us to use ORM objects directly with Pydantic models

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,ConfigDict
 from enum import Enum
 
 
@@ -21,7 +21,7 @@ class SharedInventoryResponse(SharedInventoryBase):
     inventory_id: int
 
     class Config:
-        orm_mode = True
+        model_config = ConfigDict(from_attributes=True)
 
 
 class SharedUserInfo(BaseModel):

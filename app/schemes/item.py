@@ -51,13 +51,3 @@ class Item(ItemBase):
                 "inventory_id": 1
             }
         }
-        # This allows the model to work with ORM objects
-        # by converting them to dictionaries
-        # and vice versa.
-        # It is useful when using ORMs like SQLAlchemy
-        # which return objects instead of dictionaries.
-        # This is important for FastAPI to work with SQLAlchemy
-        # and other ORMs.
-        # It allows the model to work with ORM objects
-        # by converting them to dictionaries
-        # and vice versa.
