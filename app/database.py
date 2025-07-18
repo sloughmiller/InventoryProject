@@ -7,9 +7,12 @@ DATABASE_URL = settings.database_url
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+    connect_args=(
+        {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+    ),
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 def get_db():
     db = SessionLocal()
@@ -18,6 +21,14 @@ def get_db():
     finally:
         db.close()
 
+
 def init_db():
-    from app import models  # make sure models are imported to register them with Base
+    from app import models  # Ensures all models are registered with Base
+
+    # ⚠️ Drop all tables — destructive operation!
+    Base.metadata.drop_all(bind=engine)
+    print("🧨 All tables dropped.")
+
+    # ✅ Recreate all tables based on current models
     Base.metadata.create_all(bind=engine)
+    print("✅ All tables created.")
