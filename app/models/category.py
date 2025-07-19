@@ -21,6 +21,6 @@ class Category(Base):
     inventory_id: Mapped[int] = mapped_column(ForeignKey('inventories.id', ondelete='CASCADE'), nullable=False)
 
     items: Mapped[List['Item']] = relationship('Item', back_populates='category', cascade='all, delete', passive_deletes=True)
-    inventory: Mapped["Inventory"] = relationship("Inventory", back_populates="locations")
+    inventory: Mapped["Inventory"] = relationship("Inventory", back_populates="categories")
 
     

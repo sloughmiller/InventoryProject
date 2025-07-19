@@ -24,5 +24,5 @@ class Condition(Base):
     items: Mapped[List["Item"]] = relationship(
         "Item", back_populates="condition", cascade="all, delete", passive_deletes=True
     )
-    inventory: Mapped["Inventory"] = relationship("Inventory", back_populates="locations")
+    inventory: Mapped["Inventory"] = relationship("Inventory", back_populates="conditions")
 
