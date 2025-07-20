@@ -27,7 +27,7 @@ const LoginPage: React.FC = () => {
         } else {
           log.info('LoginPage', `📦 ${inventories.length} inventories found, redirecting to selector`);
         }
-        navigate('/select-inventory');
+        navigate('/dashboard');
       }
     } catch (err) {
       log.error('LoginPage', '❌ Failed to fetch inventories after login', err);
