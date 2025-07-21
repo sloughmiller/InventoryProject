@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 from app import crud, schemes, models
 from app.database import get_db
@@ -64,3 +64,8 @@ def delete_location(
     _: str = Depends(require_admin_role),
 ):
     return crud.location.delete_location(db, location_id, inventory_id)
+
+
+@router.options("/")
+def options_locations():
+    return Response(status_code=204)
