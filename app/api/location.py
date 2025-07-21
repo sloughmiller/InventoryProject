@@ -11,6 +11,7 @@ from app.api.deps import (
 
 router = APIRouter()
 
+
 @router.get("/", response_model=list[schemes.Location])
 def read_locations(
     inventory_id: int = Depends(extract_inventory_id),
@@ -40,6 +41,7 @@ def create_location(
     current_user: models.User = Depends(get_current_user),
     _: str = Depends(require_admin_role),
 ):
+    print("📦 Incoming location payload:", location)
     return crud.location.create_location(db, location)
 
 
