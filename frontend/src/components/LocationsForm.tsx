@@ -1,6 +1,6 @@
-// src/components/LocationForm.tsx
 import React, { useState } from 'react';
 import api from '../api/api';
+import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
 
 interface LocationFormProps {
   onCreated: () => void;
@@ -9,12 +9,24 @@ interface LocationFormProps {
 const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
+  const { selectedInventory, loading } = useSelectedInventory();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!selectedInventory || loading) {
+      setError('Inventory not selected. Please select or reload.');
+      return;
+    }
+
     try {
-      await api.post('/locations/', { name });
+      await api.post('/locations/', {
+        name,
+        inventory_id: selectedInventory.id,
+      });
+
       setName('');
+      setError('');
       onCreated();
     } catch (err) {
       console.error('❌ Failed to create location:', err);
