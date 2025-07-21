@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import api from '../api/api';
 import BaseCard from './cards/BaseCard';
 import type { Category } from '../types';
+import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
 
 interface CategoryFormProps {
   onCreated: () => void;
@@ -11,11 +12,22 @@ interface CategoryFormProps {
 const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
+  const { selectedInventory, loading } = useSelectedInventory();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!selectedInventory || loading) {
+      setError('Inventory not selected. Please select or reload.');
+      return;
+    }
+
     try {
-      await api.post<Category>('/categories/', { name }); // optional Category response
+      await api.post<Category>('/categories/', {
+        name,
+        inventory_id: selectedInventory.id,
+      });
+
       setName('');
       setError('');
       onCreated();

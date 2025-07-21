@@ -11,9 +11,12 @@ const PostLoginRouter: React.FC = () => {
   useEffect(() => {
     const checkInventories = async () => {
       try {
+        // ✅ Slight delay to ensure AuthContext + Axios header are fully in place
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
         const res = await api.get('/inventories/accessible');
         const inventories = res.data;
-         log.info('PostLoginRouter', 'Accessible inventories:', inventories);
+        log.info('PostLoginRouter', 'Accessible inventories:', inventories);
 
         if (inventories.length === 1) {
           const [single] = inventories;
@@ -25,13 +28,14 @@ const PostLoginRouter: React.FC = () => {
           navigate('/select-inventory', { replace: true });
         }
       } catch (err) {
-        log.error('PostLoginRouter', '❌ Failed to fetch inventories after login:', err);;
+        log.error('PostLoginRouter', '❌ Failed to fetch inventories after login:', err);
         navigate('/login');
       }
     };
 
     checkInventories();
   }, [navigate, setSelectedInventory]);
+
 
   return <p className="text-center mt-10 text-gray-500">Loading your inventories...</p>;
 };

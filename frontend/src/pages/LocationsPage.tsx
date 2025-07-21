@@ -1,7 +1,8 @@
 // src/pages/LocationsPage.tsx
 import React, { useState, useEffect } from 'react';
-import { getLocations, createLocation, deleteLocation, updateLocation } from '../api/locationApi';
+import api from '../api/api';
 import Layout from '../components/Layout';
+import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
 
 interface Location {
   id: number;
@@ -14,11 +15,12 @@ const LocationsPage: React.FC = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
+  const { selectedInventory } = useSelectedInventory();
 
   const fetchLocations = async () => {
     try {
-      const data = await getLocations();
-      setLocations(data);
+      const res = await api.get('/locations/');
+      setLocations(res.data);
     } catch (err) {
       console.error('❌ Failed to fetch locations:', err);
     }
@@ -26,8 +28,18 @@ const LocationsPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!selectedInventory) {
+      setError('No inventory selected.');
+      return;
+    }
+
     try {
-      await createLocation({ name, description });
+      await api.post('/locations/', {
+        name,
+        description,
+        inventory_id: selectedInventory.id,
+      });
       setName('');
       setDescription('');
       setError('');
@@ -40,7 +52,7 @@ const LocationsPage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteLocation(id);
+      await api.delete(`/locations/${id}`);
       fetchLocations();
     } catch (err) {
       console.error(`❌ Failed to delete location ${id}:`, err);
@@ -52,9 +64,10 @@ const LocationsPage: React.FC = () => {
     const newDescription = prompt('Enter new description (optional):');
     if (newName !== null) {
       try {
-        await updateLocation(id, {
+        await api.put(`/locations/${id}`, {
           name: newName,
           description: newDescription || undefined,
+          inventory_id: selectedInventory?.id, // included just in case your schema requires it
         });
         fetchLocations();
       } catch (err) {
@@ -64,10 +77,8 @@ const LocationsPage: React.FC = () => {
   };
 
   useEffect(() => {
-  fetchLocations();
-}, []);
-
-
+    fetchLocations();
+  }, []);
 
   return (
     <Layout>
@@ -137,7 +148,6 @@ const LocationsPage: React.FC = () => {
               </li>
             ))}
           </ul>
-
         </section>
       </div>
     </Layout>
