@@ -21,6 +21,16 @@ def read_categories(
     return crud.category.get_categories(db, inventory_id)
 
 
+@router.post("/", response_model=schemes.Category)
+def create_category(
+    category: schemes.CategoryCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+    _: str = Depends(require_admin_role),
+):
+    return crud.category.create_category(db, category)
+
+
 @router.get("/{category_id}", response_model=schemes.Category)
 def read_category(
     category_id: int,
@@ -34,14 +44,6 @@ def read_category(
     return db_category
 
 
-@router.post("/", response_model=schemes.Category)
-def create_category(
-    category: schemes.CategoryCreate,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user),
-    _: str = Depends(require_admin_role),
-):
-    return crud.category.create_category(db, category)
 
 
 @router.put("/{category_id}", response_model=schemes.Category)

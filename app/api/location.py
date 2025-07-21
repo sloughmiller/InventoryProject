@@ -37,19 +37,9 @@ def read_location(
 def create_location(
     location: schemes.LocationCreate,
     db: Session = Depends(get_db),
-    _: str = Depends(require_admin_role),
     current_user: models.User = Depends(get_current_user),
+    _: str = Depends(require_admin_role),
 ):
-    inv = db.query(models.Inventory).filter(
-        models.Inventory.id == location.inventory_id
-    ).first()
-
-    if not inv:
-        raise HTTPException(status_code=404, detail="Inventory not found")
-
-    if inv.owner_id != current_user.id:
-        raise HTTPException(status_code=403, detail="No access to this inventory")
-
     return crud.location.create_location(db, location)
 
 
