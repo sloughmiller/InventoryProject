@@ -20,7 +20,12 @@ export async function getLocations(): Promise<Location[]> {
 }
 
 export async function createLocation(data: CreateLocationInput): Promise<Location> {
-  const res = await api.post('/locations/', data);
+  console.log('📨 Sending to backend:', data);
+  const res = await api.post('/locations/', data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   return res.data;
 }
 
