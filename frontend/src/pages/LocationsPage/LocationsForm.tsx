@@ -8,15 +8,12 @@ interface LocationFormProps {
 
 const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const { selectedInventory, loading } = useSelectedInventory();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    console.log('🔍 Submitting new location...');
-    console.log('🔁 Selected Inventory:', selectedInventory);
-    console.log('📦 Payload:', { name, inventory_id: selectedInventory?.id });
+    e.preventDefault(); // ✅ Critical: Prevent form reload
 
     if (!selectedInventory || loading) {
       setError('Inventory not selected. Please select or reload.');
@@ -24,10 +21,19 @@ const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
       return;
     }
 
+    const payload = {
+      name,
+      description: description || undefined,
+      inventory_id: selectedInventory.id,
+    };
+
+    console.log('📦 Payload about to POST:', payload);
+
     try {
-      const result = await createLocation({ name, inventory_id: selectedInventory.id });
+      const result = await createLocation(payload);
       console.log('✅ Location created successfully:', result);
       setName('');
+      setDescription('');
       setError('');
       onCreated();
     } catch (err) {
@@ -45,6 +51,11 @@ const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
+      />
+      <input
+        placeholder="Description (optional)"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
       />
       <button type="submit">➕ Add Location</button>
     </form>
