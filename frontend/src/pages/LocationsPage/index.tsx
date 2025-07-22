@@ -18,8 +18,16 @@ const LocationsPage: React.FC = () => {
   const { selectedInventory } = useSelectedInventory();
 
   const fetchLocations = async () => {
+    if (!selectedInventory) {
+      console.warn('⚠️ No inventory selected — skipping fetch.');
+      return;
+    }
+
+    console.log('📥 Fetching locations for inventory_id:', selectedInventory.id);
+
     try {
       const data = await getLocations();
+      console.log('✅ Locations fetched:', data);
       setLocations(data);
     } catch (err) {
       console.error('❌ Failed to fetch locations:', err);
@@ -29,13 +37,18 @@ const LocationsPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('🧾 Attempting to create location with values:');
+    console.log({ name, description, inventory_id: selectedInventory?.id });
+
     if (!selectedInventory) {
       setError('No inventory selected.');
+      console.error('❌ Cannot create location — no selected inventory.');
       return;
     }
 
     try {
       await createLocation({ name, description, inventory_id: selectedInventory.id });
+      console.log('✅ Location created successfully.');
       setName('');
       setDescription('');
       setError('');
@@ -47,8 +60,10 @@ const LocationsPage: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
+    console.log(`🗑️ Attempting to delete location ID: ${id}`);
     try {
       await deleteLocation(id);
+      console.log(`✅ Location ${id} deleted.`);
       fetchLocations();
     } catch (err) {
       console.error(`❌ Failed to delete location ${id}:`, err);
@@ -58,6 +73,9 @@ const LocationsPage: React.FC = () => {
   const handleEdit = async (id: number) => {
     const newName = prompt('Enter new location name:');
     const newDescription = prompt('Enter new description (optional):');
+
+    console.log('✏️ Editing location:', { id, newName, newDescription });
+
     if (newName && selectedInventory) {
       try {
         await updateLocation(id, {
@@ -65,6 +83,7 @@ const LocationsPage: React.FC = () => {
           description: newDescription || undefined,
           inventory_id: selectedInventory.id,
         });
+        console.log(`✅ Location ${id} updated.`);
         fetchLocations();
       } catch (err) {
         console.error(`❌ Failed to update location ${id}:`, err);
@@ -74,7 +93,7 @@ const LocationsPage: React.FC = () => {
 
   useEffect(() => {
     fetchLocations();
-  }, []);
+  }, [selectedInventory]); // 🔄 Refetch if inventory changes
 
   return (
     <Layout>

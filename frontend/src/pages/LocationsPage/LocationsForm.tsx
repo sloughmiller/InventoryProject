@@ -14,13 +14,19 @@ const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('🔍 Submitting new location...');
+    console.log('🔁 Selected Inventory:', selectedInventory);
+    console.log('📦 Payload:', { name, inventory_id: selectedInventory?.id });
+
     if (!selectedInventory || loading) {
       setError('Inventory not selected. Please select or reload.');
+      console.error('❌ Cannot submit — inventory missing or still loading.');
       return;
     }
 
     try {
-      await createLocation({ name, inventory_id: selectedInventory.id });
+      const result = await createLocation({ name, inventory_id: selectedInventory.id });
+      console.log('✅ Location created successfully:', result);
       setName('');
       setError('');
       onCreated();
