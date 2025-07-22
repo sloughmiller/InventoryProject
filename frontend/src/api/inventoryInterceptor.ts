@@ -3,17 +3,16 @@ import api from './api';
 
 api.interceptors.request.use((config) => {
   const selectedInventoryId = localStorage.getItem('selectedInventoryId');
+  const method = config.method?.toLowerCase();
 
-  if (selectedInventoryId) {
-    const method = config.method?.toLowerCase();
-
-    // Only inject for GET or DELETE
-    if (method === 'get' || method === 'delete') {
-      if (!config.params) config.params = {};
-      config.params.inventory_id = selectedInventoryId;
-    }
+  // Only inject inventory_id into query string for safe idempotent operations
+  if (selectedInventoryId && (method === 'get' || method === 'delete')) {
+    if (!config.params) config.params = {};
+    config.params.inventory_id = selectedInventoryId;
+    console.log('🔗 Injecting inventory_id into query params:', selectedInventoryId);
   }
 
   return config;
+}, (error) => {
+  return Promise.reject(error);
 });
-
