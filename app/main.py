@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from app.database import get_db, init_db, SessionLocal
+from app.database import get_db, SessionLocal
 from app.core.auth import hash_password
 from app import crud, schemes
 from app.core.logger import logger
@@ -17,7 +17,7 @@ import logging
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("🚀 Starting up the application...")
-    init_db()
+    #init_db()
     seed_admin_user()
     yield
     logger.info("🛑 Shutting down the application...")
@@ -104,6 +104,6 @@ def seed_admin_user():
 
 # For dev-only execution
 if __name__ == "__main__":
-    init_db()
+    #init_db()
     seed_admin_user()
     print("Database tables created successfully.")
