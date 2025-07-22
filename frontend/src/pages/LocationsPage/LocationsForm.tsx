@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import api from '../api/api';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
+import api from '../../api/api';
+import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
 
 interface LocationFormProps {
   onCreated: () => void;
