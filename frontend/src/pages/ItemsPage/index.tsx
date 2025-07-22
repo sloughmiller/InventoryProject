@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { getItems, deleteItem } from '../api/itemApi';
-import ItemForm from '../components/ItemForm';
-import Layout from '../components/Layout';
-import ItemCard from '../components/cards/ItemCard';
-import api from '../api/api';
-import { log } from '../utils/logger';
-import type { Item, Inventory } from '../types';
+import { getItems, deleteItem } from '../../api/itemApi';
+import ItemForm from './ItemForm';
+import Layout from '../../components/layout';
+import ItemCard from './ItemCard';
+import api from '../../api/api';
+import { log } from '../../utils/logger';
+import type { Item, Inventory } from '../../types';
 
 const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);

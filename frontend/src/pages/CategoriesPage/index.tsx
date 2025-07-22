@@ -1,11 +1,11 @@
 // src/pages/CategoriesPage.tsx
 import React, { useEffect, useState } from 'react';
-import api from '../api/api';
-import Layout from '../components/Layout';
-import CategoryForm from '../components/CategoryForm';
-import CategoryCard from '../components/cards/CategoryCard';
-import type { Category } from '../types';
-import { log } from '../utils/logger';
+import api from '../../api/api';
+import Layout from '../../components/layout';
+import CategoryForm from './CategoryForm';
+import CategoryCard from './CategoryCard';
+import type { Category } from '../../types';
+import { log } from '../../utils/logger';
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);

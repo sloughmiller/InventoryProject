@@ -1,9 +1,9 @@
 // src/components/CategoryForm.tsx
 import React, { useState } from 'react';
-import api from '../api/api';
-import BaseCard from './cards/BaseCard';
-import type { Category } from '../types';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
+import api from '../../api/api';
+import BaseCard from '../../components/cards/BaseCard';
+import type { Category } from '../../types';
+import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
 
 interface CategoryFormProps {
   onCreated: () => void;

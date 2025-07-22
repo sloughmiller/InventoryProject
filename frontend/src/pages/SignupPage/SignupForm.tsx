@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../../../frontend/src/api/api';
+import api from '../../api/api';
 
 interface SignupFormProps {
   onSignupSuccess: () => void;

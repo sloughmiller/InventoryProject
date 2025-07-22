@@ -1,8 +1,8 @@
 // src/components/InventoryForm.tsx
 import React, { useState } from 'react';
-import api from '../api/api';
-import BaseCard from './cards/BaseCard';
-import { log } from '../utils/logger';
+import api from '../../api/api';
+import BaseCard from '../cards/BaseCard';
+import { log } from '../../utils/logger';
 
 interface Props {
   onCreated: () => void;

@@ -1,6 +1,6 @@
 // src/components/cards/InventoryCard.tsx
 import React from 'react';
-import BaseCard from './BaseCard';
+import BaseCard from '../../components/cards/BaseCard';
 import type { Inventory } from '../../types';
 
 type Props = {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import api, { setAuthToken } from '../api/api';
-import { useAuth } from '../contexts/AuthContext';
+import api, { setAuthToken } from '../../api/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface LoginFormProps {
   onLoginSuccess: () => void;

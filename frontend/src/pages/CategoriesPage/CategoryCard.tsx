@@ -1,5 +1,5 @@
 import React from 'react';
-import BaseCard from './BaseCard';
+import BaseCard from '../../components/cards/BaseCard';
 import type { Category } from '../../types';
 
 type Props = {

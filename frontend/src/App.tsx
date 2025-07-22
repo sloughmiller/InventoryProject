@@ -10,7 +10,7 @@ import ItemsPage from './pages/ItemsPage';
 import CategoriesPage from './pages/CategoriesPage';
 import LocationsPage from './pages/LocationsPage';
 
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './routes/ProtectedRoute';
 import { checkBackendAvailable } from './api/api';
 import InventorySelectorPage from './pages/InventorySelectorPage';
 import PostLoginRouter from './routes/PostLoginRouter';

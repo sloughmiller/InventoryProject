@@ -1,12 +1,12 @@
 // src/pages/InventorySelectorPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/api';
-import Layout from '../components/Layout';
-import InventoryCard from '../components/cards/InventoryCard';
-import type { Inventory } from '../types';
-import { log } from '../utils/logger';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext'; // ← make sure this is imported
+import api from '../../api/api';
+import Layout from '../../components/layout';
+import InventoryCard from '../../components/inventories/InventoryCard';
+import type { Inventory } from '../../types';
+import { log } from '../../utils/logger';
+import { useSelectedInventory } from '../../contexts/SelectedInventoryContext'; // ← make sure this is imported
 
 
 

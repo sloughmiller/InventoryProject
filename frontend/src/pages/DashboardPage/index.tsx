@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import UserProfile from '../components/UserProfile';
-import { fetchCurrentUser } from '../api/api';
-import Layout from '../components/Layout';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
-import { log } from '../utils/logger';
+import UserProfile from '../../components/users/UserProfile';
+import { fetchCurrentUser } from '../../api/api';
+import Layout from '../../components/layout';
+import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { log } from '../../utils/logger';
 
 const DashboardPage: React.FC = () => {
   const [username, setUsername] = useState<string | null>(null);

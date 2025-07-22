@@ -1,8 +1,8 @@
 // src/components/ItemForm.tsx
 import React, { useEffect, useState } from 'react';
-import api from '../api/api';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
-import type { Item } from '../types';
+import api from '../../api/api';
+import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import type { Item } from '../../types/index';
 
 interface Category {
   id: number;

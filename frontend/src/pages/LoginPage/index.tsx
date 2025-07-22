@@ -1,11 +1,11 @@
 // src/pages/LoginPage.tsx
 import React from 'react';
-import LoginForm from '../components/LoginForm';
+import LoginForm from './LoginForm';
 import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import api from '../api/api';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
-import { log } from '../utils/logger';
+import Layout from '../../components/layout/index';
+import api from '../../api/api';
+import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { log } from '../../utils/logger';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();

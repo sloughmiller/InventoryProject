@@ -1,8 +1,8 @@
 // src/pages/LocationsPage.tsx
 import React, { useState, useEffect } from 'react';
-import api from '../api/api';
-import Layout from '../components/Layout';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
+import api from '../../api/api';
+import Layout from '../../components/layout';
+import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
 
 interface Location {
   id: number;

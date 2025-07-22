@@ -1,5 +1,5 @@
 import React from 'react';
-import SignupForm from '../components/SignupForm';
+import SignupForm from './SignupForm';
 import { useNavigate } from 'react-router-dom';
 
 const SignupPage: React.FC = () => {

@@ -1,11 +1,11 @@
 // src/pages/InventoryManagerPage.tsx
 import React, { useEffect, useState } from 'react';
-import api from '../api/api';
-import Layout from '../components/Layout';
-import InventoryForm from '../components/InventoryForm';
-import InventoryCard from '../components/cards/InventoryCard';
-import { log } from '../utils/logger';
-import type { Inventory } from '../types';
+import api from '../../api/api';
+import Layout from '../../components/layout';
+import InventoryForm from '../../components/inventories/InventoryForm';
+import InventoryCard from '../../components/inventories/InventoryCard';
+import { log } from '../../utils/logger';
+import type { Inventory } from '../../types';
 
 const InventoryManagerPage: React.FC = () => {
   const [inventories, setInventories] = useState<Inventory[]>([]);
