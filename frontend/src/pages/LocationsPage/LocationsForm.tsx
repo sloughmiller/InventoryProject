@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import api from '../../api/api';
 import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { createLocation } from '../../api/locationApi';
 
 interface LocationFormProps {
   onCreated: () => void;
@@ -20,11 +20,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
     }
 
     try {
-      await api.post('/locations/', {
-        name,
-        inventory_id: selectedInventory.id,
-      });
-
+      await createLocation({ name, inventory_id: selectedInventory.id });
       setName('');
       setError('');
       onCreated();

@@ -1,14 +1,14 @@
 // src/pages/LocationsPage.tsx
-import React, { useState, useEffect } from 'react';
-import api from '../../api/api';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout';
 import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
-
-interface Location {
-  id: number;
-  name: string;
-  description?: string;
-}
+import {
+  getLocations,
+  createLocation,
+  updateLocation,
+  deleteLocation,
+  type Location,
+} from '../../api/locationApi';
 
 const LocationsPage: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
@@ -19,8 +19,8 @@ const LocationsPage: React.FC = () => {
 
   const fetchLocations = async () => {
     try {
-      const res = await api.get('/locations/');
-      setLocations(res.data);
+      const data = await getLocations();
+      setLocations(data);
     } catch (err) {
       console.error('❌ Failed to fetch locations:', err);
     }
@@ -35,11 +35,7 @@ const LocationsPage: React.FC = () => {
     }
 
     try {
-      await api.post('/locations/', {
-        name,
-        description,
-        inventory_id: selectedInventory.id,
-      });
+      await createLocation({ name, description, inventory_id: selectedInventory.id });
       setName('');
       setDescription('');
       setError('');
@@ -52,7 +48,7 @@ const LocationsPage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await api.delete(`/locations/${id}`);
+      await deleteLocation(id);
       fetchLocations();
     } catch (err) {
       console.error(`❌ Failed to delete location ${id}:`, err);
@@ -62,12 +58,12 @@ const LocationsPage: React.FC = () => {
   const handleEdit = async (id: number) => {
     const newName = prompt('Enter new location name:');
     const newDescription = prompt('Enter new description (optional):');
-    if (newName !== null) {
+    if (newName && selectedInventory) {
       try {
-        await api.put(`/locations/${id}`, {
+        await updateLocation(id, {
           name: newName,
           description: newDescription || undefined,
-          inventory_id: selectedInventory?.id, // included just in case your schema requires it
+          inventory_id: selectedInventory.id,
         });
         fetchLocations();
       } catch (err) {
