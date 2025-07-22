@@ -35,11 +35,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://sloughmiller-inventoryproject.netlify.app",
         "http://localhost:5173",
         "https://localhost:5173",
         "http://192.168.1.21:5173",
         "https://192.168.1.21:5173",
-        "https://sloughmiller-inventoryproject.netlify.app",
+        
     ],
     allow_credentials=True,
     allow_methods=["*"],
