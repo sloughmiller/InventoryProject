@@ -6,13 +6,20 @@ import CategoryForm from './CategoryForm';
 import CategoryCard from './CategoryCard';
 import type { Category } from '../../types';
 import { log } from '../../utils/logger';
+import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const { selectedInventory, loading } = useSelectedInventory();
 
   const fetchCategories = async () => {
+    if (!selectedInventory || loading) {
+      log.warn('CategoriesPage', '⚠️ No inventory selected or still loading.');
+      return;
+    }
+
     try {
-      const response = await api.get('/categories/');
+      const response = await api.get(`/categories/?inventory_id=${selectedInventory.id}`);
       setCategories(response.data);
       log.info('CategoriesPage', '📦 Categories loaded:', response.data);
     } catch (err) {
@@ -24,27 +31,41 @@ const CategoriesPage: React.FC = () => {
     const newName = prompt('Enter new category name:', category.name);
     if (!newName || newName === category.name) return;
 
+    if (!selectedInventory) {
+      log.warn('CategoriesPage', '⚠️ No inventory selected.');
+      return;
+    }
+
     try {
       log.info('CategoriesPage', `✏️ Renaming category ID ${category.id} to "${newName}"`);
-      await api.put(`/categories/${category.id}`, { name: newName });
+      await api.put(`/categories/${category.id}?inventory_id=${selectedInventory.id}`, {
+        name: newName,
+      });
       fetchCategories();
     } catch (err) {
       log.error('CategoriesPage', `❌ Failed to rename category ID ${category.id}:`, err);
     }
   };
 
+
   const handleDelete = async (category: Category) => {
     const confirmDelete = confirm(`Delete category "${category.name}"?`);
     if (!confirmDelete) return;
 
+    if (!selectedInventory) {
+      log.warn('CategoriesPage', '⚠️ No inventory selected.');
+      return;
+    }
+
     try {
       log.info('CategoriesPage', `🗑️ Deleting category ID ${category.id}`);
-      await api.delete(`/categories/${category.id}`);
+      await api.delete(`/categories/${category.id}?inventory_id=${selectedInventory.id}`);
       fetchCategories();
     } catch (err) {
       log.error('CategoriesPage', `❌ Failed to delete category ID ${category.id}:`, err);
     }
   };
+
 
   useEffect(() => {
     log.debug('CategoriesPage', '🔄 Initializing category fetch...');
