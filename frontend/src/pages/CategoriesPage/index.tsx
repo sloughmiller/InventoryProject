@@ -50,6 +50,11 @@ const CategoriesPage: React.FC = () => {
     const confirmDelete = confirm(`Delete category "${category.name}"?`);
     if (!confirmDelete) return;
 
+    if (!selectedInventory) {
+      log.warn('CategoriesPage', '⚠️ No inventory selected.');
+      return;
+    }
+
     try {
       log.info('CategoriesPage', `🗑️ Deleting category ID ${category.id}`);
       await api.delete(`/categories/${category.id}?inventory_id=${selectedInventory.id}`);
@@ -58,6 +63,7 @@ const CategoriesPage: React.FC = () => {
       log.error('CategoriesPage', `❌ Failed to delete category ID ${category.id}:`, err);
     }
   };
+
 
 
   useEffect(() => {
