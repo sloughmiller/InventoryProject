@@ -33,24 +33,6 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
-origins = [
-        "https://sloughmiller-inventoryproject.netlify.app",
-        "http://localhost:5173",
-        "https://localhost:5173",
-        "http://192.168.1.21:5173",
-        "https://192.168.1.21:5173",
-        
-    ]
-
-# ✅ Apply CORS middleware early
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     logger.exception(f"🔥 Unhandled exception: {exc}")
@@ -72,6 +54,26 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         status_code=422,
         content={"detail": exc.errors()}
     )
+
+origins = [
+        "https://sloughmiller-inventoryproject.netlify.app",
+        "http://localhost:5173",
+        "https://localhost:5173",
+        "http://192.168.1.21:5173",
+        "https://192.168.1.21:5173",
+        
+    ]
+
+# ✅ Apply CORS middleware early
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 
 # ✅ Middleware to log every request
 @app.middleware("http")
