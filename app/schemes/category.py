@@ -2,25 +2,30 @@ from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
 
+# Base model for shared fields (no inventory_id here anymore)
 class CategoryBase(BaseModel):
     name: str
     description: Optional[str] = None
-    inventory_id: int
 
+
+# Schema for creating a category (used in POST body)
 class CategoryCreate(CategoryBase):
     pass
 
+
+# Schema for updating a category (used in PUT body)
 class CategoryUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    inventory_id: Optional[int] = None
 
     class Config:
         model_config = ConfigDict(from_attributes=True)
 
 
+# Schema for returning a category (used in response_model)
 class Category(CategoryBase):
     id: int
+    inventory_id: int
 
     class Config:
         model_config = ConfigDict(from_attributes=True)
@@ -32,5 +37,3 @@ class Category(CategoryBase):
                 "inventory_id": 100
             }
         }
-        # This will allow us to use ORM objects directly with Pydantic models
-        # without needing to convert them to dictionaries first.
