@@ -41,17 +41,13 @@ def get_current_user(
 
 
 def extract_inventory_id(request: Request) -> int:
-    """
-    Extract `inventory_id` from query or path parameters.
-    On failure, raise detailed error with debug info.
-    """
     path_params = request.path_params
     query_params = dict(request.query_params)
     headers = dict(request.headers)
 
-    inventory_id = path_params.get("inventory_id") or query_params.get("inventory_id")
+    raw_id = path_params.get("inventory_id") or query_params.get("inventory_id")
 
-    if not inventory_id:
+    if raw_id is None:
         raise HTTPException(
             status_code=400,
             detail={
@@ -63,7 +59,18 @@ def extract_inventory_id(request: Request) -> int:
                 "headers": {
                     "authorization": headers.get("authorization"),
                     "content-type": headers.get("content-type"),
-                }
+                },
+            },
+        )
+
+    try:
+        return int(raw_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "error": f"Invalid inventory_id: must be an integer. Got '{raw_id}'",
+                "path": request.url.path,
             },
         )
 
@@ -121,4 +128,6 @@ def require_admin_or_viewer_role(
     db: Session = Depends(database.get_db),
     current_user=Depends(get_current_user),
 ):
-    return get_inventory_role_or_403(inventory_id, ["admin", "viewer"])(db, current_user)
+    return get_inventory_role_or_403(inventory_id, ["admin", "viewer"])(
+        db, current_user
+    )
