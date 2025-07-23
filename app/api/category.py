@@ -29,7 +29,7 @@ def create_category(
     current_user: models.User = Depends(get_current_user),
     _: str = Depends(require_admin_role),
 ):
-    return crud.category.create_category(db, category)
+    return crud.category.create_category(db, category, inventory_id)
 
 
 @router.get("/{category_id}", response_model=schemes.Category)
