@@ -74,21 +74,6 @@ def extract_inventory_id(request: Request) -> int:
             },
         )
 
-    try:
-        return int(inventory_id)
-    except ValueError:
-        raise HTTPException(
-            status_code=422,
-            detail={
-                "error": "Invalid inventory_id format, must be an integer",
-                "provided_value": inventory_id,
-                "path": request.url.path,
-                "query_params": query_params,
-                "path_params": path_params,
-                "method": request.method,
-            },
-        )
-
 
 def get_inventory_role_or_403(inventory_id: int, allowed_roles: list[str]):
     def dependency(
