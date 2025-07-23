@@ -42,6 +42,13 @@ app = FastAPI(
 )
 
 
+@app.middleware("http")
+async def add_vary_header(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Vary"] = "Origin"
+    return response
+
+
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     logger.exception(f"🔥 Unhandled exception: {exc}")
