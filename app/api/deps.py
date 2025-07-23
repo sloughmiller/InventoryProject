@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jose import JWTError
+import json
 
 from app import crud, database, core
 from app.crud.shared_inventory import get_user_inventory_role
@@ -41,21 +42,44 @@ def get_current_user(
 
 def extract_inventory_id(request: Request) -> int:
     """
-    Tries to extract `inventory_id` from either query parameters or path parameters.
+    Extract `inventory_id` from query or path parameters.
+    On failure, raise detailed error with debug info.
     """
-    inventory_id = (
-        request.path_params.get("inventory_id")
-        or request.query_params.get("inventory_id")
-    )
+    path_params = request.path_params
+    query_params = dict(request.query_params)
+    headers = dict(request.headers)
+
+    inventory_id = path_params.get("inventory_id") or query_params.get("inventory_id")
+
     if not inventory_id:
         raise HTTPException(
-            status_code=400, detail="Missing required parameter: inventory_id"
+            status_code=400,
+            detail={
+                "error": "Missing required parameter: inventory_id",
+                "path": request.url.path,
+                "query_params": query_params,
+                "path_params": path_params,
+                "method": request.method,
+                "headers": {
+                    "authorization": headers.get("authorization"),
+                    "content-type": headers.get("content-type"),
+                }
+            },
         )
+
     try:
         return int(inventory_id)
     except ValueError:
         raise HTTPException(
-            status_code=422, detail="Invalid inventory_id format, must be an integer"
+            status_code=422,
+            detail={
+                "error": "Invalid inventory_id format, must be an integer",
+                "provided_value": inventory_id,
+                "path": request.url.path,
+                "query_params": query_params,
+                "path_params": path_params,
+                "method": request.method,
+            },
         )
 
 

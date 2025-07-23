@@ -51,3 +51,4 @@ alembic.ini
 .env
 frontend/cert/cert.pem
 frontend/cert/key.pem
+frontend/tests/api-test.http
