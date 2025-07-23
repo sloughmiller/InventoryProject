@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import api from '../../api/api';
 import BaseCard from '../../components/cards/BaseCard';
-//import type { Category } from '../../types';
 import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
 
 interface CategoryFormProps {
@@ -23,9 +22,11 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
     }
 
     try {
-      await api.post(`/categories/?inventory_id=${selectedInventory.id}`, {
-        name, 
-      });
+      await api.post('/categories/',
+        { name },
+        { params: { inventory_id: selectedInventory.id } }
+      );
+
 
       setName('');
       setError('');
