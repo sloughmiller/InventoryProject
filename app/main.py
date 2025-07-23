@@ -52,7 +52,10 @@ async def add_vary_header(request: Request, call_next):
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     logger.exception(f"🔥 Unhandled exception: {exc}")
-    return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+    origin = request.headers.get("origin")
+    headers = {"Access-Control-Allow-Origin": origin or "*", "Vary": "Origin"}
+    return JSONResponse(status_code=500, content={"detail": "Internal server error"}, headers=headers)
+
 
 
 @app.exception_handler(StarletteHTTPException)
