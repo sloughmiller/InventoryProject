@@ -37,12 +37,13 @@ def read_location(
 @router.post("/", response_model=schemes.Location)
 def create_location(
     location: schemes.LocationCreate,
+    inventory_id: int = Depends(extract_inventory_id),  # ✅ required
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
     _: str = Depends(require_admin_role),
 ):
     print("📦 Incoming location payload:", location)
-    return crud.location.create_location(db, location)
+    return crud.location.create_location(db, location, inventory_id)
 
 
 @router.put("/{location_id}", response_model=schemes.Location)

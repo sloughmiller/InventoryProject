@@ -24,8 +24,11 @@ def get_locations(db: Session, inventory_id: int, skip: int = 0, limit: int = 10
 
 
 def create_location(db: Session, location: schemes.LocationCreate, inventory_id: int):
-    location_data = location.dict(exclude={"inventory_id"})
-    db_location = models.Location(**location_data, inventory_id=inventory_id)
+    db_location = models.Location(
+        name=location.name,
+        description=location.description,
+        inventory_id=inventory_id,  # ✅ pulled from route, not schema
+    )
     db.add(db_location)
     db.commit()
     db.refresh(db_location)
