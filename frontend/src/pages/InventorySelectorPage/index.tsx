@@ -38,7 +38,7 @@ const InventorySelectorPage: React.FC = () => {
     };
 
     fetchInventories();
-  }, [navigate]);
+  }, [navigate, setSelectedInventory]);
 
   const handleSelect = (inv: Inventory) => {
     log.info('InventorySelectorPage', `📦 Inventory selected: ${inv.name}`);
