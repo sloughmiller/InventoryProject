@@ -24,6 +24,7 @@ def read_categories(
 @router.post("/", response_model=schemes.Category)
 def create_category(
     category: schemes.CategoryCreate,
+    inventory_id: int = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
     _: str = Depends(require_admin_role),
