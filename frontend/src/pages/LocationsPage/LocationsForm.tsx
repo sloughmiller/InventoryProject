@@ -13,7 +13,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
   const { selectedInventory, loading } = useSelectedInventory();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // ✅ Critical: Prevent form reload
+    e.preventDefault();
 
     if (!selectedInventory || loading) {
       setError('Inventory not selected. Please select or reload.');
@@ -24,13 +24,12 @@ const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
     const payload = {
       name,
       description: description || undefined,
-      inventory_id: selectedInventory.id,
     };
 
-    console.log('📦 Payload about to POST:', payload);
+    console.log('📦 Location payload:', payload);
 
     try {
-      const result = await createLocation(payload);
+      const result = await createLocation(payload, selectedInventory.id);
       console.log('✅ Location created successfully:', result);
       setName('');
       setDescription('');

@@ -67,9 +67,12 @@ const CategoriesPage: React.FC = () => {
 
 
   useEffect(() => {
-    log.debug('CategoriesPage', '🔄 Initializing category fetch...');
-    fetchCategories();
-  }, [selectedInventory?.id]); // make sure it re-fetches when the inventory changes
+    if (selectedInventory && !loading) {
+      log.debug('CategoriesPage', '🔄 Initializing category fetch...');
+      fetchCategories();
+    }
+  }, [selectedInventory?.id, loading]);
+
 
   return (
     <Layout>

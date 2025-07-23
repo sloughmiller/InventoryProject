@@ -5,36 +5,50 @@ export interface Location {
   id: number;
   name: string;
   description?: string;
-  inventory_id: number; // ✅ must be present in full Location object
+  inventory_id: number;
 }
 
 export interface CreateLocationInput {
   name: string;
   description?: string;
-  inventory_id: number;
 }
 
-export async function getLocations(): Promise<Location[]> {
-  const res = await api.get('/locations/');
-  return res.data;
-}
-
-export async function createLocation(data: CreateLocationInput): Promise<Location> {
-  console.log('📨 Sending to backend:', data);
-  const res = await api.post('/locations/', data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
+export async function getLocationsForInventory(inventory_id: number): Promise<Location[]> {
+  const res = await api.get('/locations/', {
+    params: { inventory_id },
   });
   return res.data;
 }
 
-export async function updateLocation(id: number, data: Partial<CreateLocationInput>): Promise<Location> {
-  const res = await api.put(`/locations/${id}`, data);
+export async function createLocation(
+  data: CreateLocationInput,
+  inventory_id: number
+): Promise<Location> {
+  const res = await api.post('/locations/', data, {
+    params: { inventory_id },
+    headers: { 'Content-Type': 'application/json' },
+  });
   return res.data;
 }
 
-export async function deleteLocation(id: number): Promise<Location> {
-  const res = await api.delete(`/locations/${id}`);
+export async function updateLocation(
+  id: number,
+  data: Partial<CreateLocationInput>,
+  inventory_id: number
+): Promise<Location> {
+  const res = await api.put(`/locations/${id}`, data, {
+    params: { inventory_id },
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return res.data;
+}
+
+export async function deleteLocation(
+  id: number,
+  inventory_id: number
+): Promise<Location> {
+  const res = await api.delete(`/locations/${id}`, {
+    params: { inventory_id },
+  });
   return res.data;
 }
