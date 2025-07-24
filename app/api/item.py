@@ -1,13 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import Optional
+
 from app import crud, schemes, models
 from app.database import get_db
 from app.api.deps import get_current_user, get_inventory_role_or_403
-from typing import Optional
 
 router = APIRouter()
 
-# View all items in an inventory → requires admin or viewer
+
+# ✅ GET all items for a given inventory OR all accessible items
 @router.get("/", response_model=list[schemes.Item])
 def read_items(
     inventory_id: Optional[int] = None,
@@ -23,14 +25,14 @@ def read_items(
         return crud.item.get_all_accessible_items(db, user_id=current_user.id)
 
 
-# View a single item → requires admin or viewer
+# ✅ GET single item by ID
 @router.get("/{item_id}", response_model=schemes.Item)
 def read_item(
     item_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    item = crud.item.get_item(db, item_id)
+    item = db.query(models.Item).filter(models.Item.id == item_id).first()
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
 
@@ -38,7 +40,7 @@ def read_item(
     return item
 
 
-# Create an item → requires admin
+# ✅ POST a new item (inventory_id required in body)
 @router.post("/", response_model=schemes.Item)
 def create_item(
     item: schemes.ItemCreate,
@@ -49,8 +51,7 @@ def create_item(
     return crud.item.create_item(db, item, inventory_id=item.inventory_id)
 
 
-
-# Update an item → requires admin
+# ✅ PUT update item by ID
 @router.put("/{item_id}", response_model=schemes.Item)
 def update_item(
     item_id: int,
@@ -58,24 +59,24 @@ def update_item(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    item = crud.item.get_item(db, item_id)
-    if item is None:
+    existing = db.query(models.Item).filter(models.Item.id == item_id).first()
+    if existing is None:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    get_inventory_role_or_403(item.inventory_id, ["admin"])(db, current_user)
-    return crud.item.update_item(db, item_id, item_update)
+    get_inventory_role_or_403(existing.inventory_id, ["admin"])(db, current_user)
+    return crud.item.update_item(db, item_id, item_update, inventory_id=existing.inventory_id)
 
 
-# Delete an item → requires admin
+# ✅ DELETE item by ID
 @router.delete("/{item_id}", response_model=schemes.Item)
 def delete_item(
     item_id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    item = crud.item.get_item(db, item_id)
-    if item is None:
+    existing = db.query(models.Item).filter(models.Item.id == item_id).first()
+    if existing is None:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    get_inventory_role_or_403(item.inventory_id, ["admin"])(db, current_user)
-    return crud.item.delete_item(db, item_id)
+    get_inventory_role_or_403(existing.inventory_id, ["admin"])(db, current_user)
+    return crud.item.delete_item(db, item_id, inventory_id=existing.inventory_id)
