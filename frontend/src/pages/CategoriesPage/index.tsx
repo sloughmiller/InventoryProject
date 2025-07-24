@@ -1,46 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import api from '../../api/api';
+import React, { useEffect } from 'react';
 import Layout from '../../components/layout';
 import CategoryForm from './CategoryForm';
 import CategoryCard from './CategoryCard';
-import type { Category } from '../../types';
-import { log } from '../../utils/logger';
 import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import {
+  getCategoriesForInventory,
+  renameCategory,
+  deleteCategory,
+  type Category,
+} from '../../api/categoryApi';
+import { useInventoryFetcher } from '../../hooks/useInventoryFetcher';
+import { log } from '../../utils/logger';
 
 const CategoriesPage: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const { selectedInventory, loading } = useSelectedInventory();
+  const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
 
-  const fetchCategories = async () => {
-    if (!selectedInventory || loading) {
-      log.warn('CategoriesPage', '⚠️ No inventory selected or still loading.');
-      return;
-    }
-
-    try {
-      const response = await api.get(`/categories/?inventory_id=${selectedInventory.id}`);
-      setCategories(response.data);
-      log.info('CategoriesPage', '📦 Categories loaded:', response.data);
-    } catch (err) {
-      log.error('CategoriesPage', '❌ Failed to load categories:', err);
-    }
-  };
+  const {
+    data: categories,
+    error: fetchError,
+    loading,
+    refetch,
+  } = useInventoryFetcher<Category>(getCategoriesForInventory);
 
   const handleRename = async (category: Category) => {
     const newName = prompt('Enter new category name:', category.name);
-    if (!newName || newName === category.name) return;
-
-    if (!selectedInventory) {
-      log.warn('CategoriesPage', '⚠️ No inventory selected.');
-      return;
-    }
+    if (!newName || newName === category.name || !selectedInventory) return;
 
     try {
       log.info('CategoriesPage', `✏️ Renaming category ID ${category.id} to "${newName}"`);
-      await api.put(`/categories/${category.id}?inventory_id=${selectedInventory.id}`, {
-        name: newName,
-      });
-      fetchCategories();
+      await renameCategory(category.id, newName, selectedInventory.id);
+      refetch();
     } catch (err) {
       log.error('CategoriesPage', `❌ Failed to rename category ID ${category.id}:`, err);
     }
@@ -48,31 +37,23 @@ const CategoriesPage: React.FC = () => {
 
   const handleDelete = async (category: Category) => {
     const confirmDelete = confirm(`Delete category "${category.name}"?`);
-    if (!confirmDelete) return;
-
-    if (!selectedInventory) {
-      log.warn('CategoriesPage', '⚠️ No inventory selected.');
-      return;
-    }
+    if (!confirmDelete || !selectedInventory) return;
 
     try {
       log.info('CategoriesPage', `🗑️ Deleting category ID ${category.id}`);
-      await api.delete(`/categories/${category.id}?inventory_id=${selectedInventory.id}`);
-      fetchCategories();
+      await deleteCategory(category.id, selectedInventory.id);
+      refetch();
     } catch (err) {
       log.error('CategoriesPage', `❌ Failed to delete category ID ${category.id}:`, err);
     }
   };
 
-
-
   useEffect(() => {
-    if (selectedInventory && !loading) {
-      log.debug('CategoriesPage', '🔄 Initializing category fetch...');
-      fetchCategories();
+    if (selectedInventory && !inventoryLoading) {
+      log.debug('CategoriesPage', '🔄 Triggering category refetch...');
+      refetch();
     }
-  }, [selectedInventory?.id, loading]);
-
+  }, [selectedInventory?.id, inventoryLoading]);
 
   return (
     <Layout>
@@ -82,7 +63,11 @@ const CategoriesPage: React.FC = () => {
           <p className="text-gray-500">Add and manage your item categories.</p>
         </header>
 
-        <CategoryForm onCreated={fetchCategories} />
+        <CategoryForm onCreated={refetch} />
+
+        {fetchError && (
+          <p className="text-red-600 bg-red-100 px-4 py-2 rounded text-center">{fetchError}</p>
+        )}
 
         <div className="space-y-2">
           {categories.length === 0 ? (

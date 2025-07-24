@@ -1,8 +1,8 @@
-// src/components/CategoryForm.tsx
+// src/pages/CategoriesPage/CategoryForm.tsx
 import React, { useState } from 'react';
-import api from '../../api/api';
 import BaseCard from '../../components/cards/BaseCard';
 import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { createCategory } from '../../api/categoryApi';
 
 interface CategoryFormProps {
   onCreated: () => void;
@@ -22,12 +22,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
     }
 
     try {
-      await api.post('/categories/',
-        { name },
-        { params: { inventory_id: selectedInventory.id } }
-      );
-
-
+      await createCategory({ name }, selectedInventory.id);
       setName('');
       setError('');
       onCreated();
