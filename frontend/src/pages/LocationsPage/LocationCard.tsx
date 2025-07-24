@@ -13,7 +13,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ location, onEdit, onDelete 
   return (
     <BaseCard
       title={location.name}
-      description={location.description || 'No description'}
+      description={`ID: ${location.id}\n${location.description || 'No description'}`}
       actions={
         <>
           <button
@@ -33,6 +33,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ location, onEdit, onDelete 
         </>
       }
     />
+
   );
 };
 

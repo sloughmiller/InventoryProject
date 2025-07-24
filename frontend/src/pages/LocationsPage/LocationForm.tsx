@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
 import { createLocation } from '../../api/locationApi';
+import BaseCard from '../../components/cards/BaseCard';
 
 interface LocationFormProps {
   onCreated: () => void;
@@ -42,22 +43,34 @@ const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h4>Add New Location</h4>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input
-        placeholder="Location Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <input
-        placeholder="Description (optional)"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <button type="submit">➕ Add Location</button>
-    </form>
+    <BaseCard title="➕ Add New Location" description="Enter a name and optional description.">
+      {error && (
+        <p className="text-red-600 bg-red-100 px-4 py-2 rounded mb-4">{error}</p>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Location Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-emerald-400"
+        />
+        <input
+          type="text"
+          placeholder="Description (optional)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-emerald-400"
+        />
+        <button
+          type="submit"
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded"
+        >
+          Add Location
+        </button>
+      </form>
+    </BaseCard>
   );
 };
 
