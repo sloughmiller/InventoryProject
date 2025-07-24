@@ -52,3 +52,9 @@ export async function deleteLocation(
   });
   return res.data;
 }
+
+
+export async function getLocation(id: number): Promise<Location> {
+  const res = await api.get(`/locations/${id}`);
+  return res.data;
+}
