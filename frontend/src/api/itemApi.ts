@@ -1,74 +1,38 @@
+// src/api/itemApi.ts
 import api from './api';
+import type { Item } from '../types'
 
-// Match the backend model structure
-export interface Item {
-  id: number;
-  name: string;
-  description?: string;
-  barcode?: string;
-  purchase_date?: string; // ISO string
-  location_id?: number;
-  category_id?: number;
-  condition_id?: number;
-  inventory_id: number;
-}
 
-export interface CreateItemInput {
-  name: string;
-  description?: string;
-  barcode?: string;
-  purchase_date?: string;
-  location_id?: number;
-  category_id?: number;
-  condition_id?: number;
-}
-
-// ✅ GET all items for an inventory
-export async function getItems(inventory_id: number): Promise<Item[]> {
+// ✅ GET all items
+export async function getItems(inventoryId: string): Promise<Item[]> {
   const res = await api.get('/items/', {
-    params: { inventory_id },
+    params: inventoryId ? { inventory_id: inventoryId } : {},
   });
   return res.data;
 }
 
-// ✅ GET single item by ID
+
+
+// ✅ GET single item by ID (optional, not required unless editing inline)
 export async function getItem(id: number): Promise<Item> {
   const res = await api.get(`/items/${id}`);
   return res.data;
 }
 
 // ✅ POST a new item
-export async function createItem(
-  data: CreateItemInput,
-  inventory_id: number
-): Promise<Item> {
-  const res = await api.post('/items/', data, {
-    params: { inventory_id },
-    headers: { 'Content-Type': 'application/json' },
-  });
+export async function createItem(data: Omit<Item, 'id'>): Promise<Item> {
+  const res = await api.post('/items/', data);
   return res.data;
 }
 
-// ✅ PUT (update) existing item
-export async function updateItem(
-  id: number,
-  data: Partial<CreateItemInput>,
-  inventory_id: number
-): Promise<Item> {
-  const res = await api.put(`/items/${id}`, data, {
-    params: { inventory_id },
-    headers: { 'Content-Type': 'application/json' },
-  });
+// ✅ PUT (update) an existing item
+export async function updateItem(id: number, data: Partial<Item>): Promise<Item> {
+  const res = await api.put(`/items/${id}`, data);
   return res.data;
 }
 
 // ✅ DELETE an item
-export async function deleteItem(
-  id: number,
-  inventory_id: number
-): Promise<Item> {
-  const res = await api.delete(`/items/${id}`, {
-    params: { inventory_id },
-  });
+export async function deleteItem(id: number): Promise<Item> {
+  const res = await api.delete(`/items/${id}`);
   return res.data;
 }
