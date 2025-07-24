@@ -1,18 +1,10 @@
 // src/components/ItemForm.tsx
-import React, { useEffect, useState } from 'react';
-import api from '../../api/api';
+import React, { useState } from 'react';
+import { createItem, updateItem } from '../../api/itemApi';
 import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
 import type { Item } from '../../types/index';
+import { useInventoryOptions } from '../../hooks/useInventoryOptions';
 
-interface Category {
-  id: number;
-  name: string;
-}
-
-interface Location {
-  id: number;
-  name: string;
-}
 
 interface ItemFormProps {
   onItemCreated?: () => void;
@@ -20,60 +12,16 @@ interface ItemFormProps {
   onEditDone?: () => void;
 }
 
-const ItemForm: React.FC<ItemFormProps> = ({
-  //onItemCreated,
-  editingItem,
-  onEditDone,
-}) => {
+const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditDone }) => {
   const { selectedInventory } = useSelectedInventory();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [quantity, setQuantity] = useState('1');
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    const loadData = async () => {
-      const [catRes, locRes] = await Promise.all([
-        api.get('/categories/'),
-        api.get('/locations/'),
-      ]);
-      setCategories(catRes.data);
-      setLocations(locRes.data);
-    };
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    if (editingItem) {
-      setName(editingItem.name);
-      setDescription(editingItem.description || '');
-      setQuantity(editingItem.quantity.toString());
-
-      const fetchNames = async () => {
-        try {
-          const catRes = await api.get(`/categories/${editingItem.category_id}`);
-          const locRes = await api.get(`/locations/${editingItem.location_id}`);
-          setSelectedCategory(catRes.data.name);
-          setSelectedLocation(locRes.data.name);
-        } catch (err) {
-          console.error('❌ Failed to load category or location names', err);
-        }
-      };
-      fetchNames();
-    } else {
-      setName('');
-      setDescription('');
-      setQuantity('');
-      setSelectedCategory('');
-      setSelectedLocation('');
-      setError('');
-    }
-  }, [editingItem]);
+  const { categories, locations } = useInventoryOptions(selectedInventory?.id);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,17 +61,19 @@ const ItemForm: React.FC<ItemFormProps> = ({
 
 
       if (editingItem) {
-        await api.put(`/items/${editingItem.id}`, {
+        await updateItem(editingItem.id, {
           ...itemData,
-          inventory_id: selectedInventory.id, // still required on update
+          inventory_id: selectedInventory.id,
         });
         onEditDone?.();
+
       } else {
         console.log("📦 Submitting item data:", {
           ...itemData,
           inventory_id: selectedInventory.id,
         });
-        await api.post(`/items/`, itemData);
+        await createItem(itemData);
+        onItemCreated?.();
       }
 
       // Reset form
