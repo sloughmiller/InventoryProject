@@ -65,40 +65,35 @@ const LocationsPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
-        <header className="text-center">
-          <h2 className="text-3xl font-bold text-emerald-700">📍 Locations</h2>
-          <p className="text-gray-600 mt-2">Manage and add inventory locations.</p>
+      <div className="max-w-3xl mx-auto space-y-8">
+        <header className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-emerald-700">📍 Locations</h1>
+          <p className="text-gray-500">Manage and add inventory locations.</p>
         </header>
 
-        <section className="bg-white shadow-md rounded p-6">
-          <h4 className="text-xl font-semibold text-emerald-600 mb-4">➕ Add New Location</h4>
-          <LocationForm onCreated={refetch} />
-        </section>
+        <LocationForm onCreated={refetch} />
 
-        <section>
-          <h3 className="text-2xl font-semibold text-emerald-700 mb-4">📋 Existing Locations</h3>
-          {fetchError && (
-            <p className="text-red-600 bg-red-100 px-4 py-2 rounded mb-4">{fetchError}</p>
+        {fetchError && (
+          <p className="text-red-600 bg-red-100 px-4 py-2 rounded text-center">{fetchError}</p>
+        )}
+
+        <div className="space-y-2">
+          {locations.length === 0 ? (
+            <p className="text-gray-500 text-center">No locations found.</p>
+          ) : (
+            locations.map((loc) => (
+              <LocationCard
+                key={loc.id}
+                location={loc}
+                onEdit={() => handleEdit(loc)}
+                onDelete={() => handleDelete(loc)}
+              />
+            ))
           )}
-          <div className="space-y-2">
-            {locations.length === 0 ? (
-              <p className="text-gray-500 text-center">No locations found.</p>
-            ) : (
-              locations.map((loc) => (
-                <LocationCard
-                  key={loc.id}
-                  location={loc}
-                  onEdit={() => handleEdit(loc)}
-                  onDelete={() => handleDelete(loc)}
-                />
-              ))
-            )}
-          </div>
-        </section>
+        </div>
       </div>
     </Layout>
   );
 };
 
-export default LocationsPage;
+  export default LocationsPage;
