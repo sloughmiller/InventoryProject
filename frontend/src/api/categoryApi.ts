@@ -24,7 +24,7 @@ export async function createCategory(
   inventory_id: number
 ): Promise<Category> {
   const res = await api.post('/categories/', data, {
-    params: { inventory_id },
+    params: { inventory_id }, 
     headers: { 'Content-Type': 'application/json' },
   });
   return res.data;
