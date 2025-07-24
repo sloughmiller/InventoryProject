@@ -18,7 +18,7 @@ const LocationsPage: React.FC = () => {
   const {
     data: locations,
     error: fetchError,
-    loading,
+    //loading,
     refetch,
   } = useInventoryFetcher<Location>(getLocationsForInventory);
 

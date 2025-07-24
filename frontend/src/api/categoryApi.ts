@@ -52,3 +52,8 @@ export async function renameCategory(
   );
   return res.data;
 }
+
+export async function getCategory(id: number): Promise<Category> {
+  const res = await api.get(`/categories/${id}`);
+  return res.data;
+}

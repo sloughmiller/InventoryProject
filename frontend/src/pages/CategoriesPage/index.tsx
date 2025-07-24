@@ -18,7 +18,7 @@ const CategoriesPage: React.FC = () => {
   const {
     data: categories,
     error: fetchError,
-    loading,
+    //loading,
     refetch,
   } = useInventoryFetcher<Category>(getCategoriesForInventory);
 
