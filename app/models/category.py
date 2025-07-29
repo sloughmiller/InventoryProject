@@ -1,7 +1,8 @@
-from sqlalchemy import ForeignKey, String, Integer, Index
+import uuid
+from sqlalchemy import String, ForeignKey, Index
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import List, Optional
-from typing import TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 from .base import Base
 
 if TYPE_CHECKING:
@@ -15,12 +16,27 @@ class Category(Base):
         Index('ix_categories_name', 'name', unique=True),
     )
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+
     name: Mapped[str] = mapped_column(String, unique=True)
-    description: Mapped[Optional[str]] = mapped_column(String, nullable=True)  
-    inventory_id: Mapped[int] = mapped_column(ForeignKey('inventories.id', ondelete='CASCADE'), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
 
-    items: Mapped[List['Item']] = relationship('Item', back_populates='category', cascade='all, delete', passive_deletes=True)
-    inventory: Mapped["Inventory"] = relationship("Inventory", back_populates="categories")
+    inventory_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey('inventories.id', ondelete='CASCADE'),
+        nullable=False
+    )
 
-    
+    items: Mapped[List['Item']] = relationship(
+        'Item',
+        back_populates='category',
+        cascade='all, delete',
+        passive_deletes=True
+    )
+
+    inventory: Mapped["Inventory"] = relationship(
+        "Inventory",
+        back_populates="categories"
+    )

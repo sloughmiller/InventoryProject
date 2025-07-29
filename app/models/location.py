@@ -1,8 +1,10 @@
-from sqlalchemy import ForeignKey, String, Integer, Index
+from sqlalchemy import ForeignKey, String, Index
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List, Optional
 from .base import Base
 from typing import TYPE_CHECKING
+import uuid
 
 if TYPE_CHECKING:
     from .item import Item
@@ -16,11 +18,15 @@ class Location(Base):
         Index("ix_locations_name", "name", unique=True),
     )
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     name: Mapped[str] = mapped_column(String, unique=True)
     description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    inventory_id: Mapped[int] = mapped_column(
-        ForeignKey("inventories.id", ondelete="CASCADE"), nullable=False
+    inventory_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("inventories.id", ondelete="CASCADE"),
+        nullable=False
     )
 
     items: Mapped[List["Item"]] = relationship(

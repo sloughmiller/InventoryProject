@@ -1,4 +1,6 @@
-from sqlalchemy import String, Integer, ForeignKey, Index
+import uuid
+from sqlalchemy import String, ForeignKey, Index
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List, TYPE_CHECKING
 from .base import Base
@@ -20,48 +22,43 @@ class Inventory(Base):
         Index("ix_inventories_name", "name"),
     )
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+
     name: Mapped[str] = mapped_column(String, nullable=False)
-    owner_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+
+    owner_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
     )
 
     # Relationships
     owner: Mapped["User"] = relationship("User", back_populates="inventories")
+
     items: Mapped[List["Item"]] = relationship(
         "Item", back_populates="inventory", cascade="all, delete", passive_deletes=True
     )
+
     shared_users: Mapped[List["SharedInventory"]] = relationship(
-        "SharedInventory",
-        back_populates="inventory",
-        cascade="all, delete",
-        passive_deletes=True,
+        "SharedInventory", back_populates="inventory", cascade="all, delete", passive_deletes=True
     )
-    
+
     categories: Mapped[List["Category"]] = relationship(
-        "Category",
-        back_populates="inventory",
-        cascade="all, delete",
-        passive_deletes=True,
+        "Category", back_populates="inventory", cascade="all, delete", passive_deletes=True
     )
 
     locations: Mapped[List["Location"]] = relationship(
-        "Location",
-        back_populates="inventory",
-        cascade="all, delete",
-        passive_deletes=True,
+        "Location", back_populates="inventory", cascade="all, delete", passive_deletes=True
     )
 
     conditions: Mapped[List["Condition"]] = relationship(
-        "Condition",
-        back_populates="inventory",
-        cascade="all, delete",
-        passive_deletes=True,
+        "Condition", back_populates="inventory", cascade="all, delete", passive_deletes=True
     )
 
     activities: Mapped[List["Activity"]] = relationship(
-        "Activity",
-        back_populates="inventory",
-        cascade="all, delete",
-        passive_deletes=True,
+        "Activity", back_populates="inventory", cascade="all, delete", passive_deletes=True
     )
