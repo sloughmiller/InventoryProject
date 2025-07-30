@@ -1,39 +1,38 @@
+import uuid
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
 
-# Base model — no inventory_id here
+# Base model — shared fields
 class LocationBase(BaseModel):
     name: str
     description: Optional[str] = None
 
 
-# Used for creation (inventory_id will come from the route/controller, not here)
+# Used for creation — inventory_id is usually inferred from context
 class LocationCreate(LocationBase):
     pass
 
 
-# Used for update — do not allow inventory_id to be updated
+# Used for update — inventory_id not allowed here
 class LocationUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
 
-    class Config:
-        model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True)
 
 
-# Response model — includes inventory_id and id
+# Full response model — includes UUID fields
 class Location(LocationBase):
-    id: int
-    inventory_id: int
+    id: uuid.UUID
+    inventory_id: uuid.UUID
 
-    class Config:
-        model_config = ConfigDict(from_attributes=True)
-        schema_extra = {
-            "example": {
-                "id": 1,
-                "name": "Cupboard",
-                "description": "Cupboard in Kitchen",
-                "inventory_id": 42
-            }
+    model_config = ConfigDict(from_attributes=True)
+    json_schema_extra = {
+        "example": {
+            "id": "c5c00cb2-89f6-43e7-91d0-7d22e9839b2e",
+            "name": "Cupboard",
+            "description": "Cupboard in Kitchen",
+            "inventory_id": "fae60a7b-7fdd-420f-85a0-1534fafeaf57"
         }
+    }

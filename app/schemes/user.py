@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional
+from uuid import UUID
 
 class UserBase(BaseModel):
     username: str
@@ -19,19 +20,16 @@ class UserUpdate(BaseModel):
         model_config = ConfigDict(from_attributes=True)
 
 class User(UserBase):
-    id: int
+    id: UUID
     is_active: bool = True
 
     class Config:
         model_config = ConfigDict(from_attributes=True)
         schema_extra = {
             "example": {
-                "id": 1,
+                "id": "c0a801d6-9a2a-4f45-87a3-e389a143c0ee",
                 "username": "johndoe",
                 "email": "johndoe@example.com",
-                "is_active": True 
+                "is_active": True
             }
         }
-# This model uses orm_mode so FastAPI can work smoothly 
-# with SQLAlchemy ORM objects. It allows FastAPI to convert
-# between ORM objects and response dictionaries automatically.

@@ -1,29 +1,31 @@
-# schemas/inventory.py
+import uuid
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
+
 
 class InventoryBase(BaseModel):
     name: str
 
+
 class InventoryCreate(InventoryBase):
-    owner_id: Optional[int] = None  # filled in automatically from current_user
+    owner_id: Optional[uuid.UUID] = None 
+
 
 class InventoryUpdate(BaseModel):
     name: Optional[str] = None
 
-    class Config:
-        model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True)
+
 
 class Inventory(InventoryBase):
-    id: int
-    owner_id: int
+    id: uuid.UUID
+    owner_id: uuid.UUID
 
-    class Config:
-        model_config = ConfigDict(from_attributes=True)
-        schema_extra = {
-            "example": {
-                "id": 1,
-                "name": "My Home Inventory",
-                "owner_id": 1
-            }
+    model_config = ConfigDict(from_attributes=True)
+    json_schema_extra = {
+        "example": {
+            "id": "94a06722-999e-4c58-ae50-2d12e3a8f0cd",
+            "name": "My Home Inventory",
+            "owner_id": "4f9c1bfa-04f5-4413-86d5-2c33f7ea6b7c"
         }
+    }
