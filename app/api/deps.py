@@ -1,8 +1,8 @@
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+from uuid import UUID
 from jose import JWTError
-import json
 
 from app import crud, database, core
 from app.crud.shared_inventory import get_user_inventory_role
@@ -12,7 +12,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(database.get_db),
 ):
     try:
         payload = core.auth.decode_access_token(token)
@@ -20,18 +21,22 @@ def get_current_user(
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
             )
-    except JWTError:
+
+        user_id_str = payload.get("sub")
+        if user_id_str is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing token subject"
+            )
+
+        user_id = UUID(user_id_str)
+
+    except (JWTError, ValueError):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
         )
 
-    username = payload.get("sub")
-    if username is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload"
-        )
-
-    user = crud.user.get_user_by_username(db, username=username)
+    user = crud.user.get_user(db, user_id)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
@@ -40,7 +45,7 @@ def get_current_user(
     return user
 
 
-def extract_inventory_id(request: Request) -> int:
+def extract_inventory_id(request: Request) -> UUID:
     path_params = request.path_params
     query_params = dict(request.query_params)
     headers = dict(request.headers)
@@ -64,23 +69,22 @@ def extract_inventory_id(request: Request) -> int:
         )
 
     try:
-        return int(raw_id)
+        return UUID(raw_id)
     except ValueError:
         raise HTTPException(
             status_code=422,
             detail={
-                "error": f"Invalid inventory_id: must be an integer. Got '{raw_id}'",
+                "error": f"Invalid inventory_id: must be a UUID. Got '{raw_id}'",
                 "path": request.url.path,
             },
         )
 
 
-def get_inventory_role_or_403(inventory_id: int, allowed_roles: list[str]):
+def get_inventory_role_or_403(inventory_id: UUID, allowed_roles: list[str]):
     def dependency(
         db: Session = Depends(database.get_db),
         current_user=Depends(get_current_user),
     ):
-        # Check if current user owns the inventory
         db_inventory = db.query(Inventory).filter(Inventory.id == inventory_id).first()
         if not db_inventory:
             raise HTTPException(status_code=404, detail="Inventory not found")
@@ -88,7 +92,6 @@ def get_inventory_role_or_403(inventory_id: int, allowed_roles: list[str]):
         if db_inventory.owner_id == current_user.id:
             return "owner"
 
-        # Check shared access
         role_entry = get_user_inventory_role(db, current_user.id, inventory_id)
         if not role_entry or role_entry.role not in allowed_roles:
             raise HTTPException(
@@ -101,7 +104,7 @@ def get_inventory_role_or_403(inventory_id: int, allowed_roles: list[str]):
 
 
 def require_admin_role(
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(database.get_db),
     current_user=Depends(get_current_user),
 ):
@@ -109,7 +112,7 @@ def require_admin_role(
 
 
 def require_admin_or_viewer_role(
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(database.get_db),
     current_user=Depends(get_current_user),
 ):

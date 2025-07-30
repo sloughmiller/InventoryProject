@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from uuid import UUID
 from typing import Optional
 
 from app import crud, schemes, models
@@ -12,7 +13,7 @@ router = APIRouter()
 # ✅ GET all items for a given inventory OR all accessible items
 @router.get("/", response_model=list[schemes.Item])
 def read_items(
-    inventory_id: Optional[int] = None,
+    inventory_id: Optional[UUID] = None,
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
@@ -28,7 +29,7 @@ def read_items(
 # ✅ GET single item by ID
 @router.get("/{item_id}", response_model=schemes.Item)
 def read_item(
-    item_id: int,
+    item_id: UUID,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -54,7 +55,7 @@ def create_item(
 # ✅ PUT update item by ID
 @router.put("/{item_id}", response_model=schemes.Item)
 def update_item(
-    item_id: int,
+    item_id: UUID,
     item_update: schemes.ItemUpdate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -70,7 +71,7 @@ def update_item(
 # ✅ DELETE item by ID
 @router.delete("/{item_id}", response_model=schemes.Item)
 def delete_item(
-    item_id: int,
+    item_id: UUID,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):

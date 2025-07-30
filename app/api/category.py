@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from uuid import UUID
+
 from app import crud, models, schemes
 from app.database import get_db
 from app.api.deps import (
@@ -14,7 +16,7 @@ router = APIRouter()
 
 @router.get("/", response_model=list[schemes.Category])
 def read_categories(
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_or_viewer_role),
 ):
@@ -24,7 +26,7 @@ def read_categories(
 @router.post("/", response_model=schemes.Category)
 def create_category(
     category: schemes.CategoryCreate,
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
     _: str = Depends(require_admin_role),
@@ -34,8 +36,8 @@ def create_category(
 
 @router.get("/{category_id}", response_model=schemes.Category)
 def read_category(
-    category_id: int,
-    inventory_id: int = Depends(extract_inventory_id),
+    category_id: UUID,
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_or_viewer_role),
 ):
@@ -45,13 +47,11 @@ def read_category(
     return db_category
 
 
-
-
 @router.put("/{category_id}", response_model=schemes.Category)
 def update_category(
-    category_id: int,
+    category_id: UUID,
     category_update: schemes.CategoryUpdate,
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_role),
 ):
@@ -60,8 +60,8 @@ def update_category(
 
 @router.delete("/{category_id}", response_model=schemes.Category)
 def delete_category(
-    category_id: int,
-    inventory_id: int = Depends(extract_inventory_id),
+    category_id: UUID,
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_role),
 ):

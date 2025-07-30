@@ -1,15 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from uuid import UUID
+
 from app import crud, schemes
 from app.database import get_db
 from app.api.deps import get_current_user
-from fastapi import status
 
 router = APIRouter()
 
 
 # Create new inventory
-# api/inventory.py
 @router.post("/", response_model=schemes.Inventory, status_code=status.HTTP_201_CREATED)
 def create_inventory(
     inventory: schemes.InventoryCreate,
@@ -40,7 +40,6 @@ def get_accessible_inventories(
     return crud.inventory.get_inventories_user_can_access(db, current_user.id)
 
 
-# Get all inventories owned by current user
 @router.get("/", response_model=list[schemes.Inventory])
 def get_user_inventories(
     db: Session = Depends(get_db),
@@ -50,10 +49,9 @@ def get_user_inventories(
     return crud.inventory.get_user_inventories(db, current_user.id)
 
 
-# Get one inventory by ID (if owned)
 @router.get("/{inventory_id}", response_model=schemes.Inventory)
 def get_inventory(
-    inventory_id: int,
+    inventory_id: UUID,
     db: Session = Depends(get_db),
     current_user: schemes.User = Depends(get_current_user),
 ):
@@ -68,10 +66,9 @@ def get_inventory(
     return db_inventory
 
 
-# Update inventory (only owner can)
 @router.put("/{inventory_id}", response_model=schemes.Inventory)
 def update_inventory(
-    inventory_id: int,
+    inventory_id: UUID,
     inventory_update: schemes.InventoryUpdate,
     db: Session = Depends(get_db),
     current_user: schemes.User = Depends(get_current_user),
@@ -87,16 +84,13 @@ def update_inventory(
     return crud.inventory.update_inventory(db, inventory_id, inventory_update)
 
 
-# Delete inventory (only owner can)
 @router.delete("/{inventory_id}", response_model=schemes.Inventory)
 def delete_inventory(
-    inventory_id: int,
+    inventory_id: UUID,
     db: Session = Depends(get_db),
     current_user: schemes.User = Depends(get_current_user),
 ):
-    print(
-        f"🗑️ Attempting deletion of inventory {inventory_id} by user {current_user.id}"
-    )
+    print(f"🗑️ Attempting deletion of inventory {inventory_id} by user {current_user.id}")
     db_inventory = crud.inventory.get_inventory(db, inventory_id)
     if not db_inventory:
         raise HTTPException(status_code=404, detail="Inventory not found")

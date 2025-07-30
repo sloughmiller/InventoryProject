@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from uuid import UUID
+
 from app import crud, schemes, models
 from app.database import get_db
 from app.api.deps import (
@@ -14,7 +16,7 @@ router = APIRouter()
 
 @router.get("/", response_model=list[schemes.Condition])
 def read_conditions(
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_or_viewer_role),
 ):
@@ -23,8 +25,8 @@ def read_conditions(
 
 @router.get("/{condition_id}", response_model=schemes.Condition)
 def read_condition(
-    condition_id: int,
-    inventory_id: int = Depends(extract_inventory_id),
+    condition_id: UUID,
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_or_viewer_role),
 ):
@@ -46,9 +48,9 @@ def create_condition(
 
 @router.put("/{condition_id}", response_model=schemes.Condition)
 def update_condition(
-    condition_id: int,
+    condition_id: UUID,
     condition_update: schemes.ConditionUpdate,
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_role),
 ):
@@ -59,8 +61,8 @@ def update_condition(
 
 @router.delete("/{condition_id}", response_model=schemes.Condition)
 def delete_condition(
-    condition_id: int,
-    inventory_id: int = Depends(extract_inventory_id),
+    condition_id: UUID,
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_role),
 ):

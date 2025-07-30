@@ -1,3 +1,4 @@
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import crud, models, schemes
@@ -14,7 +15,7 @@ router = APIRouter()
 
 @router.get("/", response_model=list[schemes.Activity])
 def read_activities(
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_or_viewer_role),
 ):
@@ -23,8 +24,8 @@ def read_activities(
 
 @router.get("/{activity_id}", response_model=schemes.Activity)
 def read_activity(
-    activity_id: int,
-    inventory_id: int = Depends(extract_inventory_id),
+    activity_id: UUID,
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_or_viewer_role),
 ):
@@ -46,9 +47,9 @@ def create_activity(
 
 @router.put("/{activity_id}", response_model=schemes.Activity)
 def update_activity(
-    activity_id: int,
+    activity_id: UUID,
     activity_update: schemes.ActivityUpdate,
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_role),
 ):
@@ -59,8 +60,8 @@ def update_activity(
 
 @router.delete("/{activity_id}", response_model=schemes.Activity)
 def delete_activity(
-    activity_id: int,
-    inventory_id: int = Depends(extract_inventory_id),
+    activity_id: UUID,
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_role),
 ):

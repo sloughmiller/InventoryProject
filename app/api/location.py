@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
+from uuid import UUID
 from app import crud, schemes, models
 from app.database import get_db
 from app.api.deps import (
@@ -14,7 +15,7 @@ router = APIRouter()
 
 @router.get("/", response_model=list[schemes.Location])
 def read_locations(
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_or_viewer_role),
 ):
@@ -23,8 +24,8 @@ def read_locations(
 
 @router.get("/{location_id}", response_model=schemes.Location)
 def read_location(
-    location_id: int,
-    inventory_id: int = Depends(extract_inventory_id),
+    location_id: UUID,
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_or_viewer_role),
 ):
@@ -37,7 +38,7 @@ def read_location(
 @router.post("/", response_model=schemes.Location)
 def create_location(
     location: schemes.LocationCreate,
-    inventory_id: int = Depends(extract_inventory_id),  # ✅ required
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
     _: str = Depends(require_admin_role),
@@ -48,9 +49,9 @@ def create_location(
 
 @router.put("/{location_id}", response_model=schemes.Location)
 def update_location(
-    location_id: int,
+    location_id: UUID,
     location_update: schemes.LocationUpdate,
-    inventory_id: int = Depends(extract_inventory_id),
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_role),
 ):
@@ -59,8 +60,8 @@ def update_location(
 
 @router.delete("/{location_id}", response_model=schemes.Location)
 def delete_location(
-    location_id: int,
-    inventory_id: int = Depends(extract_inventory_id),
+    location_id: UUID,
+    inventory_id: UUID = Depends(extract_inventory_id),
     db: Session = Depends(get_db),
     _: str = Depends(require_admin_role),
 ):
