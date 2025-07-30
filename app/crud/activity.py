@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
+from uuid import UUID
 from app import models, schemes
 
 
-def get_activity(db: Session, activity_id: int, inventory_id: int):
+def get_activity(db: Session, activity_id: UUID, inventory_id: UUID):
     return (
         db.query(models.Activity)
         .filter(
@@ -13,7 +14,7 @@ def get_activity(db: Session, activity_id: int, inventory_id: int):
     )
 
 
-def get_activities(db: Session, inventory_id: int, skip: int = 0, limit: int = 100):
+def get_activities(db: Session, inventory_id: UUID, skip: int = 0, limit: int = 100):
     return (
         db.query(models.Activity)
         .filter(models.Activity.inventory_id == inventory_id)
@@ -37,7 +38,7 @@ def create_activity(db: Session, activity: schemes.ActivityCreate):
     return db_activity
 
 
-def delete_activity(db: Session, activity_id: int, inventory_id: int):
+def delete_activity(db: Session, activity_id: UUID, inventory_id: UUID):
     db_activity = get_activity(db, activity_id, inventory_id)
     if db_activity:
         db.delete(db_activity)
@@ -47,9 +48,9 @@ def delete_activity(db: Session, activity_id: int, inventory_id: int):
 
 def update_activity(
     db: Session,
-    activity_id: int,
+    activity_id: UUID,
     activity_update: schemes.ActivityUpdate,
-    inventory_id: int,
+    inventory_id: UUID,
 ):
     db_activity = get_activity(db, activity_id, inventory_id)
     if db_activity:

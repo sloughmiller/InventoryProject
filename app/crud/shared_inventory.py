@@ -1,13 +1,14 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from uuid import UUID
 from app import models, schemes
 
 
-def get_shared_inventory(db: Session, shared_id: int):
+def get_shared_inventory(db: Session, shared_id: UUID):
     return db.query(models.SharedInventory).filter(models.SharedInventory.id == shared_id).first()
 
 
-def get_shared_users_for_inventory(db: Session, inventory_id: int):
+def get_shared_users_for_inventory(db: Session, inventory_id: UUID):
     return (
         db.query(models.SharedInventory)
         .filter(models.SharedInventory.inventory_id == inventory_id)
@@ -15,7 +16,7 @@ def get_shared_users_for_inventory(db: Session, inventory_id: int):
     )
 
 
-def get_user_inventory_role(db: Session, user_id: int, inventory_id: int):
+def get_user_inventory_role(db: Session, user_id: UUID, inventory_id: UUID):
     return (
         db.query(models.SharedInventory)
         .filter(
@@ -44,7 +45,7 @@ def create_shared_inventory(db: Session, share: schemes.SharedInventoryCreate):
 
 def update_shared_inventory(
     db: Session,
-    shared_id: int,
+    shared_id: UUID,
     update_data: schemes.SharedInventoryBase,
 ):
     db_share = get_shared_inventory(db, shared_id)
@@ -57,7 +58,7 @@ def update_shared_inventory(
     return db_share
 
 
-def delete_shared_inventory(db: Session, shared_id: int):
+def delete_shared_inventory(db: Session, shared_id: UUID):
     db_share = get_shared_inventory(db, shared_id)
     if not db_share:
         raise HTTPException(status_code=404, detail="Shared inventory entry not found")

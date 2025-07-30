@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
+from uuid import UUID
 from app import models, schemes
 
 
-def get_location(db: Session, location_id: int, inventory_id: int):
+def get_location(db: Session, location_id: UUID, inventory_id: UUID):
     return (
         db.query(models.Location)
         .filter(
@@ -13,7 +14,7 @@ def get_location(db: Session, location_id: int, inventory_id: int):
     )
 
 
-def get_locations(db: Session, inventory_id: int, skip: int = 0, limit: int = 100):
+def get_locations(db: Session, inventory_id: UUID, skip: int = 0, limit: int = 100):
     return (
         db.query(models.Location)
         .filter(models.Location.inventory_id == inventory_id)
@@ -23,7 +24,7 @@ def get_locations(db: Session, inventory_id: int, skip: int = 0, limit: int = 10
     )
 
 
-def create_location(db: Session, location: schemes.LocationCreate, inventory_id: int):
+def create_location(db: Session, location: schemes.LocationCreate, inventory_id: UUID):
     db_location = models.Location(
         name=location.name,
         description=location.description,
@@ -35,7 +36,7 @@ def create_location(db: Session, location: schemes.LocationCreate, inventory_id:
     return db_location
 
 
-def delete_location(db: Session, location_id: int, inventory_id: int):
+def delete_location(db: Session, location_id: UUID, inventory_id: UUID):
     db_location = get_location(db, location_id, inventory_id)
     if db_location:
         db.delete(db_location)
@@ -45,9 +46,9 @@ def delete_location(db: Session, location_id: int, inventory_id: int):
 
 def update_location(
     db: Session,
-    location_id: int,
+    location_id: UUID,
     location_update: schemes.LocationUpdate,
-    inventory_id: int,
+    inventory_id: UUID,
 ):
     db_location = get_location(db, location_id, inventory_id)
     if db_location:

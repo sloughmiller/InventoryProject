@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
+from uuid import UUID
 from app import models, schemes
 
 
 # 🔍 Get a single item by ID, scoped by inventory
-def get_item(db: Session, item_id: int, inventory_id: int) -> models.Item | None:
+def get_item(db: Session, item_id: UUID, inventory_id: UUID) -> models.Item | None:
     return (
         db.query(models.Item)
         .filter(
@@ -17,7 +18,7 @@ def get_item(db: Session, item_id: int, inventory_id: int) -> models.Item | None
 # 📦 Get all items for a specific inventory
 def get_items(
     db: Session,
-    inventory_id: int,
+    inventory_id: UUID,
     skip: int = 0,
     limit: int = 100
 ) -> list[models.Item]:
@@ -31,7 +32,7 @@ def get_items(
 
 
 # 🔐 Get all items from inventories shared with the user
-def get_all_accessible_items(db: Session, user_id: int) -> list[models.Item]:
+def get_all_accessible_items(db: Session, user_id: UUID) -> list[models.Item]:
     return (
         db.query(models.Item)
         .join(
@@ -47,7 +48,7 @@ def get_all_accessible_items(db: Session, user_id: int) -> list[models.Item]:
 def create_item(
     db: Session,
     item: schemes.ItemCreate,
-    inventory_id: int
+    inventory_id: UUID
 ) -> models.Item:
     item_data = item.dict(exclude={"inventory_id"})
     db_item = models.Item(**item_data, inventory_id=inventory_id)
@@ -60,8 +61,8 @@ def create_item(
 # ❌ Delete an item (scoped to inventory)
 def delete_item(
     db: Session,
-    item_id: int,
-    inventory_id: int
+    item_id: UUID,
+    inventory_id: UUID
 ) -> models.Item | None:
     db_item = get_item(db, item_id, inventory_id)
     if db_item:
@@ -73,9 +74,9 @@ def delete_item(
 # ✏️ Update an item (scoped, excludes inventory_id)
 def update_item(
     db: Session,
-    item_id: int,
+    item_id: UUID,
     item_update: schemes.ItemUpdate,
-    inventory_id: int
+    inventory_id: UUID
 ) -> models.Item | None:
     db_item = get_item(db, item_id, inventory_id)
     if db_item:
