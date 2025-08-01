@@ -1,7 +1,8 @@
 import uuid
 from pydantic import BaseModel, ConfigDict
-from typing import Optional,ClassVar
+from typing import Optional, ClassVar
 from datetime import datetime
+
 
 class ActivityBase(BaseModel):
     user_id: uuid.UUID
@@ -10,14 +11,17 @@ class ActivityBase(BaseModel):
     action: str
     details: Optional[str] = None
 
+
 class ActivityCreate(ActivityBase):
     pass
+
 
 class ActivityUpdate(BaseModel):
     action: Optional[str] = None
     details: Optional[str] = None
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
+
 
 class Activity(ActivityBase):
     id: uuid.UUID
@@ -32,6 +36,6 @@ class Activity(ActivityBase):
             "inventory_id": "73844e74-9f0e-4ac2-ae91-5b86c44776c6",
             "action": "view",
             "details": "User viewed the item",
-            "created_at": "2023-10-01T12:00:00Z"
+            "created_at": "2023-10-01T12:00:00Z",
         }
     }

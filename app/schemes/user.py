@@ -17,7 +17,7 @@ class UserUpdate(BaseModel):
     is_superuser: Optional[bool] = None
 
     class Config:
-        model_config = ConfigDict(from_attributes=True)
+        model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 class User(UserBase):
     id: UUID

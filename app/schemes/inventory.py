@@ -14,7 +14,7 @@ class InventoryCreate(InventoryBase):
 class InventoryUpdate(BaseModel):
     name: Optional[str] = None
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 class Inventory(InventoryBase):

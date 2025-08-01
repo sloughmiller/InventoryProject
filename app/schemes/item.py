@@ -34,7 +34,7 @@ class ItemUpdate(BaseModel):
     location_id: Optional[uuid.UUID] = None
     condition_id: Optional[uuid.UUID] = None
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 # Response model — includes ID and inventory ID
