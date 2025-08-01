@@ -1,6 +1,6 @@
 import uuid
 from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from typing import ClassVar, Optional
 
 
 # Base model — shared fields
@@ -27,7 +27,7 @@ class Location(LocationBase):
     id: uuid.UUID
     inventory_id: uuid.UUID
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] =ConfigDict(from_attributes=True)
     json_schema_extra = {
         "example": {
             "id": "c5c00cb2-89f6-43e7-91d0-7d22e9839b2e",

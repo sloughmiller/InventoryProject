@@ -1,6 +1,6 @@
 import uuid
 from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from typing import ClassVar, Optional
 
 
 class ConditionBase(BaseModel):
@@ -23,7 +23,7 @@ class Condition(ConditionBase):
     id: uuid.UUID
     inventory_id: uuid.UUID
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] =ConfigDict(from_attributes=True)
     json_schema_extra = {
         "example": {
             "id": "c79a3c56-90f0-42f7-a5e0-45003e80dc7d",

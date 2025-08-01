@@ -1,6 +1,6 @@
 import uuid
 from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from typing import Optional,ClassVar
 from datetime import datetime
 
 class ActivityBase(BaseModel):
@@ -23,7 +23,7 @@ class Activity(ActivityBase):
     id: uuid.UUID
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
     json_schema_extra = {
         "example": {
             "id": "1e0d34ce-9c27-4b44-bd1d-b6e1f37f8b7a",

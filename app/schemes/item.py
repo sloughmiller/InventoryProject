@@ -1,6 +1,6 @@
 import uuid
 from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from typing import ClassVar, Optional
 from datetime import date
 
 
@@ -42,7 +42,7 @@ class Item(ItemBase):
     id: uuid.UUID
     inventory_id: uuid.UUID
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] =ConfigDict(from_attributes=True)
     json_schema_extra = {
         "example": {
             "id": "f13f4f8e-31b5-4560-91a2-51c39e322e0a",

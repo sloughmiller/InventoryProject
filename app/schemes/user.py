@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
-from typing import Optional
+from typing import ClassVar, Optional
 from uuid import UUID
 
 class UserBase(BaseModel):
@@ -24,7 +24,7 @@ class User(UserBase):
     is_active: bool = True
 
     class Config:
-        model_config = ConfigDict(from_attributes=True)
+        model_config: ClassVar[ConfigDict] =ConfigDict(from_attributes=True)
         schema_extra = {
             "example": {
                 "id": "c0a801d6-9a2a-4f45-87a3-e389a143c0ee",

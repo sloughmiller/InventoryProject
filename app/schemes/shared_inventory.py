@@ -1,3 +1,4 @@
+from typing import ClassVar
 from pydantic import BaseModel, ConfigDict
 from enum import Enum
 from uuid import UUID
@@ -22,7 +23,7 @@ class SharedInventoryResponse(SharedInventoryBase):
     inventory_id: UUID
 
     class Config:
-        model_config = ConfigDict(from_attributes=True)
+        model_config: ClassVar[ConfigDict] =ConfigDict(from_attributes=True)
 
 
 class SharedUserInfo(BaseModel):
