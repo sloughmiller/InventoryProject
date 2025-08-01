@@ -27,12 +27,14 @@ class Category(CategoryBase):
     id: uuid.UUID
     inventory_id: uuid.UUID
 
-    model_config: ClassVar[ConfigDict] =ConfigDict(from_attributes=True)
-    json_schema_extra = {
-        "example": {
-            "id": "28d5c2f3-3a58-4bfc-b82e-2a97e4771631",
-            "name": "Electronics",
-            "description": "Devices and gadgets",
-            "inventory_id": "73844e74-9f0e-4ac2-ae91-5b86c44776c6"
+    model_config: ClassVar[ConfigDict] = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
+            "example": {
+                "id": "28d5c2f3-3a58-4bfc-b82e-2a97e4771631",
+                "name": "Electronics",
+                "description": "Devices and gadgets",
+                "inventory_id": "73844e74-9f0e-4ac2-ae91-5b86c44776c6"
+            }
         }
-    }
+    )

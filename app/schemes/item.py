@@ -42,19 +42,21 @@ class Item(ItemBase):
     id: uuid.UUID
     inventory_id: uuid.UUID
 
-    model_config: ClassVar[ConfigDict] =ConfigDict(from_attributes=True)
-    json_schema_extra = {
-        "example": {
-            "id": "f13f4f8e-31b5-4560-91a2-51c39e322e0a",
-            "name": "Mountain Bike",
-            "description": "Trek X-Caliber 7, red color",
-            "barcode": "123456789",
-            "purchase_date": "2023-08-15",
-            "value": 899.99,
-            "quantity": 2,
-            "category_id": "e9e6b709-2f69-4d6c-a6d1-ea634dca1c58",
-            "location_id": "76c4dd80-20b6-4e6e-b497-04df1a32aa7a",
-            "condition_id": "b93a7ab3-748e-4dd5-b39c-7f6cb48c7b28",
-            "inventory_id": "bc44d05c-9431-48d5-8df8-5dc6de3b5997"
+    model_config: ClassVar[ConfigDict] = ConfigDict(
+        from_attributes=True,
+        json_schema_extra = {
+            "example": {
+                "id": "f13f4f8e-31b5-4560-91a2-51c39e322e0a",
+                "name": "Mountain Bike",
+                "description": "Trek X-Caliber 7, red color",
+                "barcode": "123456789",
+                "purchase_date": "2023-08-15",
+                "value": 899.99,
+                "quantity": 2,
+                "category_id": "e9e6b709-2f69-4d6c-a6d1-ea634dca1c58",
+                "location_id": "76c4dd80-20b6-4e6e-b497-04df1a32aa7a",
+                "condition_id": "b93a7ab3-748e-4dd5-b39c-7f6cb48c7b28",
+                "inventory_id": "bc44d05c-9431-48d5-8df8-5dc6de3b5997"
+            }
         }
-    }
+    )

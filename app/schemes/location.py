@@ -27,12 +27,14 @@ class Location(LocationBase):
     id: uuid.UUID
     inventory_id: uuid.UUID
 
-    model_config: ClassVar[ConfigDict] =ConfigDict(from_attributes=True)
-    json_schema_extra = {
-        "example": {
-            "id": "c5c00cb2-89f6-43e7-91d0-7d22e9839b2e",
-            "name": "Cupboard",
-            "description": "Cupboard in Kitchen",
-            "inventory_id": "fae60a7b-7fdd-420f-85a0-1534fafeaf57"
+    model_config: ClassVar[ConfigDict] = ConfigDict(
+        from_attributes=True,
+        json_schema_extra = {
+            "example": {
+                "id": "c5c00cb2-89f6-43e7-91d0-7d22e9839b2e",
+                "name": "Cupboard",
+                "description": "Cupboard in Kitchen",
+                "inventory_id": "fae60a7b-7fdd-420f-85a0-1534fafeaf57"
+            }
         }
-    }
+    )
