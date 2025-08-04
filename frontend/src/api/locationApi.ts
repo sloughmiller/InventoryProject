@@ -2,10 +2,10 @@
 import api from './api';
 
 export interface Location {
-  id: number;
+  id: string;
   name: string;
   description?: string;
-  inventory_id: number;
+  inventory_id: string;
 }
 
 export interface CreateLocationInput {
@@ -13,7 +13,7 @@ export interface CreateLocationInput {
   description?: string;
 }
 
-export async function getLocationsForInventory(inventory_id: number): Promise<Location[]> {
+export async function getLocationsForInventory(inventory_id: string): Promise<Location[]> {
   const res = await api.get('/locations/', {
     params: { inventory_id },
   });
@@ -22,7 +22,7 @@ export async function getLocationsForInventory(inventory_id: number): Promise<Lo
 
 export async function createLocation(
   data: CreateLocationInput,
-  inventory_id: number
+  inventory_id: string
 ): Promise<Location> {
   const res = await api.post('/locations/', data, {
     params: { inventory_id },
@@ -32,9 +32,9 @@ export async function createLocation(
 }
 
 export async function updateLocation(
-  id: number,
+  id: string,
   data: Partial<CreateLocationInput>,
-  inventory_id: number
+  inventory_id: string
 ): Promise<Location> {
   const res = await api.put(`/locations/${id}`, data, {
     params: { inventory_id },
@@ -44,8 +44,8 @@ export async function updateLocation(
 }
 
 export async function deleteLocation(
-  id: number,
-  inventory_id: number
+  id: string,
+  inventory_id: string
 ): Promise<Location> {
   const res = await api.delete(`/locations/${id}`, {
     params: { inventory_id },
@@ -54,7 +54,7 @@ export async function deleteLocation(
 }
 
 
-export async function getLocation(id: number): Promise<Location> {
+export async function getLocation(id: string): Promise<Location> {
   const res = await api.get(`/locations/${id}`);
   return res.data;
 }

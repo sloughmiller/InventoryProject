@@ -14,7 +14,7 @@ export async function getItems(inventoryId: string): Promise<Item[]> {
 
 
 // ✅ GET single item by ID (optional, not required unless editing inline)
-export async function getItem(id: number): Promise<Item> {
+export async function getItem(id: string): Promise<Item> {
   const res = await api.get(`/items/${id}`);
   return res.data;
 }
@@ -26,13 +26,13 @@ export async function createItem(data: Omit<Item, 'id'>): Promise<Item> {
 }
 
 // ✅ PUT (update) an existing item
-export async function updateItem(id: number, data: Partial<Item>): Promise<Item> {
+export async function updateItem(id: string, data: Partial<Item>): Promise<Item> {
   const res = await api.put(`/items/${id}`, data);
   return res.data;
 }
 
 // ✅ DELETE an item
-export async function deleteItem(id: number): Promise<Item> {
+export async function deleteItem(id: string): Promise<Item> {
   const res = await api.delete(`/items/${id}`);
   return res.data;
 }

@@ -1,10 +1,10 @@
 import api from './api';
 
 export interface Category {
-  id: number;
+  id: string;
   name: string;
   description?: string;
-  inventory_id: number;
+  inventory_id: string;
 }
 
 export interface CreateCategoryInput {
@@ -12,7 +12,7 @@ export interface CreateCategoryInput {
   description?: string;
 }
 
-export async function getCategoriesForInventory(inventory_id: number): Promise<Category[]> {
+export async function getCategoriesForInventory(inventory_id: string): Promise<Category[]> {
   const res = await api.get('/categories/', {
     params: { inventory_id },
   });
@@ -21,7 +21,7 @@ export async function getCategoriesForInventory(inventory_id: number): Promise<C
 
 export async function createCategory(
   data: CreateCategoryInput,
-  inventory_id: number
+  inventory_id: string
 ): Promise<Category> {
   const res = await api.post('/categories/', data, {
     params: { inventory_id }, 
@@ -31,8 +31,8 @@ export async function createCategory(
 }
 
 export async function deleteCategory(
-  id: number,
-  inventory_id: number
+  id: string,
+  inventory_id: string
 ): Promise<Category> {
   const res = await api.delete(`/categories/${id}`, {
     params: { inventory_id },
@@ -41,9 +41,9 @@ export async function deleteCategory(
 }
 
 export async function renameCategory(
-  id: number,
+  id: string,
   name: string,
-  inventory_id: number
+  inventory_id: string
 ): Promise<Category> {
   const res = await api.put(
     `/categories/${id}`,
@@ -53,7 +53,7 @@ export async function renameCategory(
   return res.data;
 }
 
-export async function getCategory(id: number): Promise<Category> {
+export async function getCategory(id: string): Promise<Category> {
   const res = await api.get(`/categories/${id}`);
   return res.data;
 }
