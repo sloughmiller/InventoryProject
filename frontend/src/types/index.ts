@@ -1,49 +1,47 @@
-// src/types.ts
-
 // 🧾 Core Inventory Types
 export interface Inventory {
-  id: number;
+  id: string; // changed from number → string (UUID)
   name: string;
 }
 
 // 📦 Item
 export interface Item {
-  id: number;
+  id: string;
   name: string;
   description?: string;
   quantity: number;
-  category_id: number;
-  location_id: number;
-  inventory_id: number;
+  category_id: string;
+  location_id: string;
+  inventory_id: string;
 }
 
 // 📁 Category
 export interface Category {
-  id: number;
+  id: string;
   name: string;
-  inventory_id: number;
+  inventory_id: string;
 }
 
 // 📍 Location
 export interface Location {
-  id: number;
+  id: string;
   name: string;
   description?: string;
-  inventory_id: number;
+  inventory_id: string;
 }
 
 // 👤 User
 export interface User {
-  id: number;
+  id: string; // UUID
   username: string;
   email?: string;
 }
 
 // 🛡️ SharedInventory
 export interface SharedInventory {
-  id: number;
-  user_id: number;
-  inventory_id: number;
+  id: string;
+  user_id: string;
+  inventory_id: string;
   role: 'admin' | 'viewer';
 }
 

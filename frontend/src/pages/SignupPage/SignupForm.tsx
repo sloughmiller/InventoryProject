@@ -14,9 +14,16 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post('/users/', { username, email, password });
+      const response = await api.post('/users/', { username, email, password });
+      const userId = response.data?.id;
+      console.log('✅ User created with UUID:', userId);
+
+      // Optionally store it (if you plan to associate future data to this user manually)
+      // localStorage.setItem('user_id', userId);
+
       onSignupSuccess();
-    } catch {
+    } catch (err) {
+      console.error('❌ Signup error:', err);
       setError('Signup failed. Please try again.');
     }
   };
@@ -75,7 +82,5 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
     </div>
   );
 };
-
-
 
 export default SignupForm;
