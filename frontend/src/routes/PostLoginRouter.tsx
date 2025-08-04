@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../hooks/useSelectedInventory';
 import { log } from '../utils/logger';
 
 const PostLoginRouter: React.FC = () => {

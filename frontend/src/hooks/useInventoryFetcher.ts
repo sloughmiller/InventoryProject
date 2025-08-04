@@ -1,8 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useSelectedInventory } from '../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../hooks/useSelectedInventory';
+
 import { log } from '../utils/logger';
 
-type FetchFn<T> = (inventory_id: number) => Promise<T[]>;
+type FetchFn<T> = (inventory_id: string) => Promise<T[]>;
+
 
 export function useInventoryFetcher<T>(fetchFn: FetchFn<T>) {
   const [data, setData] = useState<T[]>([]);

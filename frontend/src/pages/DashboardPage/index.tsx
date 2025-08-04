@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserProfile from '../../components/users/UserProfile';
 import { fetchCurrentUser } from '../../api/api';
 import Layout from '../../components/layout';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
+
 import { log } from '../../utils/logger';
 
 const DashboardPage: React.FC = () => {

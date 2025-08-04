@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+// src/contexts/SelectedInventoryContext.tsx
+import React, { createContext, useState, useEffect } from 'react';
 import type { Inventory } from '../types';
 import { log } from '../utils/logger';
 
@@ -8,7 +9,7 @@ interface InventoryContextType {
   loading: boolean;
 }
 
-const SelectedInventoryContext = createContext<InventoryContextType | undefined>(undefined);
+export const SelectedInventoryContext = createContext<InventoryContextType | undefined>(undefined);
 
 export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [selectedInventory, setSelectedInventoryState] = useState<Inventory | null>(null);
@@ -21,7 +22,7 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
 
       if (storedId && storedName) {
         const restored: Inventory = {
-          id: storedId, // ✅ no parseInt — UUID is a string
+          id: storedId, // UUID-safe
           name: storedName,
         };
         setSelectedInventoryState(restored);
@@ -38,7 +39,7 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
 
   const setSelectedInventory = (inv: Inventory) => {
     try {
-      localStorage.setItem('selectedInventoryId', inv.id); // ✅ no .toString() needed
+      localStorage.setItem('selectedInventoryId', inv.id);
       localStorage.setItem('selectedInventoryName', inv.name);
       setSelectedInventoryState(inv);
       log.info('SelectedInventoryContext', '✅ Inventory selected and saved to localStorage:', inv);
@@ -52,10 +53,4 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
       {children}
     </SelectedInventoryContext.Provider>
   );
-};
-
-export const useSelectedInventory = () => {
-  const ctx = useContext(SelectedInventoryContext);
-  if (!ctx) throw new Error('useSelectedInventory must be used within provider');
-  return ctx;
 };
