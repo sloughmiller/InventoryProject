@@ -11,8 +11,8 @@ const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState('');
   const [editingItem, setEditingItem] = useState<Item | null>(null);
-  const [categoryMap, setCategoryMap] = useState<Record<number, string>>({});
-  const [locationMap, setLocationMap] = useState<Record<number, string>>({});
+  const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
+  const [locationMap, setLocationMap] = useState<Record<string, string>>({});
   const [inventories, setInventories] = useState<Inventory[]>([]);
   const [selectedInventoryId, setSelectedInventoryId] = useState<string>('');
 
@@ -26,20 +26,21 @@ const ItemsPage: React.FC = () => {
         api.get('/inventories/accessible'),
       ]);
 
-      const catMap: Record<number, string> = {};
-      categoriesData.data.forEach((cat: { id: number; name: string }) => {
+      const catMap: Record<string, string> = {};
+      categoriesData.data.forEach((cat: { id: string; name: string }) => {
         catMap[cat.id] = cat.name;
       });
 
-      const locMap: Record<number, string> = {};
-      locationsData.data.forEach((loc: { id: number; name: string }) => {
+      const locMap: Record<string, string> = {};
+      locationsData.data.forEach((loc: { id: string; name: string }) => {
         locMap[loc.id] = loc.name;
       });
 
       const filteredItems =
-        selectedInventoryId === ''
-          ? itemsData
-          : itemsData.filter((item) => item.inventory_id === parseInt(selectedInventoryId));
+  selectedInventoryId === ''
+    ? itemsData
+    : itemsData.filter((item) => item.inventory_id === selectedInventoryId);
+
 
       setItems(filteredItems);
       setCategoryMap(catMap);
@@ -54,7 +55,7 @@ const ItemsPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (itemId: number) => {
+  const handleDelete = async (itemId: string) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
     log.warn('ItemsPage', '🗑️ Deleting item ID', itemId);
     try {

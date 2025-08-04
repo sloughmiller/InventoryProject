@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Layout from '../../components/layout';
 import CategoryForm from './CategoryForm';
 import CategoryCard from './CategoryCard';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import {
   getCategoriesForInventory,
   renameCategory,

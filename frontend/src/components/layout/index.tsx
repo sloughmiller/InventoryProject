@@ -2,7 +2,8 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { log } from '../../utils/logger';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
+
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();

@@ -1,7 +1,7 @@
 // src/pages/CategoriesPage/CategoryForm.tsx
 import React, { useState } from 'react';
 import BaseCard from '../../components/cards/BaseCard';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import { createCategory } from '../../api/categoryApi';
 
 interface CategoryFormProps {

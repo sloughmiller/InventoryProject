@@ -1,7 +1,7 @@
 // src/components/ItemForm.tsx
 import React, { useState } from 'react';
 import { createItem, updateItem } from '../../api/itemApi';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import type { Item } from '../../types/index';
 import { useInventoryOptions } from '../../hooks/useInventoryOptions';
 

@@ -6,8 +6,7 @@ import Layout from '../../components/layout';
 import InventoryCard from '../../components/inventories/InventoryCard';
 import type { Inventory } from '../../types';
 import { log } from '../../utils/logger';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext'; // ← make sure this is imported
-
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 
 
 const InventorySelectorPage: React.FC = () => {
