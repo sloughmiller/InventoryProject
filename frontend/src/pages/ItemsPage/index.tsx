@@ -6,6 +6,7 @@ import ItemCard from './ItemCard';
 import api from '../../api/api';
 import { log } from '../../utils/logger';
 import type { Item, Inventory } from '../../types';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 
 const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -14,7 +15,7 @@ const ItemsPage: React.FC = () => {
   const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
   const [locationMap, setLocationMap] = useState<Record<string, string>>({});
   const [inventories, setInventories] = useState<Inventory[]>([]);
-  const [selectedInventoryId, setSelectedInventoryId] = useState<string>('');
+  const { selectedInventory } = useSelectedInventory();
 
   const fetchItems = async () => {
     log.info('ItemsPage', '🔄 Fetching items and metadata...');
@@ -96,7 +97,8 @@ const ItemsPage: React.FC = () => {
             >
               <option value="">All Inventories</option>
               {inventories.map((inv) => (
-                <option key={inv.id} value={inv.id.toString()}>
+                <option key={inv.id} value={inv.id}>
+
                   {inv.name}
                 </option>
               ))}
