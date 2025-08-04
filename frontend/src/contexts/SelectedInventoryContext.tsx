@@ -21,7 +21,7 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
 
       if (storedId && storedName) {
         const restored: Inventory = {
-          id: parseInt(storedId, 10),
+          id: storedId, // ✅ no parseInt — UUID is a string
           name: storedName,
         };
         setSelectedInventoryState(restored);
@@ -38,7 +38,7 @@ export const SelectedInventoryProvider: React.FC<{ children: React.ReactNode }> 
 
   const setSelectedInventory = (inv: Inventory) => {
     try {
-      localStorage.setItem('selectedInventoryId', inv.id.toString());
+      localStorage.setItem('selectedInventoryId', inv.id); // ✅ no .toString() needed
       localStorage.setItem('selectedInventoryName', inv.name);
       setSelectedInventoryState(inv);
       log.info('SelectedInventoryContext', '✅ Inventory selected and saved to localStorage:', inv);
