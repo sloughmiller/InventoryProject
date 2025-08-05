@@ -24,7 +24,7 @@ export async function createCategory(
   inventory_id: string
 ): Promise<Category> {
   const res = await api.post('/categories/', data, {
-    params: { inventory_id }, 
+    params: { inventory_id },
     headers: { 'Content-Type': 'application/json' },
   });
   return res.data;
@@ -43,15 +43,17 @@ export async function deleteCategory(
 export async function renameCategory(
   id: string,
   name: string,
-  inventory_id: string
+  inventory_id: string,
+  description?: string
 ): Promise<Category> {
   const res = await api.put(
     `/categories/${id}`,
-    { name },
+    { name, description }, // ✅ include description if provided
     { params: { inventory_id } }
   );
   return res.data;
 }
+
 
 export async function getCategory(id: string): Promise<Category> {
   const res = await api.get(`/categories/${id}`);

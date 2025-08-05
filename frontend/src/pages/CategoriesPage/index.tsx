@@ -24,12 +24,23 @@ const CategoriesPage: React.FC = () => {
 
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
-  const handleRename = async (category: Category, newName: string) => {
+  const handleRename = async (
+    category: Category,
+    newName: string,
+    newDescription?: string
+  ) => {
     if (!newName || newName === category.name || !selectedInventory) return;
 
     try {
       log.info('CategoriesPage', `✏️ Renaming category ID ${category.id} to "${newName}"`);
-      await renameCategory(category.id, newName, selectedInventory.id);
+      await renameCategory(
+        category.id,
+        newName,
+        selectedInventory.id,
+        newDescription
+      );
+
+
       refetch();
     } catch (err) {
       log.error('CategoriesPage', `❌ Failed to rename category ID ${category.id}:`, err);
@@ -94,9 +105,13 @@ const CategoriesPage: React.FC = () => {
           isOpen={!!editingCategory}
           title="Edit Category"
           currentValue={editingCategory.name}
+          currentDescription={editingCategory.description}
           onClose={() => setEditingCategory(null)}
-          onSave={(newName) => handleRename(editingCategory, newName)}
+          onSave={(newName, newDescription) =>
+            handleRename(editingCategory, newName, newDescription)
+          }
         />
+
       )}
     </Layout>
   );
