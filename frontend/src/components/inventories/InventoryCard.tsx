@@ -12,7 +12,6 @@ type Props = {
 
 const InventoryCard: React.FC<Props> = ({ inventory, onRename, onDelete, onSelect }) => {
   const isSelectable = typeof onSelect === 'function';
-  const showActions = typeof onRename === 'function' || typeof onDelete === 'function';
 
   const handleClick = () => {
     if (isSelectable) onSelect?.(inventory);
@@ -25,13 +24,9 @@ const InventoryCard: React.FC<Props> = ({ inventory, onRename, onDelete, onSelec
     >
       <BaseCard
         title={inventory.name}
-        description={
-          isSelectable
-            ? 'Tap to manage this inventory'
-            : undefined
-        }
+        description={undefined} 
         actions={
-          showActions && !isSelectable ? (
+          !isSelectable ? (
             <>
               <button
                 onClick={(e) => {
