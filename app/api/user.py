@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 from uuid import UUID
+import re
 
 from app import crud, schemes
 from app.database import get_db
@@ -19,6 +20,10 @@ router = APIRouter()
 @router.post("/", response_model=schemes.User)
 def create_user(user: schemes.UserCreate, db: Session = Depends(get_db)):
     print("🧾 Incoming signup request:", user.dict())
+
+    # ✅ Validate password strength
+    validate_password_strength(user.password)
+
     try:
         created_user = crud.user.create_user(db, user)
         print("✅ User created successfully:", created_user.username)
@@ -29,6 +34,7 @@ def create_user(user: schemes.UserCreate, db: Session = Depends(get_db)):
     except Exception as e:
         print("❌ Unexpected error during signup:", e)
         raise HTTPException(status_code=500, detail="Internal server error")
+
 
 
 # Login
@@ -86,3 +92,10 @@ def update_user(user_id: UUID, user_update: schemes.UserUpdate, db: Session = De
 @router.delete("/{user_id}", response_model=schemes.User, dependencies=[Depends(get_current_user)])
 def delete_user(user_id: UUID, db: Session = Depends(get_db)):
     return crud.user.delete_user(db, user_id)
+
+
+def validate_password_strength(password: str) -> None:
+    if len(password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters long.")
+    if not re.search(r"[A-Z]", password):
+        raise HTTPException(status_code=400, detail="Password must contain at least one uppercase letter.")
