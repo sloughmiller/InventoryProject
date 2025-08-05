@@ -5,7 +5,7 @@ import Layout from '../../components/layout';
 import ItemCard from './ItemCard';
 import api from '../../api/api';
 import { log } from '../../utils/logger';
-import type { Item, Inventory } from '../../types';
+import type { Item } from '../../types';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 
 const ItemsPage: React.FC = () => {
@@ -14,17 +14,15 @@ const ItemsPage: React.FC = () => {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
   const [locationMap, setLocationMap] = useState<Record<string, string>>({});
-  const [inventories, setInventories] = useState<Inventory[]>([]);
   const { selectedInventory } = useSelectedInventory();
 
   const fetchItems = async () => {
     log.info('ItemsPage', '🔄 Fetching items and metadata...');
     try {
-      const [itemsData, categoriesData, locationsData, inventoriesData] = await Promise.all([
-        getItems(selectedInventoryId),
+      const [itemsData, categoriesData, locationsData] = await Promise.all([
+        getItems(selectedInventory?.id ?? ''), // if null, gets all (or nothing, depending on your API)
         api.get('/categories/'),
         api.get('/locations/'),
-        api.get('/inventories/accessible'),
       ]);
 
       const catMap: Record<string, string> = {};
@@ -37,18 +35,14 @@ const ItemsPage: React.FC = () => {
         locMap[loc.id] = loc.name;
       });
 
-      const filteredItems =
-  selectedInventoryId === ''
-    ? itemsData
-    : itemsData.filter((item) => item.inventory_id === selectedInventoryId);
-
+      const filteredItems = selectedInventory
+        ? itemsData.filter((item) => item.inventory_id === selectedInventory.id)
+        : [];
 
       setItems(filteredItems);
       setCategoryMap(catMap);
       setLocationMap(locMap);
-      setInventories(inventoriesData.data);
       setError('');
-
       log.info('ItemsPage', `✅ Loaded ${filteredItems.length} items`);
     } catch (err) {
       log.error('ItemsPage', '❌ Failed to fetch items or metadata', err);
@@ -70,9 +64,11 @@ const ItemsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    log.debug('ItemsPage', '🔁 Selected inventory changed to:', selectedInventoryId || 'All');
-    fetchItems();
-  }, [selectedInventoryId]);
+    if (selectedInventory) {
+      log.debug('ItemsPage', '🔁 Selected inventory changed to:', selectedInventory.name);
+      fetchItems();
+    }
+  }, [selectedInventory]);
 
   return (
     <Layout>
@@ -84,26 +80,6 @@ const ItemsPage: React.FC = () => {
           <p className="text-gray-600 mt-2">
             Manage and review your current inventory.
           </p>
-          <div className="mt-4">
-            <label className="text-sm font-medium text-gray-700 mr-2">Filter by Inventory:</label>
-            <select
-              value={selectedInventoryId}
-              onChange={(e) => {
-                const value = e.target.value;
-                setSelectedInventoryId(value);
-                log.debug('ItemsPage', '🧭 Inventory filter selected:', value || 'All');
-              }}
-              className="border border-gray-300 rounded p-2"
-            >
-              <option value="">All Inventories</option>
-              {inventories.map((inv) => (
-                <option key={inv.id} value={inv.id}>
-
-                  {inv.name}
-                </option>
-              ))}
-            </select>
-          </div>
         </header>
 
         {error && (
