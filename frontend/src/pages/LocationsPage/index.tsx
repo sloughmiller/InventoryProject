@@ -38,7 +38,7 @@ const LocationsPage: React.FC = () => {
       log.info('LocationsPage', `✏️ Updating location ID ${editingLocation.id}`);
       await updateLocation(
         editingLocation.id,
-        { name: newName, description: newDescription || undefined },
+        { name: newName, description: newDescription},
         selectedInventory.id
       );
       refetch();
