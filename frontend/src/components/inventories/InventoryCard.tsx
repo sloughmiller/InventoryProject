@@ -19,7 +19,7 @@ const InventoryCard: React.FC<Props> = ({ inventory, onRename, onDelete, onSelec
     <div onClick={handleClick} className={onSelect ? 'cursor-pointer' : ''}>
       <BaseCard
         title={inventory.name}
-        description={`ID: ${inventory.id}`}
+        description="Tap to manage this inventory"
         actions={
           !onSelect && (
             <>
@@ -48,5 +48,6 @@ const InventoryCard: React.FC<Props> = ({ inventory, onRename, onDelete, onSelec
     </div>
   );
 };
+
 
 export default InventoryCard;
