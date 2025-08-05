@@ -3,12 +3,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { log } from '../../utils/logger';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
+import { useLoading } from '../../contexts/LoadingContext';
 
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedInventory } = useSelectedInventory();
+  const { loading: globalLoading } = useLoading();
+
+  // Optional: Expose this in a context for other components to set
+
 
   const isDashboard = location.pathname === '/dashboard';
   const isAuthPage = ['/login', '/signup'].includes(location.pathname);
@@ -31,6 +36,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      {globalLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 z-50 flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-emerald-600 border-dashed rounded-full animate-spin"></div>
+        </div>
+      )}
+
       {!isAuthPage && (
         <>
           <div className="relative flex items-center justify-between p-4 bg-white shadow-md">
