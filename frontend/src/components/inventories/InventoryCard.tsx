@@ -1,6 +1,6 @@
 // src/components/cards/InventoryCard.tsx
 import React from 'react';
-import BaseCard from '../../components/cards/BaseCard';
+import BaseCard from '../cards/BaseCard';
 import type { Inventory } from '../../types';
 
 type Props = {
@@ -11,17 +11,27 @@ type Props = {
 };
 
 const InventoryCard: React.FC<Props> = ({ inventory, onRename, onDelete, onSelect }) => {
+  const isSelectable = typeof onSelect === 'function';
+  const showActions = typeof onRename === 'function' || typeof onDelete === 'function';
+
   const handleClick = () => {
-    if (onSelect) onSelect(inventory);
+    if (isSelectable) onSelect?.(inventory);
   };
 
   return (
-    <div onClick={handleClick} className={onSelect ? 'cursor-pointer' : ''}>
+    <div
+      onClick={handleClick}
+      className={isSelectable ? 'cursor-pointer' : ''}
+    >
       <BaseCard
         title={inventory.name}
-        description="Tap to manage this inventory"
+        description={
+          isSelectable
+            ? 'Tap to manage this inventory'
+            : undefined
+        }
         actions={
-          !onSelect && (
+          showActions && !isSelectable ? (
             <>
               <button
                 onClick={(e) => {
@@ -37,17 +47,16 @@ const InventoryCard: React.FC<Props> = ({ inventory, onRename, onDelete, onSelec
                   e.stopPropagation();
                   onDelete?.(inventory);
                 }}
-                className="text-red-500 hover:underline"
+                className="text-red-500 hover:underline ml-4"
               >
                 Delete
               </button>
             </>
-          )
+          ) : undefined
         }
       />
     </div>
   );
 };
-
 
 export default InventoryCard;
