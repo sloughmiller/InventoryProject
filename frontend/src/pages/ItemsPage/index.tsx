@@ -1,3 +1,4 @@
+// src/pages/items/ItemsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { getItems, deleteItem } from '../../api/itemApi';
 import ItemForm from './ItemForm';
@@ -20,7 +21,7 @@ const ItemsPage: React.FC = () => {
     log.info('ItemsPage', '🔄 Fetching items and metadata...');
     try {
       const [itemsData, categoriesData, locationsData] = await Promise.all([
-        getItems(selectedInventory?.id ?? ''), // if null, gets all (or nothing, depending on your API)
+        getItems(selectedInventory?.id ?? ''),
         api.get('/categories/'),
         api.get('/locations/'),
       ]);
