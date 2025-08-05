@@ -13,20 +13,29 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Simple frontend password validation
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      setError('Password must contain at least one uppercase letter.');
+      return;
+    }
+
     try {
       const response = await api.post('/users/', { username, email, password });
       const userId = response.data?.id;
       console.log('✅ User created with UUID:', userId);
-
-      // Optionally store it (if you plan to associate future data to this user manually)
-      // localStorage.setItem('user_id', userId);
-
       onSignupSuccess();
     } catch (err) {
       console.error('❌ Signup error:', err);
       setError('Signup failed. Please try again.');
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-emerald-50 px-4">
@@ -70,7 +79,11 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
             required
             className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500"
           />
+          <p className="text-xs text-gray-500 mt-1">
+            Must be at least 8 characters and contain one capital letter.
+          </p>
         </div>
+
 
         <button
           type="submit"
