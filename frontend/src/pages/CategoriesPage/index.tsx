@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout';
 import CategoryForm from './CategoryForm';
 import CategoryCard from './CategoryCard';
+import EditModal from '../../components/EditModal'; // ✅ Import modal
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import {
   getCategoriesForInventory,
@@ -18,12 +19,12 @@ const CategoriesPage: React.FC = () => {
   const {
     data: categories,
     error: fetchError,
-    //loading,
     refetch,
   } = useInventoryFetcher<Category>(getCategoriesForInventory);
 
-  const handleRename = async (category: Category) => {
-    const newName = prompt('Enter new category name:', category.name);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+
+  const handleRename = async (category: Category, newName: string) => {
     if (!newName || newName === category.name || !selectedInventory) return;
 
     try {
@@ -32,6 +33,8 @@ const CategoriesPage: React.FC = () => {
       refetch();
     } catch (err) {
       log.error('CategoriesPage', `❌ Failed to rename category ID ${category.id}:`, err);
+    } finally {
+      setEditingCategory(null); // ✅ Close modal after save attempt
     }
   };
 
@@ -77,13 +80,24 @@ const CategoriesPage: React.FC = () => {
               <CategoryCard
                 key={cat.id}
                 category={cat}
-                onRename={handleRename}
+                onRename={() => setEditingCategory(cat)} // ✅ Open modal
                 onDelete={handleDelete}
               />
             ))
           )}
         </div>
       </div>
+
+      {/* ✅ Edit modal */}
+      {editingCategory && (
+        <EditModal
+          isOpen={!!editingCategory}
+          title="Edit Category"
+          currentValue={editingCategory.name}
+          onClose={() => setEditingCategory(null)}
+          onSave={(newName) => handleRename(editingCategory, newName)}
+        />
+      )}
     </Layout>
   );
 };
