@@ -9,20 +9,29 @@ interface LocationCardProps {
 }
 
 const LocationCard: React.FC<LocationCardProps> = ({ location, onEdit, onDelete }) => {
-
-
   return (
     <BaseCard
       title={location.name}
-      description={`ID: ${location.id}`}
+      description={location.description || ''}
       actions={
-        <>
-          <button onClick={() => onEdit(location)} className="text-blue-600 hover:underline">Edit</button>
-          <button onClick={() => onDelete(location)} className="text-red-500 hover:underline">Delete</button>
-        </>
+        <div className="flex gap-4 text-sm">
+          <button
+            onClick={() => onEdit(location)}
+            className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
+            aria-label="Edit location"
+          >
+            ✏️ Edit
+          </button>
+          <button
+            onClick={() => onDelete(location)}
+            className="flex items-center gap-1 text-red-500 hover:text-red-700"
+            aria-label="Delete location"
+          >
+            🗑️ Delete
+          </button>
+        </div>
       }
     />
-
   );
 };
 
