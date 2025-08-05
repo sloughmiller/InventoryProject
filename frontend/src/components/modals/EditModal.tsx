@@ -29,7 +29,8 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const handleSave = () => {
     if (newName.trim()) {
-      onSave(newName.trim(), newDescription.trim() || undefined);
+      onSave(newName.trim(), newDescription.trim());
+
     }
     onClose();
   };
