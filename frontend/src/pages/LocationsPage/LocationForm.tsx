@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import { createLocation } from '../../api/locationApi';
 import BaseCard from '../../components/cards/BaseCard';
 

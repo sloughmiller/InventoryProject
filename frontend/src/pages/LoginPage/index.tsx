@@ -4,7 +4,7 @@ import LoginForm from './LoginForm';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/index';
 import api from '../../api/api';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import { log } from '../../utils/logger';
 
 const LoginPage: React.FC = () => {

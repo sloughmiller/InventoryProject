@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Layout from '../../components/layout';
-import { useSelectedInventory } from '../../contexts/SelectedInventoryContext';
+import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import {
   getLocationsForInventory,
   updateLocation,
