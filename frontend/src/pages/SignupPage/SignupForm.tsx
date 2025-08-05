@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../../api/api';
+import type { AxiosError } from 'axios';
 
 interface SignupFormProps {
   onSignupSuccess: () => void;
@@ -14,7 +15,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simple frontend password validation
+    // Password validation (same as before)
     if (password.length < 8) {
       setError('Password must be at least 8 characters long.');
       return;
@@ -30,11 +31,27 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
       const userId = response.data?.id;
       console.log('✅ User created with UUID:', userId);
       onSignupSuccess();
-    } catch (err) {
-      console.error('❌ Signup error:', err);
-      setError('Signup failed. Please try again.');
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ detail?: string | string[] }>;
+      console.error('❌ Signup error:', error);
+
+      if (error.response && error.response.data?.detail) {
+        const detail = error.response.data.detail;
+
+        if (typeof detail === 'string') {
+          setError(detail);
+        } else if (Array.isArray(detail) && detail.length > 0) {
+          setError(detail[0]);
+        } else {
+          setError('Signup failed. Please try again.');
+        }
+      } else {
+        setError('Signup failed. Please try again.');
+      }
     }
+
   };
+
 
 
   return (
