@@ -4,8 +4,9 @@ interface EditModalProps {
   isOpen: boolean;
   title: string;
   currentValue: string;
+  currentDescription?: string;
   onClose: () => void;
-  onSave: (newName: string) => void;
+  onSave: (newName: string, newDescription?: string) => void;
 }
 
 const EditModal: React.FC<EditModalProps> = ({ isOpen, title, currentValue, onClose, onSave }) => {

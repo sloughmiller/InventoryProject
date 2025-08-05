@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import {
@@ -11,6 +11,7 @@ import { useInventoryFetcher } from '../../hooks/useInventoryFetcher';
 import { log } from '../../utils/logger';
 import LocationCard from './LocationCard';
 import LocationForm from './LocationForm';
+import EditModal from '../../components/EditModal'; // ✅ Modal component
 
 const LocationsPage: React.FC = () => {
   const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
@@ -18,9 +19,10 @@ const LocationsPage: React.FC = () => {
   const {
     data: locations,
     error: fetchError,
-    //loading,
     refetch,
   } = useInventoryFetcher<Location>(getLocationsForInventory);
+
+  const [editingLocation, setEditingLocation] = useState<Location | null>(null);
 
   useEffect(() => {
     if (selectedInventory && !inventoryLoading) {
@@ -29,22 +31,21 @@ const LocationsPage: React.FC = () => {
     }
   }, [selectedInventory?.id, inventoryLoading]);
 
-  const handleEdit = async (location: Location) => {
-    const newName = prompt('Enter new location name:', location.name);
-    const newDescription = prompt('Enter new description (optional):', location.description || '');
-
-    if (!newName || !selectedInventory?.id) return;
+  const handleSaveEdit = async (newName: string, newDescription?: string) => {
+    if (!editingLocation || !selectedInventory?.id || !newName) return;
 
     try {
-      log.info('LocationsPage', `✏️ Updating location ID ${location.id}`);
+      log.info('LocationsPage', `✏️ Updating location ID ${editingLocation.id}`);
       await updateLocation(
-        location.id,
+        editingLocation.id,
         { name: newName, description: newDescription || undefined },
         selectedInventory.id
       );
       refetch();
     } catch (err) {
-      log.error('LocationsPage', `❌ Failed to update location ID ${location.id}:`, err);
+      log.error('LocationsPage', `❌ Failed to update location ID ${editingLocation.id}:`, err);
+    } finally {
+      setEditingLocation(null);
     }
   };
 
@@ -85,15 +86,27 @@ const LocationsPage: React.FC = () => {
               <LocationCard
                 key={loc.id}
                 location={loc}
-                onEdit={() => handleEdit(loc)}
+                onEdit={() => setEditingLocation(loc)}
                 onDelete={() => handleDelete(loc)}
               />
             ))
           )}
         </div>
       </div>
+
+      {/* ✅ Modal for editing */}
+      {editingLocation && (
+        <EditModal
+          isOpen={!!editingLocation}
+          title="Edit Location"
+          currentValue={editingLocation.name}
+          currentDescription={editingLocation.description}
+          onClose={() => setEditingLocation(null)}
+          onSave={(newName, newDescription) => handleSaveEdit(newName, newDescription)}
+        />
+      )}
     </Layout>
   );
 };
 
-  export default LocationsPage;
+export default LocationsPage;
