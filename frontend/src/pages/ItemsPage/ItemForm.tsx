@@ -1,11 +1,9 @@
 // src/components/ItemForm.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createItem, updateItem } from '../../api/itemApi';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
-import { useInventoryOptions } from '../../hooks/useInventoryOptions';
-import type { Item } from '../../types/index';
-
-
+import { useCategoryLocationOptions } from '../../hooks/useCategoryLocationOptions';
+import type { Item } from '../../types';
 
 interface ItemFormProps {
   onItemCreated?: () => void;
@@ -15,14 +13,33 @@ interface ItemFormProps {
 
 const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditDone }) => {
   const { selectedInventory } = useSelectedInventory();
-
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [error, setError] = useState('');
-  const { categories, locations } = useInventoryOptions(selectedInventory?.id);
+
+  const { categories, locations } = useCategoryLocationOptions(selectedInventory?.id);
+
+  useEffect(() => {
+    if (editingItem) {
+      setName(editingItem.name || '');
+      setDescription(editingItem.description || '');
+      setQuantity(editingItem.quantity.toString());
+
+      const catName = categories.find((c) => c.id === editingItem.category_id)?.name || '';
+      const locName = locations.find((l) => l.id === editingItem.location_id)?.name || '';
+      setSelectedCategory(catName);
+      setSelectedLocation(locName);
+    } else {
+      setName('');
+      setDescription('');
+      setQuantity('1');
+      setSelectedCategory('');
+      setSelectedLocation('');
+    }
+  }, [editingItem, categories, locations]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,33 +63,26 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       return;
     }
 
+    const itemData = {
+      name,
+      description,
+      quantity: parsedQuantity,
+      category_id: category.id,
+      location_id: location.id,
+      inventory_id: selectedInventory.id,
+      barcode: null,
+      purchase_date: null,
+      value: null,
+      condition_id: null,
+    };
+
     try {
-      const itemData = {
-        name,
-        description,
-        quantity: parsedQuantity,
-        category_id: category.id,
-        location_id: location.id,
-        inventory_id: selectedInventory.id,
-        barcode: null,
-        purchase_date: null,
-        value: null,
-        condition_id: null,
-      };
-
-
       if (editingItem) {
-        await updateItem(editingItem.id, {
-          ...itemData,
-          inventory_id: selectedInventory.id,
-        });
+        console.log("✏️ Updating item:", editingItem.id, itemData);
+        await updateItem(editingItem.id, itemData);
         onEditDone?.();
-
       } else {
-        console.log("📦 Submitting item data:", {
-          ...itemData,
-          inventory_id: selectedInventory.id,
-        });
+        console.log("📦 Submitting item data:", itemData);
         await createItem(itemData);
         onItemCreated?.();
       }
@@ -80,7 +90,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       // Reset form
       setName('');
       setDescription('');
-      setQuantity('');
+      setQuantity('1');
       setSelectedCategory('');
       setSelectedLocation('');
       setError('');

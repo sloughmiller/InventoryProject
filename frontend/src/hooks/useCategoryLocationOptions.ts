@@ -1,9 +1,9 @@
-// src/hooks/useInventoryOptions.ts
+// src/hooks/useCategoryLocationOptions.ts
 import { useEffect, useRef, useState } from "react";
 import { getCategoriesForInventory, type Category } from "../api/categoryApi";
 import { getLocationsForInventory, type Location } from "../api/locationApi";
 
-export function useInventoryOptions(inventoryId?: string) {
+export function useCategoryLocationOptions(inventoryId?: string) {
   const cache = useRef<Record<string, { categories: Category[]; locations: Location[] }>>({});
 
   const [categories, setCategories] = useState<Category[]>([]);

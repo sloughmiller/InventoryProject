@@ -1,5 +1,7 @@
 // src/pages/items/ItemsPage.tsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useInventoryList } from '../../hooks/useInventoryList';
 import { getItems, deleteItem } from '../../api/itemApi';
 import Layout from '../../components/layout';
 import ItemCard from './ItemCard';
@@ -18,6 +20,10 @@ const ItemsPage: React.FC = () => {
   const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
   const [locationMap, setLocationMap] = useState<Record<string, string>>({});
   const { selectedInventory } = useSelectedInventory();
+  const navigate = useNavigate();
+  const { inventoryOptions, loading } = useInventoryList();
+
+
 
   const fetchItems = async () => {
     log.info('ItemsPage', '🔄 Fetching items and metadata...');
@@ -68,20 +74,37 @@ const ItemsPage: React.FC = () => {
 
   const handleEdit = (item: Item) => {
     setEditingItem(item);
-    setShowItemModal(true);
+    setTimeout(() => setShowItemModal(true), 0);
   };
 
   const handleAdd = () => {
     setEditingItem(null);
-    setShowItemModal(true);
+    setTimeout(() => setShowItemModal(true), 0);
   };
 
+  // ⛔️ Redirect logic
+  useEffect(() => {
+    if (!loading && !selectedInventory) {
+      if (inventoryOptions.length > 0) {
+        log.warn('ItemsPage', '🚨 No selected inventory — redirecting to selector');
+        navigate('/inventory-selector');
+      } else {
+        log.warn('ItemsPage', '🆘 No inventories exist — redirecting to manage');
+        navigate('/inventories', {
+          state: { message: 'Please create an inventory before adding items.' },
+        });
+      }
+    }
+  }, [selectedInventory, loading, inventoryOptions, navigate]);
+
+  // ✅ Fetch data when we have a selected inventory
   useEffect(() => {
     if (selectedInventory) {
       log.debug('ItemsPage', '🔁 Selected inventory changed to:', selectedInventory.name);
       fetchItems();
     }
   }, [selectedInventory]);
+
 
   return (
     <Layout>
@@ -138,6 +161,7 @@ const ItemsPage: React.FC = () => {
         }}
       >
         <ItemForm
+          key={editingItem?.id || 'new'}
           editingItem={editingItem}
           onEditDone={() => {
             setShowItemModal(false);
@@ -149,6 +173,7 @@ const ItemsPage: React.FC = () => {
             fetchItems();
           }}
         />
+
       </ModalWrapper>
 
     </Layout>
