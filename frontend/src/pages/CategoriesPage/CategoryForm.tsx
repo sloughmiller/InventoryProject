@@ -1,8 +1,8 @@
-// src/pages/CategoriesPage/CategoryForm.tsx
 import React, { useState } from 'react';
 import BaseCard from '../../components/cards/BaseCard';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import { createCategory } from '../../api/categoryApi';
+import { useWithLoading } from '../../utils/withLoading'; // ✅ import the helper
 
 interface CategoryFormProps {
   onCreated: () => void;
@@ -13,6 +13,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
   const [error, setError] = useState('');
   const { selectedInventory, loading } = useSelectedInventory();
 
+  const doWithLoading = useWithLoading(); // ✅ initialize the wrapper
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -22,7 +24,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
     }
 
     try {
-      await createCategory({ name }, selectedInventory.id);
+      await doWithLoading(() =>
+        createCategory({ name }, selectedInventory.id)
+      );
       setName('');
       setError('');
       onCreated();
