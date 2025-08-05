@@ -11,12 +11,24 @@ type Props = {
 const CategoryCard: React.FC<Props> = ({ category, onRename, onDelete }) => (
   <BaseCard
     title={category.name}
-    description={`ID: ${category.id}`}
+    description={import.meta.env.DEV ? `ID: ${category.id}` : ''}
     actions={
-      <>
-        <button onClick={() => onRename(category)} className="text-blue-600 hover:underline">Edit</button>
-        <button onClick={() => onDelete(category)} className="text-red-500 hover:underline">Delete</button>
-      </>
+      <div className="flex gap-4 text-sm">
+        <button
+          onClick={() => onRename(category)}
+          className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
+          aria-label="Edit category"
+        >
+          ✏️ Edit
+        </button>
+        <button
+          onClick={() => onDelete(category)}
+          className="flex items-center gap-1 text-red-500 hover:text-red-700"
+          aria-label="Delete category"
+        >
+          🗑️ Delete
+        </button>
+      </div>
     }
   />
 );
