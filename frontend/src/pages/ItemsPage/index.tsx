@@ -1,9 +1,10 @@
 // src/pages/items/ItemsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { getItems, deleteItem } from '../../api/itemApi';
-import ItemForm from './ItemForm';
 import Layout from '../../components/layout';
 import ItemCard from './ItemCard';
+import ItemForm from './ItemForm';
+import ModalWrapper from '../../components/modals/ModalWrapper';
 import api from '../../api/api';
 import { log } from '../../utils/logger';
 import type { Item } from '../../types';
@@ -13,6 +14,7 @@ const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState('');
   const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [showItemModal, setShowItemModal] = useState(false);
   const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
   const [locationMap, setLocationMap] = useState<Record<string, string>>({});
   const { selectedInventory } = useSelectedInventory();
@@ -64,6 +66,16 @@ const ItemsPage: React.FC = () => {
     }
   };
 
+  const handleEdit = (item: Item) => {
+    setEditingItem(item);
+    setShowItemModal(true);
+  };
+
+  const handleAdd = () => {
+    setEditingItem(null);
+    setShowItemModal(true);
+  };
+
   useEffect(() => {
     if (selectedInventory) {
       log.debug('ItemsPage', '🔁 Selected inventory changed to:', selectedInventory.name);
@@ -78,9 +90,13 @@ const ItemsPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-emerald-700 flex items-center gap-2">
             📦 Inventory Items
           </h2>
-          <p className="text-gray-600 mt-2">
-            Manage and review your current inventory.
-          </p>
+          <p className="text-gray-600 mt-2">Manage and review your current inventory.</p>
+          <button
+            onClick={handleAdd}
+            className="mt-4 bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700"
+          >
+            ➕ Add Item
+          </button>
         </header>
 
         {error && (
@@ -88,22 +104,6 @@ const ItemsPage: React.FC = () => {
             {error}
           </p>
         )}
-
-        <section>
-          <h3 className="text-2xl font-semibold text-emerald-600 mb-4 flex items-center gap-2">
-            {editingItem ? '✏️ Edit Item' : '➕ Add New Item'}
-          </h3>
-          <div className="bg-white p-6 rounded shadow">
-            <ItemForm
-              onItemCreated={fetchItems}
-              editingItem={editingItem}
-              onEditDone={() => {
-                log.debug('ItemsPage', '✅ Finished editing item');
-                setEditingItem(null);
-              }}
-            />
-          </div>
-        </section>
 
         <section>
           <h3 className="text-2xl font-semibold text-emerald-600 mb-4 flex items-center gap-2">
@@ -120,10 +120,7 @@ const ItemsPage: React.FC = () => {
                   item={item}
                   categoryName={categoryMap[item.category_id]}
                   locationName={locationMap[item.location_id]}
-                  onEdit={() => {
-                    log.info('ItemsPage', '✏️ Editing item ID', item.id);
-                    setEditingItem(item);
-                  }}
+                  onEdit={() => handleEdit(item)}
                   onDelete={() => handleDelete(item.id)}
                 />
               ))}
@@ -131,6 +128,29 @@ const ItemsPage: React.FC = () => {
           )}
         </section>
       </div>
+
+      <ModalWrapper
+        isOpen={showItemModal}
+        title={editingItem ? 'Edit Item' : 'Add Item'}
+        onClose={() => {
+          setShowItemModal(false);
+          setEditingItem(null);
+        }}
+      >
+        <ItemForm
+          editingItem={editingItem}
+          onEditDone={() => {
+            setShowItemModal(false);
+            setEditingItem(null);
+            fetchItems();
+          }}
+          onItemCreated={() => {
+            setShowItemModal(false);
+            fetchItems();
+          }}
+        />
+      </ModalWrapper>
+
     </Layout>
   );
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout';
 import CategoryForm from './CategoryForm';
 import CategoryCard from './CategoryCard';
-import EditModal from '../../components/EditModal'; // ✅ Import modal
+import EditModal from '../../components/modals/EditModal'; // ✅ Import modal
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import {
   getCategoriesForInventory,

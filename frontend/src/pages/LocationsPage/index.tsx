@@ -11,7 +11,7 @@ import { useInventoryFetcher } from '../../hooks/useInventoryFetcher';
 import { log } from '../../utils/logger';
 import LocationCard from './LocationCard';
 import LocationForm from './LocationForm';
-import EditModal from '../../components/EditModal'; // ✅ Modal component
+import EditModal from '../../components/modals/EditModal'; // ✅ Modal component
 
 const LocationsPage: React.FC = () => {
   const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
