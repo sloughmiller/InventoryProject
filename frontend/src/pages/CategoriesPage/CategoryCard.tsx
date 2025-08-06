@@ -11,7 +11,7 @@ type Props = {
 const CategoryCard: React.FC<Props> = ({ category, onRename, onDelete }) => (
   <BaseCard
     title={category.name}
-    description={category.description || ''} // fallback to empty string if null
+    description={category.description || ''}
     actions={
       <div className="flex gap-4 text-sm">
         <button
