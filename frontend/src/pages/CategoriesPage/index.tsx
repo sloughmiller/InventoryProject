@@ -29,7 +29,12 @@ const CategoriesPage: React.FC = () => {
     newName: string,
     newDescription?: string
   ) => {
-    if (!newName || newName === category.name || !selectedInventory) return;
+    if (!newName || !selectedInventory) return;
+
+    const nameChanged = newName !== category.name;
+    const descriptionChanged = newDescription !== category.description;
+
+    if (!nameChanged && !descriptionChanged) return;
 
     try {
       log.info('CategoriesPage', `✏️ Renaming category ID ${category.id} to "${newName}"`);
@@ -40,14 +45,14 @@ const CategoriesPage: React.FC = () => {
         newDescription
       );
 
-
       refetch();
     } catch (err) {
       log.error('CategoriesPage', `❌ Failed to rename category ID ${category.id}:`, err);
     } finally {
-      setEditingCategory(null); // ✅ Close modal after save attempt
+      setEditingCategory(null);
     }
   };
+
 
   const handleDelete = async (category: Category) => {
     const confirmDelete = confirm(`Delete category "${category.name}"?`);
