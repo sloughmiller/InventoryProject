@@ -11,7 +11,9 @@ import { useInventoryFetcher } from '../../hooks/useInventoryFetcher';
 import { log } from '../../utils/logger';
 import LocationCard from './LocationCard';
 import LocationForm from './LocationForm';
-import EditModal from '../../components/modals/EditModal'; // ✅ Modal component
+import EditModal from '../../components/modals/EditModal';
+import Spinner from '../../components/Spinner';
+
 
 const LocationsPage: React.FC = () => {
   const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
@@ -19,6 +21,7 @@ const LocationsPage: React.FC = () => {
   const {
     data: locations,
     error: fetchError,
+    loading: loadingLocations,
     refetch,
   } = useInventoryFetcher<Location>(getLocationsForInventory);
 
@@ -38,7 +41,7 @@ const LocationsPage: React.FC = () => {
       log.info('LocationsPage', `✏️ Updating location ID ${editingLocation.id}`);
       await updateLocation(
         editingLocation.id,
-        { name: newName, description: newDescription},
+        { name: newName, description: newDescription },
         selectedInventory.id
       );
       refetch();
@@ -79,7 +82,9 @@ const LocationsPage: React.FC = () => {
         )}
 
         <div className="space-y-2">
-          {locations.length === 0 ? (
+          {loadingLocations ? (
+            <Spinner />
+          ) : locations.length === 0 ? (
             <p className="text-gray-500 text-center">No locations found.</p>
           ) : (
             locations.map((loc) => (
@@ -92,6 +97,7 @@ const LocationsPage: React.FC = () => {
             ))
           )}
         </div>
+
       </div>
 
       {/* ✅ Modal for editing */}
