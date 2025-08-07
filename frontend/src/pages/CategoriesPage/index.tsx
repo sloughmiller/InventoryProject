@@ -3,7 +3,7 @@ import Layout from '../../components/layout';
 import CategoryForm from './CategoryForm';
 import CategoryCard from './CategoryCard';
 import EditModal from '../../components/modals/EditModal';
-import Spinner from '../../components/Spinner'; 
+import Spinner from '../../components/Spinner';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import {
   getCategoriesForInventory,
@@ -13,14 +13,19 @@ import {
 } from '../../api/categoryApi';
 import { useInventoryFetcher } from '../../hooks/useInventoryFetcher';
 import { log } from '../../utils/logger';
+import toast from 'react-hot-toast';
+import ConfirmDeleteModal from '../../components/modals/ConfirmDeleteModal';
 
 const CategoriesPage: React.FC = () => {
   const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
+  const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
+
+
 
   const {
     data: categories,
     error: fetchError,
-    loading: loadingCategories, 
+    loading: loadingCategories,
     refetch,
   } = useInventoryFetcher<Category>(getCategoriesForInventory);
 
@@ -50,21 +55,28 @@ const CategoriesPage: React.FC = () => {
       refetch();
     } catch (err) {
       log.error('CategoriesPage', `❌ Failed to rename category ID ${category.id}:`, err);
+      toast.error('⚠️ Failed to update category');
     } finally {
       setEditingCategory(null);
     }
   };
 
-  const handleDelete = async (category: Category) => {
-    const confirmDelete = confirm(`Delete category "${category.name}"?`);
-    if (!confirmDelete || !selectedInventory) return;
+  const handleDelete = (category: Category) => {
+    setDeletingCategory(category);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingCategory || !selectedInventory) return;
 
     try {
-      log.info('CategoriesPage', `🗑️ Deleting category ID ${category.id}`);
-      await deleteCategory(category.id, selectedInventory.id);
+      await deleteCategory(deletingCategory.id, selectedInventory.id);
+      toast.success('🗑️ Category deleted');
       refetch();
     } catch (err) {
-      log.error('CategoriesPage', `❌ Failed to delete category ID ${category.id}:`, err);
+      toast.error('❌ Failed to delete category');
+      log.error('CategoriesPage', err);
+    } finally {
+      setDeletingCategory(null);
     }
   };
 
@@ -116,11 +128,23 @@ const CategoriesPage: React.FC = () => {
           currentValue={editingCategory.name}
           currentDescription={editingCategory.description}
           onClose={() => setEditingCategory(null)}
-          onSave={(newName, newDescription) =>
-            handleRename(editingCategory, newName, newDescription)
-          }
+          onSave={async (newName, newDescription) => {
+            await handleRename(editingCategory, newName, newDescription);
+            toast.success('✏️ Category updated');
+          }}
         />
       )}
+      {deletingCategory && (
+        <ConfirmDeleteModal
+          isOpen={!!deletingCategory}
+          title="Delete Category"
+          message={`Are you sure you want to delete "${deletingCategory.name}"?`}
+          onClose={() => setDeletingCategory(null)}
+          onConfirm={confirmDelete}
+        />
+      )}
+
+
     </Layout>
   );
 };

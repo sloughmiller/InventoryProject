@@ -12,11 +12,15 @@ import { log } from '../../utils/logger';
 import LocationCard from './LocationCard';
 import LocationForm from './LocationForm';
 import EditModal from '../../components/modals/EditModal';
+import ConfirmDeleteModal from '../../components/modals/ConfirmDeleteModal';
 import Spinner from '../../components/Spinner';
+import toast from 'react-hot-toast';
 
 
 const LocationsPage: React.FC = () => {
   const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
+  const [deletingLocation, setDeletingLocation] = useState<Location | null>(null);
+
 
   const {
     data: locations,
@@ -47,25 +51,28 @@ const LocationsPage: React.FC = () => {
       refetch();
     } catch (err) {
       log.error('LocationsPage', `❌ Failed to update location ID ${editingLocation.id}:`, err);
+      toast.error('⚠️ Failed to update location');
     } finally {
       setEditingLocation(null);
     }
   };
 
-  const handleDelete = async (location: Location) => {
-    if (!selectedInventory?.id) return;
-
-    const confirmDelete = confirm(`Delete location "${location.name}"?`);
-    if (!confirmDelete) return;
+  const confirmDelete = async () => {
+    if (!deletingLocation || !selectedInventory?.id) return;
 
     try {
-      log.info('LocationsPage', `🗑️ Deleting location ID ${location.id}`);
-      await deleteLocation(location.id, selectedInventory.id);
+      log.info('LocationsPage', `🗑️ Deleting location ID ${deletingLocation.id}`);
+      await deleteLocation(deletingLocation.id, selectedInventory.id);
+      toast.success('🗑️ Location deleted');
       refetch();
     } catch (err) {
-      log.error('LocationsPage', `❌ Failed to delete location ID ${location.id}:`, err);
+      log.error('LocationsPage', `❌ Failed to delete location ID ${deletingLocation.id}:`, err);
+      toast.error('❌ Failed to delete location');
+    } finally {
+      setDeletingLocation(null);
     }
   };
+
 
   return (
     <Layout>
@@ -92,7 +99,8 @@ const LocationsPage: React.FC = () => {
                 key={loc.id}
                 location={loc}
                 onEdit={() => setEditingLocation(loc)}
-                onDelete={() => handleDelete(loc)}
+                onDelete={() => setDeletingLocation(loc)}
+
               />
             ))
           )}
@@ -108,9 +116,23 @@ const LocationsPage: React.FC = () => {
           currentValue={editingLocation.name}
           currentDescription={editingLocation.description}
           onClose={() => setEditingLocation(null)}
-          onSave={(newName, newDescription) => handleSaveEdit(newName, newDescription)}
+          onSave={async (newName, newDescription) => {
+            await handleSaveEdit(newName, newDescription);
+            toast.success('📍 Location updated');
+          }}
         />
       )}
+      {deletingLocation && (
+        <ConfirmDeleteModal
+          isOpen={!!deletingLocation}
+          title="Delete Location"
+          message={`Are you sure you want to delete "${deletingLocation.name}"?`}
+          onClose={() => setDeletingLocation(null)}
+          onConfirm={confirmDelete}
+        />
+      )}
+
+
     </Layout>
   );
 };

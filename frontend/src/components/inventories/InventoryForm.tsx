@@ -1,8 +1,9 @@
 // src/components/InventoryForm.tsx
 import React, { useState } from 'react';
-import api from '../../api/api';
+import { createInventory } from '../../api/inventoryApi';
 import BaseCard from '../cards/BaseCard';
 import { log } from '../../utils/logger';
+import toast from 'react-hot-toast';
 
 interface Props {
   onCreated: () => void;
@@ -16,9 +17,10 @@ const InventoryForm: React.FC<Props> = ({ onCreated }) => {
     e.preventDefault();
     try {
       log.info('InventoryForm', `➕ Creating inventory: ${name}`);
-      await api.post('/inventories/', { name });
+      await createInventory(name);
       setName('');
       setError('');
+      toast.success('➕ Inventory created');
       onCreated();
     } catch (err) {
       log.error('InventoryForm', '❌ Failed to create inventory:', err);
@@ -37,7 +39,10 @@ const InventoryForm: React.FC<Props> = ({ onCreated }) => {
           placeholder="Inventory name"
           required
         />
-        <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded" type="submit">
+        <button
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded"
+          type="submit"
+        >
           Create
         </button>
       </form>

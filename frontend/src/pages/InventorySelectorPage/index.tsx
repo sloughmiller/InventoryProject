@@ -1,26 +1,24 @@
 // src/pages/InventorySelectorPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/api';
+
 import Layout from '../../components/layout';
 import InventoryCard from '../../components/inventories/InventoryCard';
-import type { Inventory } from '../../types';
 import { log } from '../../utils/logger';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
-
+import { getAccessibleInventories } from '../../api/inventoryApi';
+import type { Inventory } from '../../types';
 
 const InventorySelectorPage: React.FC = () => {
   const [inventories, setInventories] = useState<Inventory[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { setSelectedInventory } = useSelectedInventory(); // ← add this inside the component
-
+  const { setSelectedInventory } = useSelectedInventory();
 
   useEffect(() => {
     const fetchInventories = async () => {
       try {
-        const res = await api.get('/inventories/accessible');
-        const data: Inventory[] = res.data;
+        const data = await getAccessibleInventories();
         setInventories(data);
         log.info('InventorySelectorPage', '✅ Inventories fetched:', data);
 
@@ -41,7 +39,7 @@ const InventorySelectorPage: React.FC = () => {
 
   const handleSelect = (inv: Inventory) => {
     log.info('InventorySelectorPage', `📦 Inventory selected: ${inv.name}`);
-    setSelectedInventory(inv); // <- this updates both context and localStorage
+    setSelectedInventory(inv);
     navigate('/dashboard');
   };
 

@@ -1,22 +1,34 @@
 // src/pages/InventoryManagerPage.tsx
 import React, { useEffect, useState } from 'react';
-import api from '../../api/api';
+import {
+  getInventories,
+  renameInventory,
+  deleteInventory,
+} from '../../api/inventoryApi';
+import EditInventoryModal from '../../components/modals/EditInventoryModal';
+import ConfirmDeleteModal from '../../components/modals/ConfirmDeleteModal';
 import Layout from '../../components/layout';
 import InventoryForm from '../../components/inventories/InventoryForm';
 import InventoryCard from '../../components/inventories/InventoryCard';
 import { log } from '../../utils/logger';
 import type { Inventory } from '../../types';
+import toast from 'react-hot-toast';
 
 const InventoryManagerPage: React.FC = () => {
   const [inventories, setInventories] = useState<Inventory[]>([]);
+  const [editingInventory, setEditingInventory] = useState<Inventory | null>(null);
+  const [deletingInventory, setDeletingInventory] = useState<Inventory | null>(null);
+
+
 
   const fetchInventories = async () => {
     try {
-      const res = await api.get('/inventories/');
-      setInventories(res.data);
-      log.info('InventoryManagerPage', '📦 Inventories loaded:', res.data);
+      const data = await getInventories();
+      setInventories(data);
+      log.info('InventoryManagerPage', '📦 Inventories loaded:', data);
     } catch (err) {
       log.error('InventoryManagerPage', '❌ Failed to load inventories:', err);
+      toast.error('Failed to load inventories.');
     }
   };
 
@@ -24,28 +36,44 @@ const InventoryManagerPage: React.FC = () => {
     fetchInventories();
   }, []);
 
-  const handleRename = async (inv: Inventory) => {
-    const newName = prompt('Enter new name for this inventory:', inv.name);
-    if (!newName || newName === inv.name) return;
+  const handleRename = (inv: Inventory) => {
+    setEditingInventory(inv);
+  };
+
+  const handleSaveRename = async (newName: string) => {
+    if (!editingInventory || newName === editingInventory.name) return;
+
     try {
-      log.info('InventoryManagerPage', `✏️ Renaming inventory ${inv.id} to "${newName}"`);
-      await api.put(`/inventories/${inv.id}`, { name: newName });
+      log.info('InventoryManagerPage', `✏️ Renaming inventory ${editingInventory.id} to "${newName}"`);
+      await renameInventory(editingInventory.id, newName);
+      toast.success('✏️ Inventory renamed');
+      setEditingInventory(null);
       fetchInventories();
     } catch (err) {
-      log.error('InventoryManagerPage', `❌ Failed to rename inventory ${inv.id}:`, err);
+      log.error('InventoryManagerPage', `❌ Failed to rename inventory:`, err);
+      toast.error('Failed to rename inventory.');
     }
   };
 
-  const handleDelete = async (inv: Inventory) => {
-    if (!confirm(`Delete inventory "${inv.name}"?`)) return;
+
+  const handleDelete = (inv: Inventory) => {
+    setDeletingInventory(inv);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingInventory) return;
     try {
-      log.info('InventoryManagerPage', `🗑️ Deleting inventory ${inv.id}`);
-      await api.delete(`/inventories/${inv.id}`);
+      log.info('InventoryManagerPage', `🗑️ Deleting inventory ${deletingInventory.id}`);
+      await deleteInventory(deletingInventory.id);
+      toast.success('🗑️ Inventory deleted');
+      setDeletingInventory(null);
       fetchInventories();
     } catch (err) {
-      log.error('InventoryManagerPage', `❌ Failed to delete inventory ${inv.id}:`, err);
+      log.error('InventoryManagerPage', `❌ Failed to delete inventory:`, err);
+      toast.error('Failed to delete inventory.');
     }
   };
+
 
   return (
     <Layout>
@@ -71,6 +99,23 @@ const InventoryManagerPage: React.FC = () => {
             ))
           )}
         </div>
+        {editingInventory && (
+          <EditInventoryModal
+            isOpen={!!editingInventory}
+            inventory={editingInventory}
+            onClose={() => setEditingInventory(null)}
+            onSave={handleSaveRename}
+          />
+        )}
+        {deletingInventory && (
+          <ConfirmDeleteModal
+            isOpen={!!deletingInventory}
+            title="Delete Inventory"
+            message={`Are you sure you want to delete "${deletingInventory.name}"? This action cannot be undone.`}
+            onClose={() => setDeletingInventory(null)}
+            onConfirm={confirmDelete}
+          />
+        )}
       </div>
     </Layout>
   );

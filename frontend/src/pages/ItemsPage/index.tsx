@@ -13,6 +13,7 @@ import type { Item } from '../../types';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import Spinner from '../../components/Spinner';
 import toast from 'react-hot-toast';
+import ConfirmDeleteModal from '../../components/modals/ConfirmDeleteModal';
 
 
 const ItemsPage: React.FC = () => {
@@ -26,6 +27,8 @@ const ItemsPage: React.FC = () => {
   const { selectedInventory } = useSelectedInventory();
   const navigate = useNavigate();
   const { inventoryOptions, loading } = useInventoryList();
+  const [deletingItem, setDeletingItem] = useState<Item | null>(null); // or Category, Location
+
 
 
 
@@ -68,19 +71,21 @@ const ItemsPage: React.FC = () => {
   };
 
 
-  const handleDelete = async (itemId: string) => {
-    if (!confirm('Are you sure you want to delete this item?')) return;
-    log.warn('ItemsPage', '🗑️ Deleting item ID', itemId);
+  const confirmDelete = async () => {
+    if (!deletingItem) return;
+
     try {
-      await deleteItem(itemId);
+      await deleteItem(deletingItem.id);
       toast.success('🗑️ Item deleted');
-      log.info('ItemsPage', '✅ Item ID deleted', itemId);
       fetchItems();
     } catch (err) {
-      log.error('ItemsPage', '❌ Failed to delete item ID', itemId, err);
-      setError('Failed to delete item.');
+      toast.error('❌ Failed to delete item');
+      log.error('ItemsPage', '❌ Deletion failed:', err);
+    } finally {
+      setDeletingItem(null);
     }
   };
+
 
   const handleEdit = (item: Item) => {
     setEditingItem(item);
@@ -156,7 +161,7 @@ const ItemsPage: React.FC = () => {
                   categoryName={categoryMap[item.category_id]}
                   locationName={locationMap[item.location_id]}
                   onEdit={() => handleEdit(item)}
-                  onDelete={() => handleDelete(item.id)}
+                  onDelete={() => setDeletingItem(item)}
                 />
               ))}
             </div>
@@ -177,20 +182,32 @@ const ItemsPage: React.FC = () => {
           key={editingItem?.id || 'new'}
           editingItem={editingItem}
           onEditDone={() => {
-            toast.success('✏️ Item updated'); 
+            toast.success('✏️ Item updated');
             setShowItemModal(false);
             setEditingItem(null);
             fetchItems();
           }}
           onItemCreated={() => {
-            toast.success('✅ Item added'); 
+            toast.success('✅ Item added');
             setShowItemModal(false);
             fetchItems();
           }}
         />
 
 
+
+
       </ModalWrapper>
+
+      {deletingItem && (
+        <ConfirmDeleteModal
+          isOpen={!!deletingItem}
+          title="Delete Item"
+          message={`Are you sure you want to delete "${deletingItem.name}"? This cannot be undone.`}
+          onClose={() => setDeletingItem(null)}
+          onConfirm={confirmDelete}
+        />
+      )}
 
     </Layout>
   );
