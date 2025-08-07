@@ -12,6 +12,7 @@ import { log } from '../../utils/logger';
 import type { Item } from '../../types';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import Spinner from '../../components/Spinner';
+import toast from 'react-hot-toast';
 
 
 const ItemsPage: React.FC = () => {
@@ -72,6 +73,7 @@ const ItemsPage: React.FC = () => {
     log.warn('ItemsPage', '🗑️ Deleting item ID', itemId);
     try {
       await deleteItem(itemId);
+      toast.success('🗑️ Item deleted');
       log.info('ItemsPage', '✅ Item ID deleted', itemId);
       fetchItems();
     } catch (err) {
@@ -81,11 +83,13 @@ const ItemsPage: React.FC = () => {
   };
 
   const handleEdit = (item: Item) => {
+    toast.success('✏️ Item updated');
     setEditingItem(item);
     setTimeout(() => setShowItemModal(true), 0);
   };
 
   const handleAdd = () => {
+    toast.success('✅ Item added');
     setEditingItem(null);
     setTimeout(() => setShowItemModal(true), 0);
   };
