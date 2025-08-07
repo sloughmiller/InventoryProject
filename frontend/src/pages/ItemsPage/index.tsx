@@ -31,7 +31,6 @@ const ItemsPage: React.FC = () => {
   const fetchItems = async () => {
     log.info('ItemsPage', '🔄 Fetching items and metadata...');
     setLoadingItems(true);
-    await new Promise((res) => setTimeout(res, 2000)); // ⏳ test delay
 
 
     try {
