@@ -1,5 +1,6 @@
 // src/api/api.ts
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 console.log("🔧 Axios base URL:", import.meta.env.VITE_API_URL);
 
@@ -7,7 +8,7 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'https://inventoryproject-72il.onrender.com',
 });
 
-// Axios interceptor: attach token to every request
+// 🔐 Axios interceptor: attach token to every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token && config.headers) {
@@ -18,6 +19,25 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// 🚨 Axios response interceptor: catch 401 errors and redirect
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.warn('🔒 Token expired or invalid — logging out');
+      toast.error('Session expired. Please log in again.');
+      localStorage.removeItem('token');
+
+      // Optional: clear other localStorage values like selected inventory
+      localStorage.removeItem('selectedInventory');
+
+      // 🔁 Force redirect to login page
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 /**
  * Force-set the token into Axios default headers.
