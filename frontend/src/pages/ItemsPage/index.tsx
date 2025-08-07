@@ -32,7 +32,6 @@ const ItemsPage: React.FC = () => {
     log.info('ItemsPage', '🔄 Fetching items and metadata...');
     setLoadingItems(true);
 
-
     try {
       const [itemsData, categoriesData, locationsData] = await Promise.all([
         getItems(selectedInventory?.id ?? ''),
@@ -62,6 +61,8 @@ const ItemsPage: React.FC = () => {
     } catch (err) {
       log.error('ItemsPage', '❌ Failed to fetch items or metadata', err);
       setError('Failed to load items.');
+    } finally {
+      setLoadingItems(false);
     }
   };
 
