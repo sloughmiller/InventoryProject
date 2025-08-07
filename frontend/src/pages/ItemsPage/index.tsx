@@ -31,6 +31,9 @@ const ItemsPage: React.FC = () => {
   const fetchItems = async () => {
     log.info('ItemsPage', '🔄 Fetching items and metadata...');
     setLoadingItems(true);
+    await new Promise((res) => setTimeout(res, 2000)); // ⏳ test delay
+
+
     try {
       const [itemsData, categoriesData, locationsData] = await Promise.all([
         getItems(selectedInventory?.id ?? ''),
@@ -62,6 +65,7 @@ const ItemsPage: React.FC = () => {
       setError('Failed to load items.');
     }
   };
+
 
   const handleDelete = async (itemId: string) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
