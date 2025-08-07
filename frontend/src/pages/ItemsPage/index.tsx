@@ -83,13 +83,11 @@ const ItemsPage: React.FC = () => {
   };
 
   const handleEdit = (item: Item) => {
-    toast.success('✏️ Item updated');
     setEditingItem(item);
     setTimeout(() => setShowItemModal(true), 0);
   };
 
   const handleAdd = () => {
-    toast.success('✅ Item added');
     setEditingItem(null);
     setTimeout(() => setShowItemModal(true), 0);
   };
@@ -179,15 +177,18 @@ const ItemsPage: React.FC = () => {
           key={editingItem?.id || 'new'}
           editingItem={editingItem}
           onEditDone={() => {
+            toast.success('✏️ Item updated'); 
             setShowItemModal(false);
             setEditingItem(null);
             fetchItems();
           }}
           onItemCreated={() => {
+            toast.success('✅ Item added'); 
             setShowItemModal(false);
             fetchItems();
           }}
         />
+
 
       </ModalWrapper>
 
