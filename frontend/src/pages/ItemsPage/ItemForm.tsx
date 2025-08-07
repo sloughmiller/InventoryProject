@@ -138,9 +138,10 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       >
         <option value="">Select Category</option>
         {categories.map((cat) => (
-          <option key={cat.id} value={cat.name}>
+          <option key={cat.id} value={cat.name} title={cat.description || ''}>
             {cat.name}
           </option>
+
         ))}
       </select>
 
@@ -152,9 +153,10 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       >
         <option value="">Select Location</option>
         {locations.map((loc) => (
-          <option key={loc.id} value={loc.name}>
+          <option key={loc.id} value={loc.name} title={loc.description || ''}>
             {loc.name}
           </option>
+
         ))}
       </select>
 
