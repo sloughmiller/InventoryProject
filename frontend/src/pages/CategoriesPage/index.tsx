@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout';
 import CategoryForm from './CategoryForm';
 import CategoryCard from './CategoryCard';
-import EditModal from '../../components/modals/EditModal'; // ✅ Import modal
+import EditModal from '../../components/modals/EditModal';
+import Spinner from '../../components/Spinner'; 
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import {
   getCategoriesForInventory,
@@ -19,6 +20,7 @@ const CategoriesPage: React.FC = () => {
   const {
     data: categories,
     error: fetchError,
+    loading: loadingCategories, 
     refetch,
   } = useInventoryFetcher<Category>(getCategoriesForInventory);
 
@@ -53,7 +55,6 @@ const CategoriesPage: React.FC = () => {
     }
   };
 
-
   const handleDelete = async (category: Category) => {
     const confirmDelete = confirm(`Delete category "${category.name}"?`);
     if (!confirmDelete || !selectedInventory) return;
@@ -85,18 +86,22 @@ const CategoriesPage: React.FC = () => {
         <CategoryForm onCreated={refetch} />
 
         {fetchError && (
-          <p className="text-red-600 bg-red-100 px-4 py-2 rounded text-center">{fetchError}</p>
+          <p className="text-red-600 bg-red-100 px-4 py-2 rounded text-center">
+            {fetchError}
+          </p>
         )}
 
         <div className="space-y-2">
-          {categories.length === 0 ? (
+          {loadingCategories ? (
+            <Spinner />
+          ) : categories.length === 0 ? (
             <p className="text-gray-500 text-center">No categories found.</p>
           ) : (
             categories.map((cat) => (
               <CategoryCard
                 key={cat.id}
                 category={cat}
-                onRename={() => setEditingCategory(cat)} // ✅ Open modal
+                onRename={() => setEditingCategory(cat)}
                 onDelete={handleDelete}
               />
             ))
@@ -104,7 +109,6 @@ const CategoriesPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ✅ Edit modal */}
       {editingCategory && (
         <EditModal
           isOpen={!!editingCategory}
@@ -116,7 +120,6 @@ const CategoriesPage: React.FC = () => {
             handleRename(editingCategory, newName, newDescription)
           }
         />
-
       )}
     </Layout>
   );
