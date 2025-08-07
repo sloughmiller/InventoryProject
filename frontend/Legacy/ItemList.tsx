@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../api/api';
-import { useSelectedInventory } from '../../hooks/useSelectedInventory';
-import type { Item } from '../../types';
+import api from '../src/api/api';
+import { useSelectedInventory } from '../src/hooks/useSelectedInventory';
+import type { Item } from '../src/types';
 
 
 interface ItemListProps {
