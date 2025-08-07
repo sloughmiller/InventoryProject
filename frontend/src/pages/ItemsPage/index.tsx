@@ -11,9 +11,12 @@ import api from '../../api/api';
 import { log } from '../../utils/logger';
 import type { Item } from '../../types';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
+import Spinner from '../../components/Spinner';
+
 
 const ItemsPage: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
+  const [loadingItems, setLoadingItems] = useState(true);
   const [error, setError] = useState('');
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [showItemModal, setShowItemModal] = useState(false);
@@ -27,6 +30,7 @@ const ItemsPage: React.FC = () => {
 
   const fetchItems = async () => {
     log.info('ItemsPage', '🔄 Fetching items and metadata...');
+    setLoadingItems(true);
     try {
       const [itemsData, categoriesData, locationsData] = await Promise.all([
         getItems(selectedInventory?.id ?? ''),
@@ -133,7 +137,9 @@ const ItemsPage: React.FC = () => {
             📂 Current Items
           </h3>
 
-          {items.length === 0 ? (
+          {loadingItems ? (
+            <Spinner />
+          ) : items.length === 0 ? (
             <p className="text-gray-500">No items found. Add your first item above.</p>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -150,6 +156,7 @@ const ItemsPage: React.FC = () => {
             </div>
           )}
         </section>
+
       </div>
 
       <ModalWrapper
