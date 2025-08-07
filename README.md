@@ -1,99 +1,83 @@
-# 🏠 Home Inventory API
+# 🏠 Home Inventory APP
 
-A full-stack personal inventory management system built with **FastAPI**, **PostgreSQL**, and **SQLAlchemy**, designed to help users track household items, categories, storage locations, and item conditions.
+A full-stack, secure inventory management platform with a FastAPI backend and React PWA frontend. Built to help users manage categorized household items across multiple inventories, the project demonstrates professional backend API architecture, secure token-based authentication, and clean, responsive frontend design using Tailwind CSS.
 
-This project serves as a demonstration of backend development, RESTful API design, database modeling, and modern Python practices — and is being actively deployed to **AWS EC2 + RDS**.
+## Backend Highlights (FastAPI)
+
+* RESTful API design using FastAPI
+* OAuth2-compatible JWT login system (OAuth2PasswordRequestForm)
+* Secure password hashing and verification (bcrypt)
+* Fully modular route + schema + crud structure
+* UUID-based routing for secure resource access
+* Scoped multi-inventory access per user
+* SQLAlchemy ORM + PostgreSQL for persistence
+* Alembic migrations for schema evolution
+* Deployed via Render with live PostgreSQL backend
+
+---
+
+## Frontend Highlights (React PWA)
+
+* Vite + React + TypeScript
+* Responsive Tailwind-styled UI
+* Modular card-based layout with reusable components
+* Centralized Auth & Inventory contexts
+* API abstraction layer per domain (items, categories, etc.)
+* Modal-based forms with live updates
+* Deployed as a PWA on Netlify
 
 ---
 
 ## 🔧 Tech Stack
 
-- **Backend**: FastAPI, SQLAlchemy, Pydantic
-- **Database**: PostgreSQL (via RDS)
-- **Hosting**: EC2 + Nginx reverse proxy (in progress)
-- **Auth**: JWT-based auth (coming soon)
-- **Frontend**: React + Tailwind (PWA, linked repo coming soon)
+* **Backend**: FastAPI, SQLAlchemy, Pydantic
+* **Database**: PostgreSQL (via Render)
+* **Auth**: OAuth2 + JWT (token-based authentication)
+* **Frontend**: React + Vite + TypeScript + Tailwind CSS (PWA)
+* **Hosting**: Backend & DB on Render, Frontend on Netlify
 
 ---
 
 ## 📁 Project Structure
 
 ```
-/app
-├── api/         → FastAPI route definitions
-├── crud/        → SQLAlchemy database interaction logic
-├── models/      → Database schema definitions
-├── schemas/     → Pydantic request/response validation
-├── main.py      → App startup, router setup
-/tests           → (To be added)
-/.env             → Environment variables
+
+/project-root
+    ├── app/              → FastAPI backend
+    ├── frontend/         → React + Tailwind frontend (PWA)
+    ├── alembic/          → Migrations
+    ├── scripts/          → Seeding and utility scripts
+
 ```
 
 ---
 
-## 🚀 Quickstart
+## ✅ Core Features
 
-### 1️⃣ Clone the repo
-
-```bash
-git clone https://github.com/yourusername/home-inventory-api.git
-cd home-inventory-api
-```
-
-### 2️⃣ Set up the environment
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-### 3️⃣ Configure environment variables
-
-Create a `.env` file in the root:
-
-```env
-DATABASE_URL=postgresql://<user>:<password>@<host>:5432/home_inventory?sslmode=require
-SECRET_KEY=your_secret_key
-```
-
-### 4️⃣ Initialize the database
-
-```bash
-python scripts/seed_data.py
-```
+* 🔐 Secure user authentication (OAuth2 + JWT)
+* 🧾 Inventory scoping: users can only access their own inventories
+* 📦 Full CRUD for items, categories, and locations
+* 📋 Modular FastAPI architecture with Pydantic & Alembic
+* 💅 Tailwind-styled React PWA frontend
+* 🔄 Modal-based forms for fast UX
+* 🐘 PostgreSQL database on Render
 
 ---
 
-## 🌐 API Access
+## 🚧 Planned Improvements
 
-Once running with:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-- [Swagger UI](http://localhost:8000/docs)
-- [ReDoc](http://localhost:8000/redoc)
+* 👥 Shared inventories with role-based access (admin/viewer)
+* 📊 Item condition field frontend integration
+* 📸 Barcode scanning support
 
 ---
 
-## ✅ Features
+## 🌐 Live Demo
 
-- 🧑‍💼 User management (admin seeding and auth in progress)
-- 📦 Inventory items, categories, locations, and condition tracking
-- ⚙️ Modular FastAPI architecture
-- 🧪 API-ready for integration and testing
-- 🐘 PostgreSQL support (local & cloud)
+> ⚠️ Backend may take 30–60 seconds to wake up if idle
 
----
-
-## 🚧 In Progress
-
-- 🔐 JWT authentication
-- 🖼️ React + Tailwind frontend (PWA)
-- ☁️ EC2 + RDS deployment (backend complete, frontend in progress)
-- 📸 Barcode scanning (planned feature)
+* 🧩 Frontend: [https://your-inventory-app.netlify.app](https://your-inventory-app.netlify.app)
+* 🔗 API Docs: [https://your-api-url.onrender.com/docs](https://your-api-url.onrender.com/docs)
 
 ---
 
