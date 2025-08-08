@@ -20,7 +20,7 @@ const InventoryForm: React.FC<Props> = ({ onCreated }) => {
       await createInventory(name);
       setName('');
       setError('');
-      toast.success('➕ Inventory "${name}" created');
+      toast.success(`➕ Inventory "${name}" created`);
       onCreated();
     } catch (err) {
       log.error('InventoryForm', '❌ Failed to create inventory:', err);
