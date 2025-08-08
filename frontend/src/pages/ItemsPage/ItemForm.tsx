@@ -6,9 +6,9 @@ import { useCategoryLocationOptions } from '../../hooks/useCategoryLocationOptio
 import type { Item } from '../../types';
 
 interface ItemFormProps {
-  onItemCreated?: () => void;
+  onItemCreated?: (created: Item) => void;
   editingItem?: Item | null;
-  onEditDone?: () => void;
+  onEditDone?: (updated: Item) => void;
 }
 
 const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditDone }) => {
@@ -74,14 +74,15 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
 
     try {
       if (editingItem) {
-        console.log('✏️ Updating item:', editingItem.id, itemData);
-        await updateItem(editingItem.id, itemData);
-        onEditDone?.();
+        const updateData: Partial<Item> = { ...itemData };
+        const updated = await updateItem(editingItem.id, updateData);
+        onEditDone?.(updated);
       } else {
-        console.log('📦 Submitting item data:', itemData);
-        await createItem(itemData);
-        onItemCreated?.();
+        const createData: Omit<Item, 'id'> = itemData;
+        const created = await createItem(createData);
+        onItemCreated?.(created);
       }
+
 
       // reset form
       setName('');
