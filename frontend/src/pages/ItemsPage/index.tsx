@@ -72,19 +72,22 @@ const ItemsPage: React.FC = () => {
 
 
   const confirmDelete = async () => {
-    if (!deletingItem) return;
+  if (!deletingItem) return;
 
-    try {
-      await deleteItem(deletingItem.id);
-      toast.success('🗑️ Item "${name}" deleted');
-      fetchItems();
-    } catch (err) {
-      toast.error('❌ Failed to delete item');
-      log.error('ItemsPage', '❌ Deletion failed:', err);
-    } finally {
-      setDeletingItem(null);
-    }
-  };
+  const deletedName = deletingItem.name;
+
+  try {
+    await deleteItem(deletingItem.id);
+    toast.success(`🗑️ Item "${deletedName}" deleted`);
+    fetchItems();
+  } catch (err) {
+    toast.error('❌ Failed to delete item');
+    log.error('ItemsPage', '❌ Deletion failed:', err);
+  } finally {
+    setDeletingItem(null);
+  }
+};
+
 
 
   const handleEdit = (item: Item) => {
@@ -181,14 +184,14 @@ const ItemsPage: React.FC = () => {
         <ItemForm
           key={editingItem?.id || 'new'}
           editingItem={editingItem}
-          onEditDone={() => {
-            toast.success('✏️ Item "${name}" updated');
+          onEditDone={(updated) => {
+             toast.success(`✏️ Item "${updated.name}" updated`);
             setShowItemModal(false);
             setEditingItem(null);
             fetchItems();
           }}
-          onItemCreated={() => {
-            toast.success('✅ Item "${name}" added');
+          onItemCreated={(created) => {
+            toast.success(`✅ Item "${created.name}" added`)
             setShowItemModal(false);
             fetchItems();
           }}

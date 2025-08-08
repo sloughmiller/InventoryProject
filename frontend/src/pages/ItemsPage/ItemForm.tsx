@@ -63,31 +63,27 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
       return;
     }
 
-    const itemData = {
+    const itemData: Omit<Item, 'id'> = {
       name,
-      description,
+      description: description || undefined,
       quantity: parsedQuantity,
       category_id: category.id,
       location_id: location.id,
       inventory_id: selectedInventory.id,
-      barcode: null,
-      purchase_date: null,
-      value: null,
-      condition_id: null,
     };
 
     try {
       if (editingItem) {
-        console.log("✏️ Updating item:", editingItem.id, itemData);
+        console.log('✏️ Updating item:', editingItem.id, itemData);
         await updateItem(editingItem.id, itemData);
         onEditDone?.();
       } else {
-        console.log("📦 Submitting item data:", itemData);
+        console.log('📦 Submitting item data:', itemData);
         await createItem(itemData);
         onItemCreated?.();
       }
 
-      
+      // reset form
       setName('');
       setDescription('');
       setQuantity('1');
@@ -141,7 +137,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
           <option key={cat.id} value={cat.name} title={cat.description || ''}>
             {cat.name}
           </option>
-
         ))}
       </select>
 
@@ -156,7 +151,6 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
           <option key={loc.id} value={loc.name} title={loc.description || ''}>
             {loc.name}
           </option>
-
         ))}
       </select>
 
