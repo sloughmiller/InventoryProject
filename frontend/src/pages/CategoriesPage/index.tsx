@@ -70,7 +70,7 @@ const CategoriesPage: React.FC = () => {
 
     try {
       await deleteCategory(deletingCategory.id, selectedInventory.id);
-      toast.success('🗑️ Category deleted');
+      toast.success('🗑️ Category "${name}" deleted');
       refetch();
     } catch (err) {
       toast.error('❌ Failed to delete category');
@@ -130,7 +130,7 @@ const CategoriesPage: React.FC = () => {
           onClose={() => setEditingCategory(null)}
           onSave={async (newName, newDescription) => {
             await handleRename(editingCategory, newName, newDescription);
-            toast.success('✏️ Category updated');
+            toast.success('✏️ Category "${name}" updated');
           }}
         />
       )}

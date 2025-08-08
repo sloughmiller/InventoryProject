@@ -76,7 +76,7 @@ const ItemsPage: React.FC = () => {
 
     try {
       await deleteItem(deletingItem.id);
-      toast.success('🗑️ Item deleted');
+      toast.success('🗑️ Item "${name}" deleted');
       fetchItems();
     } catch (err) {
       toast.error('❌ Failed to delete item');
@@ -182,13 +182,13 @@ const ItemsPage: React.FC = () => {
           key={editingItem?.id || 'new'}
           editingItem={editingItem}
           onEditDone={() => {
-            toast.success('✏️ Item updated');
+            toast.success('✏️ Item "${name}" updated');
             setShowItemModal(false);
             setEditingItem(null);
             fetchItems();
           }}
           onItemCreated={() => {
-            toast.success('✅ Item added');
+            toast.success('✅ Item "${name}" added');
             setShowItemModal(false);
             fetchItems();
           }}

@@ -46,7 +46,7 @@ const InventoryManagerPage: React.FC = () => {
     try {
       log.info('InventoryManagerPage', `✏️ Renaming inventory ${editingInventory.id} to "${newName}"`);
       await renameInventory(editingInventory.id, newName);
-      toast.success('✏️ Inventory renamed');
+      toast.success('✏️ Inventory "${name}" renamed');
       setEditingInventory(null);
       fetchInventories();
     } catch (err) {
@@ -65,7 +65,7 @@ const InventoryManagerPage: React.FC = () => {
     try {
       log.info('InventoryManagerPage', `🗑️ Deleting inventory ${deletingInventory.id}`);
       await deleteInventory(deletingInventory.id);
-      toast.success('🗑️ Inventory deleted');
+      toast.success('🗑️ Inventory "${name}" deleted');
       setDeletingInventory(null);
       fetchInventories();
     } catch (err) {

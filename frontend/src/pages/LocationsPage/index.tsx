@@ -63,7 +63,7 @@ const LocationsPage: React.FC = () => {
     try {
       log.info('LocationsPage', `🗑️ Deleting location ID ${deletingLocation.id}`);
       await deleteLocation(deletingLocation.id, selectedInventory.id);
-      toast.success('🗑️ Location deleted');
+      toast.success('🗑️ Location "${name}" deleted');
       refetch();
     } catch (err) {
       log.error('LocationsPage', `❌ Failed to delete location ID ${deletingLocation.id}:`, err);
@@ -118,7 +118,7 @@ const LocationsPage: React.FC = () => {
           onClose={() => setEditingLocation(null)}
           onSave={async (newName, newDescription) => {
             await handleSaveEdit(newName, newDescription);
-            toast.success('📍 Location updated');
+            toast.success('📍 Location "${name}" updated');
           }}
         />
       )}
