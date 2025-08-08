@@ -44,14 +44,17 @@ const InventoryManagerPage: React.FC = () => {
     if (!editingInventory || newName === editingInventory.name) return;
 
     try {
-      log.info('InventoryManagerPage', `✏️ Renaming inventory ${editingInventory.id} to "${newName}"`);
+      log.info(
+        'InventoryManagerPage',
+        `✏️ Renaming inventory ${editingInventory.id} to "${newName}"`
+      );
       await renameInventory(editingInventory.id, newName);
-      toast.success('✏️ Inventory "${name}" renamed');
+      toast.success(`✏️ Inventory "${newName}" renamed`);
       setEditingInventory(null);
       fetchInventories();
     } catch (err) {
       log.error('InventoryManagerPage', `❌ Failed to rename inventory:`, err);
-      toast.error('Failed to rename inventory.');
+      toast.error(`❌ Failed to rename "${editingInventory.name}"`);
     }
   };
 
@@ -63,14 +66,17 @@ const InventoryManagerPage: React.FC = () => {
   const confirmDelete = async () => {
     if (!deletingInventory) return;
     try {
-      log.info('InventoryManagerPage', `🗑️ Deleting inventory ${deletingInventory.id}`);
+      log.info(
+        'InventoryManagerPage',
+        `🗑️ Deleting inventory ${deletingInventory.id}`
+      );
       await deleteInventory(deletingInventory.id);
-      toast.success('🗑️ Inventory "${name}" deleted');
+      toast.success(`🗑️ Inventory "${deletingInventory.name}" deleted`);
       setDeletingInventory(null);
       fetchInventories();
     } catch (err) {
       log.error('InventoryManagerPage', `❌ Failed to delete inventory:`, err);
-      toast.error('Failed to delete inventory.');
+      toast.error(`❌ Failed to delete "${deletingInventory.name}"`);
     }
   };
 
