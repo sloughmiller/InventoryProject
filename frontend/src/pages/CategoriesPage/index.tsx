@@ -16,11 +16,12 @@ import { log } from '../../utils/logger';
 import toast from 'react-hot-toast';
 import ConfirmDeleteModal from '../../components/modals/ConfirmDeleteModal';
 
+const truncate = (s: string, n = 24) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+
 const CategoriesPage: React.FC = () => {
   const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
   const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
-
-
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   const {
     data: categories,
@@ -28,8 +29,6 @@ const CategoriesPage: React.FC = () => {
     loading: loadingCategories,
     refetch,
   } = useInventoryFetcher<Category>(getCategoriesForInventory);
-
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   const handleRename = async (
     category: Category,
@@ -40,7 +39,6 @@ const CategoriesPage: React.FC = () => {
 
     const nameChanged = newName !== category.name;
     const descriptionChanged = newDescription !== category.description;
-
     if (!nameChanged && !descriptionChanged) return;
 
     try {
@@ -68,9 +66,12 @@ const CategoriesPage: React.FC = () => {
   const confirmDelete = async () => {
     if (!deletingCategory || !selectedInventory) return;
 
+    // capture before state clears
+    const deletedName = truncate(deletingCategory.name);
+
     try {
       await deleteCategory(deletingCategory.id, selectedInventory.id);
-      toast.success('🗑️ Category "${name}" deleted');
+      toast.success(`🗑️ Category "${deletedName}" deleted`);
       refetch();
     } catch (err) {
       toast.error('❌ Failed to delete category');
@@ -85,7 +86,7 @@ const CategoriesPage: React.FC = () => {
       log.debug('CategoriesPage', '🔄 Triggering category refetch...');
       refetch();
     }
-  }, [selectedInventory?.id, inventoryLoading]);
+  }, [selectedInventory?.id, inventoryLoading, refetch]);
 
   return (
     <Layout>
@@ -130,15 +131,17 @@ const CategoriesPage: React.FC = () => {
           onClose={() => setEditingCategory(null)}
           onSave={async (newName, newDescription) => {
             await handleRename(editingCategory, newName, newDescription);
-            toast.success('✏️ Category "${name}" updated');
+            // use the *new* name; editingCategory may already be null
+            toast.success(`✏️ Category "${truncate(newName)}" updated`);
           }}
         />
       )}
+
       {deletingCategory && (
         <ConfirmDeleteModal
           isOpen={!!deletingCategory}
           title="Delete Category"
-          message={`Are you sure you want to delete "${deletingCategory.name}"?`}
+          message={`Are you sure you want to delete "${truncate(deletingCategory.name)}"?`}
           onClose={() => setDeletingCategory(null)}
           onConfirm={confirmDelete}
         />
