@@ -48,7 +48,7 @@ export async function renameCategory(
 ): Promise<Category> {
   const res = await api.put(
     `/categories/${id}`,
-    { name, description }, // ✅ include description if provided
+    { name, description },
     { params: { inventory_id } }
   );
   return res.data;

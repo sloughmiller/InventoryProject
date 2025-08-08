@@ -15,7 +15,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Password validation (same as before)
+    
     if (password.length < 8) {
       setError('Password must be at least 8 characters long.');
       return;

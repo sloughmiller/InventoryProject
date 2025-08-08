@@ -11,7 +11,6 @@ const PostLoginRouter: React.FC = () => {
   useEffect(() => {
     const checkInventories = async () => {
       try {
-        // ✅ Slight delay to ensure AuthContext + Axios header are fully in place
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         const res = await api.get('/inventories/accessible');

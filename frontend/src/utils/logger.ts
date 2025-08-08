@@ -29,7 +29,5 @@ export const log = {
   },
   fatal: (context: string, ...args: unknown[]) => {
     console.error(...format('fatal', context, args));
-    // Hook: send to external error tracking
-    // e.g. sendToSentry('fatal', context, args)
   },
 };

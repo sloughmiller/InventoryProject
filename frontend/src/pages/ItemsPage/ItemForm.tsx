@@ -87,7 +87,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onItemCreated, editingItem, onEditD
         onItemCreated?.();
       }
 
-      // Reset form
+      
       setName('');
       setDescription('');
       setQuantity('1');

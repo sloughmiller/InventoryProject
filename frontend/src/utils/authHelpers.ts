@@ -2,7 +2,7 @@ import { jwtDecode } from 'jwt-decode';
 
 
 interface TokenPayload {
-  sub: string; // UUID
+  sub: string;
   exp: number;
 }
 

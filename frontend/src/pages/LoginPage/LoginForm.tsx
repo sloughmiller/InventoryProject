@@ -25,14 +25,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
       });
 
       const token = response.data.access_token;
-
-      // ✅ Immediately set the token for Axios
       setAuthToken(token);
-
-      // ✅ Update auth context (e.g., store token in state/localStorage)
       login(token);
-
-      // ✅ Call post-login handler (e.g., redirect, fetch user/inventories)
       onLoginSuccess();
     } catch (err) {
       console.error('❌ Login error:', err);

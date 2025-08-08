@@ -4,7 +4,7 @@ import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import { SelectedInventoryProvider } from './contexts/SelectedInventoryContext';
 import { LoadingProvider } from './contexts/LoadingContext';
-import { Toaster } from 'react-hot-toast'; // ✅ Import Toaster
+import { Toaster } from 'react-hot-toast';
 import './index.css';
 import './api/inventoryInterceptor';
 

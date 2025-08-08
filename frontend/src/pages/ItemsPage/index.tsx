@@ -27,7 +27,7 @@ const ItemsPage: React.FC = () => {
   const { selectedInventory } = useSelectedInventory();
   const navigate = useNavigate();
   const { inventoryOptions, loading } = useInventoryList();
-  const [deletingItem, setDeletingItem] = useState<Item | null>(null); // or Category, Location
+  const [deletingItem, setDeletingItem] = useState<Item | null>(null);
 
 
 
@@ -97,7 +97,7 @@ const ItemsPage: React.FC = () => {
     setTimeout(() => setShowItemModal(true), 0);
   };
 
-  // ⛔️ Redirect logic
+ 
   useEffect(() => {
     if (!loading && !selectedInventory) {
       if (inventoryOptions.length > 0) {
@@ -112,7 +112,7 @@ const ItemsPage: React.FC = () => {
     }
   }, [selectedInventory, loading, inventoryOptions, navigate]);
 
-  // ✅ Fetch data when we have a selected inventory
+  
   useEffect(() => {
     if (selectedInventory) {
       log.debug('ItemsPage', '🔁 Selected inventory changed to:', selectedInventory.name);
