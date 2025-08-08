@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import BaseCard from '../../components/cards/BaseCard';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import { createCategory } from '../../api/categoryApi';
-import { useWithLoading } from '../../utils/withLoading'; // ✅ import the helper
-
+import { useWithLoading } from '../../utils/withLoading'; 
+import toast from 'react-hot-toast';
 interface CategoryFormProps {
   onCreated: () => void;
 }
@@ -13,7 +13,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
   const [error, setError] = useState('');
   const { selectedInventory, loading } = useSelectedInventory();
 
-  const doWithLoading = useWithLoading(); // ✅ initialize the wrapper
+  const doWithLoading = useWithLoading(); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +30,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onCreated }) => {
       setName('');
       setError('');
       onCreated();
+      toast.success(`✅ Category "${name}" added`);
     } catch (err) {
       console.error('❌ Failed to create category:', err);
       setError('Could not create category.');

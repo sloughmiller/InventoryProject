@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelectedInventory } from '../../hooks/useSelectedInventory';
 import { createLocation } from '../../api/locationApi';
 import BaseCard from '../../components/cards/BaseCard';
+import toast from 'react-hot-toast';
 
 interface LocationFormProps {
   onCreated: () => void;
@@ -36,6 +37,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ onCreated }) => {
       setDescription('');
       setError('');
       onCreated();
+      toast.success(`✅ Location "${name}" added`);
     } catch (err) {
       console.error('❌ Failed to create location:', err);
       setError('Could not create location.');
