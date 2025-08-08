@@ -21,6 +21,9 @@ const LocationsPage: React.FC = () => {
   const { selectedInventory, loading: inventoryLoading } = useSelectedInventory();
   const [deletingLocation, setDeletingLocation] = useState<Location | null>(null);
 
+  const truncate = (s: string, n = 24) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+
+
 
   const {
     data: locations,
@@ -60,10 +63,12 @@ const LocationsPage: React.FC = () => {
   const confirmDelete = async () => {
     if (!deletingLocation || !selectedInventory?.id) return;
 
+    const deletedName = truncate(deletingLocation.name); // capture before await/state changes
+
     try {
       log.info('LocationsPage', `🗑️ Deleting location ID ${deletingLocation.id}`);
       await deleteLocation(deletingLocation.id, selectedInventory.id);
-      toast.success('🗑️ Location "${name}" deleted');
+      toast.success(`🗑️ Location "${deletedName}" deleted`);
       refetch();
     } catch (err) {
       log.error('LocationsPage', `❌ Failed to delete location ID ${deletingLocation.id}:`, err);
@@ -118,7 +123,7 @@ const LocationsPage: React.FC = () => {
           onClose={() => setEditingLocation(null)}
           onSave={async (newName, newDescription) => {
             await handleSaveEdit(newName, newDescription);
-            toast.success('📍 Location "${name}" updated');
+            toast.success(`📍 Location "${truncate(newName)}" updated`);
           }}
         />
       )}
